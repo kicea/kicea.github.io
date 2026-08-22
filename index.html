@@ -106,7 +106,7 @@
                     </div>
                     <p class="text-gray-700 mb-4">Finding places to pray in Korea:</p>
                     <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start"><span class="text-green-600 mr-2">•</span><strong>Seoul Central Masjid</strong> - Itaewon (main mosque)</li>
+                        <li class="flex items-start"><span class="text-green-600 mr-2">•</span><strong>Seoul Central Masjid</strong> - Itaewon (main mosque) <a href="https://en.wikipedia.org/wiki/List_of_mosques_in_South_Korea" target="_blank" class="text-green-600 hover:text-green-700 underline ml-1">(see full list)</a></li>
                         <li class="flex items-start"><span class="text-green-600 mr-2">•</span>Check for Shia-specific prayer spaces in major cities</li>
                         <li class="flex items-start"><span class="text-green-600 mr-2">•</span>University prayer rooms available at some campuses</li>
                         <li class="flex items-start"><span class="text-green-600 mr-2">•</span>Qibla direction: Approximately west-northwest</li>
@@ -222,8 +222,8 @@
                 const end = index < islamicMonths.length - 1
                     ? addDays(parseUTC(islamicMonths[index + 1].start), -1)
                     : addDays(start, 29);
-                const startM = start.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
-                const endM = end.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+                const startM = start.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+                const endM = end.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
                 return startM === endM ? startM : startM + '–' + endM;
             }
 
@@ -237,7 +237,6 @@
                         : addDays(parseUTC(islamicMonths[i].start), 29).getTime();
                     if (today >= start && today <= end) return i;
                 }
-                // Before the first listed month or after the last one: clamp to nearest edge
                 return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
             }
 
@@ -600,3 +599,7 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+</body>
+</html>

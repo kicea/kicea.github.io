@@ -218,7 +218,21 @@
                 return date.toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
             }
 
-            let current = 8; // default view: Ramadan
+            function findCurrentMonthIndex() {
+                const now = new Date();
+                const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                for (let i = 0; i < islamicMonths.length; i++) {
+                    const start = parseUTC(islamicMonths[i].start).getTime();
+                    const end = i < islamicMonths.length - 1
+                        ? addDays(parseUTC(islamicMonths[i + 1].start), -1).getTime()
+                        : addDays(parseUTC(islamicMonths[i].start), 29).getTime();
+                    if (today >= start && today <= end) return i;
+                }
+                // Before the first listed month or after the last one: clamp to nearest edge
+                return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
+            }
+
+            let current = findCurrentMonthIndex();
 
             const select = document.getElementById('monthSelect');
             islamicMonths.forEach((m, i) => {

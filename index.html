@@ -217,6 +217,15 @@
             function fmtDate(date) {
                 return date.toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
             }
+            function getEnglishRange(index) {
+                const start = parseUTC(islamicMonths[index].start);
+                const end = index < islamicMonths.length - 1
+                    ? addDays(parseUTC(islamicMonths[index + 1].start), -1)
+                    : addDays(start, 29);
+                const startM = start.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+                const endM = end.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+                return startM === endM ? startM : startM + '–' + endM;
+            }
 
             function findCurrentMonthIndex() {
                 const now = new Date();
@@ -238,7 +247,7 @@
             islamicMonths.forEach((m, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = m.name + ' (' + m.label + ')';
+                opt.textContent = m.name + ' (' + getEnglishRange(i) + ')';
                 select.appendChild(opt);
             });
 
@@ -254,7 +263,7 @@
 
                 const startLabel = fmtMonthYear(start);
                 const endLabel = fmtMonthYear(end);
-                document.getElementById('monthTitle').textContent = month.name + ' (' + month.label + ') 1448';
+                document.getElementById('monthTitle').textContent = month.name + ' (' + getEnglishRange(index) + ') 1448';
                 document.getElementById('monthSubtitle').textContent =
                     (startLabel === endLabel ? startLabel : startLabel + ' – ' + endLabel) +
                     ' · Begins ' + fmtDate(start) + ', Korea';

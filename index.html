@@ -316,15 +316,16 @@
                     if (isGregorianMonthStart) titleParts.push(date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' }) + ' begins');
                     cell.title = titleParts.join(' · ');
 
-                    let watermarkHTML = '';
+                    let mainNumberHTML;
                     if (isGregorianMonthStart) {
                         const gregMonthLabel = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
-                        watermarkHTML = '<span class="absolute top-0.5 inset-x-0 text-center pointer-events-none select-none text-amber-600 font-bold text-[9px] sm:text-[10px] tracking-wide">' + gregMonthLabel + '</span>';
+                        mainNumberHTML = '<span class="relative z-10 font-bold text-orange-600 text-[10px] sm:text-xs whitespace-nowrap">' + date.getUTCDate() + ' ' + gregMonthLabel + '</span>';
+                    } else {
+                        mainNumberHTML = '<span class="relative z-10 font-semibold text-gray-800">' + date.getUTCDate() + '</span>';
                     }
 
                     cell.innerHTML =
-                        watermarkHTML +
-                        '<span class="relative z-10 font-semibold text-gray-800">' + date.getUTCDate() + '</span>' +
+                        mainNumberHTML +
                         '<span class="relative z-10 text-[10px] text-gray-500">' + (day === 1 ? '🌙 1' : day) + '</span>' +
                         (isToday ? '<span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-purple-600 z-10"></span>' : '');
 

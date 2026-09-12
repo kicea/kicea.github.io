@@ -52,7 +52,7 @@
                 </div>
 
                 <p class="text-xs text-gray-500 mt-6">
-                    ⓘ Month-start dates are estimates based on moonsighting for Korea and may shift by a day depending on official confirmation. "Add to Personal Calendar" downloads a file you can import into Google Calendar, Apple Calendar, Outlook, or any other calendar app.
+                    ⓘ Month-start dates are estimates based on moonsighting for Korea and may shift by a day depending on official confirmation. "Add to Personal Calendar" downloads a file you can import into Google Calendar, Apple Calendar, Outlook, or any other calendar app. Jump straight to a month by appending <code>#1448/N</code> to this page's URL (N = 1 for Muharram … 12 for Dhu al-Hijjah).
                 </p>
             </div>
         </div>
@@ -73,6 +73,8 @@
                 { name: "Dhu al-Qi'dah", label: "Zeeqada", start: "2027-04-09" },
                 { name: "Dhu al-Hijjah", label: "Zilhijja", start: "2027-05-08" }
             ];
+
+            const HIJRI_YEAR = 1448;
 
             const eventsByMonth = {
                 "Muharram": {
@@ -184,7 +186,49 @@
                 return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
             }
 
-            let current = findCurrentMonthIndex();
+            // ---- Deep-linking: /1448/1 (Muharram) ... /1448/12 (Dhu al-Hijjah) ----
+            // Matches either a URL hash (#1448/3) or a path segment (/1448/3), so the
+            // link works both as a plain fragment (no server config needed) and, if the
+            // page is served with rewrites so unknown paths fall back to this file, as a
+            // real path.
+            function parseMonthFromLocation() {
+                try {
+                    const candidates = [window.location.hash.replace(/^#\/?/, ''), window.location.pathname];
+                    for (const candidate of candidates) {
+                        const match = candidate.match(/(\d{3,4})\/(\d{1,2})(?:\/|$)/);
+                        if (match) {
+                            const monthNum = parseInt(match[2], 10);
+                            if (monthNum >= 1 && monthNum <= islamicMonths.length) {
+                                return monthNum - 1;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // Location isn't readable/parseable in this context (e.g. sandboxed preview) — ignore.
+                }
+                return null;
+            }
+
+            function monthHash(index) {
+                return '#' + HIJRI_YEAR + '/' + (index + 1);
+            }
+
+            // Some embedded/sandboxed contexts (like an about:srcdoc preview iframe)
+            // block history.replaceState with a SecurityError. That must never be
+            // allowed to interrupt render(), so it's fully isolated here.
+            function updateLocationHash(index) {
+                try {
+                    const newHash = monthHash(index);
+                    if (window.location.hash !== newHash) {
+                        history.replaceState(null, '', newHash);
+                    }
+                } catch (e) {
+                    // Not fatal — deep-linking just won't update the address bar here.
+                }
+            }
+
+            let current = parseMonthFromLocation();
+            if (current === null) current = findCurrentMonthIndex();
 
             const select = document.getElementById('monthSelect');
             islamicMonths.forEach((m, i) => {
@@ -274,11 +318,12 @@
             function render(index) {
                 current = index;
                 select.value = index;
+                updateLocationHash(index);
                 const { month, start, end, length, special } = getMonthData(index);
 
                 const startLabel = fmtMonthYear(start);
                 const endLabel = fmtMonthYear(end);
-                document.getElementById('monthTitle').textContent = month.name + ' (' + getEnglishRange(index) + ') 1448';
+                document.getElementById('monthTitle').textContent = month.name + ' (' + getEnglishRange(index) + ') ' + HIJRI_YEAR;
                 document.getElementById('monthSubtitle').textContent =
                     (startLabel === endLabel ? startLabel : startLabel + ' – ' + endLabel) +
                     ' · Begins ' + fmtDate(start) + ', Korea';
@@ -368,6 +413,15 @@
                     });
                 });
                 downloadICS('hussainiya-seoul-islamic-calendar-1448.ics', allVevents);
+            });
+
+            // Support browser back/forward and manually-typed/edited hashes (e.g. someone
+            // pastes a link with #1448/9 into the address bar of an already-open page).
+            window.addEventListener('hashchange', function() {
+                const idx = parseMonthFromLocation();
+                if (idx !== null && idx !== current) {
+                    render(idx);
+                }
             });
 
             render(current);

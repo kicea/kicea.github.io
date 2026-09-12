@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Calendar (Korea) — Korea Islamic Cultural Exchange Association</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            menuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-lg md:text-xl font-bold">Korea Islamic Cultural Exchange Association</h1>
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html#home" class="hover:text-gray-200 transition">Home</a>
+                    <a href="calendar.html" class="text-gray-200 font-semibold transition">Islamic Calendar</a>
+                    <a href="index.html#outreach" class="hover:text-gray-200 transition">Community Outreach</a>
+                    <a href="index.html#education" class="hover:text-gray-200 transition">Learning & Education</a>
+                    <a href="index.html#social" class="hover:text-gray-200 transition">Social</a>
+                </div>
+                <button id="menuBtn" class="md:hidden shrink-0 ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="index.html#home" class="block hover:text-gray-200 transition py-2">Home</a>
+                <a href="calendar.html" class="block text-gray-200 font-semibold transition py-2">Islamic Calendar</a>
+                <a href="index.html#outreach" class="block hover:text-gray-200 transition py-2">Community Outreach</a>
+                <a href="index.html#education" class="block hover:text-gray-200 transition py-2">Learning & Education</a>
+                <a href="index.html#social" class="block hover:text-gray-200 transition py-2">Social</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Islamic Calendar Section -->
+    <section id="calendar" class="py-16 bg-white">
+        <div class="max-w-5xl mx-auto px-4">
+            <a href="index.html" class="inline-flex items-center gap-1 text-sm text-purple-600 hover:text-purple-800 mb-6">← Back to home</a>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">Islamic Calendar (Korea)</h2>
+            <p class="text-gray-600 text-center mb-8 max-w-2xl mx-auto">Month-by-month Hijri calendar based on moonsighting for Korea (Hijri year 1448).</p>
+
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 md:p-8 card-hover">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h3 id="monthTitle" class="text-2xl font-bold text-gray-800"></h3>
+                        <p id="monthSubtitle" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="prevMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700">‹</button>
+                        <select id="monthSelect" class="border border-purple-200 rounded-lg px-3 py-2 text-sm bg-white"></select>
+                        <button id="nextMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700">›</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div class="flex flex-wrap gap-4 text-xs text-gray-600">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> Month begins</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Celebration</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-500 inline-block"></span> Commemoration</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Other events</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full border-2 border-purple-600 inline-block"></span> Today</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm border border-gray-200 border-t-4 border-t-amber-500 inline-block"></span> Solar month starts</span>
+                    </div>
+                    <button id="downloadAllBtn" class="text-xs sm:text-sm bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 transition whitespace-nowrap">⬇ Add all dates to calendar</button>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
+                    <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+                </div>
+
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
+
+                <div id="keyDates" class="mt-6 space-y-2"></div>
+
+                <p class="text-xs text-gray-500 mt-6">
+                    ⓘ Month-start dates are estimates based on moonsighting for Korea and may shift by a day depending on official confirmation. Tap 📅 to add a single date to Google Calendar, or ⬇ to download an .ics file for Apple Calendar / Outlook / other apps.
+                </p>
+            </div>
+        </div>
+
+        <script>
+        (function() {
+            const islamicMonths = [
+                { name: "Muharram", label: "Muharram", start: "2026-06-17" },
+                { name: "Safar", label: "Safar", start: "2026-07-16" },
+                { name: "Rabi' al-Awwal", label: "Rabiul Awwal", start: "2026-08-15" },
+                { name: "Rabi' al-Thani", label: "Rabiussani", start: "2026-09-14" },
+                { name: "Jumada al-Awwal", label: "Jamadiul Awwal", start: "2026-10-14" },
+                { name: "Jumada al-Thani", label: "Jamadius Sani", start: "2026-11-12" },
+                { name: "Rajab", label: "Rajab", start: "2026-12-12" },
+                { name: "Sha'ban", label: "Shaban", start: "2027-01-10" },
+                { name: "Ramadan", label: "Ramadan", start: "2027-02-09" },
+                { name: "Shawwal", label: "Shawwal", start: "2027-03-10" },
+                { name: "Dhu al-Qi'dah", label: "Zeeqada", start: "2027-04-09" },
+                { name: "Dhu al-Hijjah", label: "Zilhijja", start: "2027-05-08" }
+            ];
+
+            const eventsByMonth = {
+                "Muharram": {
+                    1: { label: "Beginning of the Hijri Year", type: "other" },
+                    2: { label: "Arrival of Imam al-Hussain (as) to Karbala", type: "other" },
+                    10: { label: "Ashura", type: "commemoration" },
+                    25: { label: "Martyrdom of Imam Zayn al-Abidin (as)", type: "commemoration" }
+                },
+                "Safar": {
+                    7: { label: "Birth of Imam Musa Kazim (as)", type: "celebration" },
+                    10: { label: "Martyrdom of Ruqayya bint Imam al-Hussain (as)", type: "commemoration" },
+                    17: { label: "Martyrdom of Imam Ali al-Rida (as)", type: "commemoration" },
+                    20: { label: "Arba'een", type: "commemoration" },
+                    28: { label: "Martyrdom of Imam Hasan (as) and Prophet Muhammad (pbuh)", type: "commemoration" }
+                },
+                "Rabi' al-Awwal": {
+                    8: { label: "Martyrdom of Imam al-Askari (as)", type: "commemoration" },
+                    9: { label: "Eid al-Zahra (as)", type: "celebration" },
+                    17: { label: "Birth of Prophet Muhammad (pbuh) and Imam Ja'far al-Sadiq (as)", type: "celebration" }
+                },
+                "Rabi' al-Thani": {
+                    10: { label: "Birth of Imam al-Askari (as)", type: "celebration" }
+                },
+                "Jumada al-Awwal": {
+                    13: { label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    15: { label: "Birth of Imam Zayn al-Abidin (as)", type: "celebration" }
+                },
+                "Jumada al-Thani": {
+                    3: { label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    20: { label: "Birth of Lady Fatima (sa)", type: "celebration" }
+                },
+                "Rajab": {
+                    1: { label: "Birth of Imam Muhammad Baqir (as)", type: "celebration" },
+                    3: { label: "Martyrdom of Imam Ali Naqi (as)", type: "commemoration" },
+                    5: { label: "Birth of Imam Ali Naqi (as)", type: "celebration" },
+                    10: { label: "Birth of Imam Muhammad Taqi (as)", type: "celebration" },
+                    13: { label: "Birth of Imam Ali (as)", type: "celebration" },
+                    15: { label: "Martyrdom of Lady Zainab (sa)", type: "commemoration" },
+                    25: { label: "Martyrdom of Imam Moosa Kazim (as)", type: "commemoration" },
+                    26: { label: "Martyrdom of Hazrat Abu Talib (as)", type: "commemoration" },
+                    27: { label: "Mab'ath / Meraj", type: "other" },
+                    28: { label: "Journey of Imam Hussain (as) from Medina", type: "other" }
+                },
+                "Sha'ban": {
+                    1: { label: "Birth of Lady Zainab (as)", type: "celebration" },
+                    3: { label: "Birth of Imam Hussain (as)", type: "celebration" },
+                    4: { label: "Birth of Hazrat Abbas (as)", type: "celebration" },
+                    15: { label: "Birth of Imam Mehdi (as) / Shab e Bara'at", type: "celebration" }
+                },
+                "Ramadan": {
+                    15: { label: "Birth of Imam Hasan (as)", type: "celebration" },
+                    19: { label: "Shab e Zarbat Imam Ali (as) / Shab e Qadr", type: "commemoration" },
+                    21: { label: "Martyrdom of Imam Ali (as) / Shab e Qadr", type: "commemoration" },
+                    23: { label: "Shab e Qadr", type: "other" }
+                },
+                "Shawwal": {
+                    1: { label: "Eid al-Fitr", type: "celebration" },
+                    8: { label: "Demolition of Jannatul Baqi", type: "other" },
+                    15: { label: "Martyrdom of Imam Ja'far al-Sadiq (as)", type: "commemoration" }
+                },
+                "Dhu al-Qi'dah": {
+                    11: { label: "Birth of Imam Ali al-Rida (as)", type: "celebration" },
+                    29: { label: "Martyrdom of Imam Muhammad Taqi (as)", type: "commemoration" }
+                },
+                "Dhu al-Hijjah": {
+                    1: { label: "Marriage of Imam Ali (as) and Lady Fatima (sa)", type: "other" },
+                    7: { label: "Martyrdom of Imam Muhammad Baqir (as)", type: "commemoration" },
+                    10: { label: "Eid al-Adha", type: "celebration" },
+                    18: { label: "Eid al-Ghadeer", type: "celebration" },
+                    24: { label: "Eid al-Mubahela", type: "celebration" }
+                }
+            };
+
+            function parseUTC(s) {
+                const [y, m, d] = s.split('-').map(Number);
+                return new Date(Date.UTC(y, m - 1, d));
+            }
+            function addDays(date, n) {
+                const d = new Date(date);
+                d.setUTCDate(d.getUTCDate() + n);
+                return d;
+            }
+            function fmtMonthYear(date) {
+                return date.toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+            }
+            function fmtDate(date) {
+                return date.toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+            }
+            function getEnglishRange(index) {
+                const start = parseUTC(islamicMonths[index].start);
+                const end = index < islamicMonths.length - 1
+                    ? addDays(parseUTC(islamicMonths[index + 1].start), -1)
+                    : addDays(start, 29);
+                const startM = start.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+                const endM = end.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+                return startM === endM ? startM : startM + '–' + endM;
+            }
+
+            function findCurrentMonthIndex() {
+                const now = new Date();
+                const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                for (let i = 0; i < islamicMonths.length; i++) {
+                    const start = parseUTC(islamicMonths[i].start).getTime();
+                    const end = i < islamicMonths.length - 1
+                        ? addDays(parseUTC(islamicMonths[i + 1].start), -1).getTime()
+                        : addDays(parseUTC(islamicMonths[i].start), 29).getTime();
+                    if (today >= start && today <= end) return i;
+                }
+                return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
+            }
+
+            let current = findCurrentMonthIndex();
+
+            const select = document.getElementById('monthSelect');
+            islamicMonths.forEach((m, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = m.name + ' (' + getEnglishRange(i) + ')';
+                select.appendChild(opt);
+            });
+
+            const typeStyles = {
+                celebration: { cell: 'bg-red-100 border-red-300', dot: 'bg-red-500' },
+                commemoration: { cell: 'bg-gray-200 border-gray-400', dot: 'bg-gray-500' },
+                other: { cell: 'bg-blue-100 border-blue-300', dot: 'bg-blue-500' }
+            };
+
+            // ---- Add to Calendar helpers ----
+            function pad(n) { return n < 10 ? '0' + n : '' + n; }
+            function icsDate(date) {
+                return date.getUTCFullYear() + pad(date.getUTCMonth() + 1) + pad(date.getUTCDate());
+            }
+            function icsStamp() {
+                const n = new Date();
+                return n.getUTCFullYear() + pad(n.getUTCMonth() + 1) + pad(n.getUTCDate()) + 'T' +
+                    pad(n.getUTCHours()) + pad(n.getUTCMinutes()) + pad(n.getUTCSeconds()) + 'Z';
+            }
+            function escapeICS(text) {
+                return String(text).replace(/([,;])/g, '\\$1');
+            }
+            function foldICS(lines) {
+                return lines.join('\r\n');
+            }
+            function buildEventICS(uid, label, date) {
+                return foldICS([
+                    'BEGIN:VEVENT',
+                    'UID:' + uid + '@hussainiya-seoul',
+                    'DTSTAMP:' + icsStamp(),
+                    'DTSTART;VALUE=DATE:' + icsDate(date),
+                    'DTEND;VALUE=DATE:' + icsDate(addDays(date, 1)),
+                    'SUMMARY:' + escapeICS(label),
+                    'DESCRIPTION:' + escapeICS(label + ' — Hussainiya Seoul Islamic Calendar'),
+                    'END:VEVENT'
+                ]);
+            }
+            function downloadICS(filename, veventsArray) {
+                const ics = foldICS([
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Hussainiya Seoul//Islamic Calendar//EN',
+                    'CALSCALE:GREGORIAN'
+                ]) + '\r\n' + veventsArray.join('\r\n') + '\r\n' + 'END:VCALENDAR';
+                const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+            }
+            function googleCalendarLink(label, date) {
+                const params = new URLSearchParams({
+                    action: 'TEMPLATE',
+                    text: label,
+                    dates: icsDate(date) + '/' + icsDate(addDays(date, 1)),
+                    details: label + ' — Hussainiya Seoul Islamic Calendar'
+                });
+                return 'https://calendar.google.com/calendar/render?' + params.toString();
+            }
+            function slugify(text) {
+                return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            }
+
+            function getMonthData(index) {
+                const month = islamicMonths[index];
+                const start = parseUTC(month.start);
+                const end = index < islamicMonths.length - 1
+                    ? addDays(parseUTC(islamicMonths[index + 1].start), -1)
+                    : addDays(start, 29);
+                const length = Math.round((end - start) / 86400000) + 1;
+                const special = Object.assign({}, eventsByMonth[month.name] || {});
+
+                if (month.name === 'Ramadan') {
+                    for (let day = length; day >= 1; day--) {
+                        const d = addDays(start, day - 1);
+                        if (d.getUTCDay() === 5) {
+                            if (special[day]) {
+                                special[day] = { label: special[day].label + " · Jumu'ah al-Wida", type: special[day].type };
+                            } else {
+                                special[day] = { label: "Jumu'ah al-Wida (last Friday of Ramadan)", type: "other" };
+                            }
+                            break;
+                        }
+                    }
+                }
+                return { month, start, end, length, special };
+            }
+
+            function render(index) {
+                current = index;
+                select.value = index;
+                const { month, start, end, length, special } = getMonthData(index);
+
+                const startLabel = fmtMonthYear(start);
+                const endLabel = fmtMonthYear(end);
+                document.getElementById('monthTitle').textContent = month.name + ' (' + getEnglishRange(index) + ') 1448';
+                document.getElementById('monthSubtitle').textContent =
+                    (startLabel === endLabel ? startLabel : startLabel + ' – ' + endLabel) +
+                    ' · Begins ' + fmtDate(start) + ', Korea';
+
+                const leading = (start.getUTCDay() + 6) % 7;
+                const grid = document.getElementById('calendarGrid');
+                grid.innerHTML = '';
+
+                for (let i = 0; i < leading; i++) {
+                    grid.appendChild(document.createElement('div'));
+                }
+
+                const now = new Date();
+                const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+
+                for (let day = 1; day <= length; day++) {
+                    const date = addDays(start, day - 1);
+                    const isSpecial = special[day];
+                    const style = isSpecial ? typeStyles[isSpecial.type] : null;
+                    const isToday = date.getTime() === todayUTC;
+                    const isGregorianMonthStart = date.getUTCDate() === 1;
+
+                    const cell = document.createElement('div');
+                    cell.className = 'relative overflow-hidden aspect-square rounded-lg flex flex-col items-center justify-center text-xs border ' +
+                        (day === 1 ? 'bg-purple-100 border-purple-300' : (style ? style.cell : 'bg-white border-purple-100')) +
+                        (isToday ? ' ring-2 ring-purple-600 ring-offset-1' : '') +
+                        (isGregorianMonthStart ? ' border-t-4 border-t-amber-500' : '');
+
+                    let titleParts = [];
+                    if (isSpecial) titleParts.push(isSpecial.label);
+                    if (isToday) titleParts.push('Today');
+                    if (isGregorianMonthStart) titleParts.push(date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' }) + ' begins');
+                    cell.title = titleParts.join(' · ');
+
+                    let mainNumberHTML;
+                    if (isGregorianMonthStart) {
+                        const gregMonthLabel = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+                        mainNumberHTML = '<span class="relative z-10 font-bold text-orange-600 text-[10px] sm:text-xs whitespace-nowrap">' + date.getUTCDate() + ' ' + gregMonthLabel + '</span>';
+                    } else {
+                        mainNumberHTML = '<span class="relative z-10 font-semibold text-gray-800">' + date.getUTCDate() + '</span>';
+                    }
+
+                    cell.innerHTML =
+                        mainNumberHTML +
+                        '<span class="relative z-10 text-[10px] text-gray-500">' + (day === 1 ? '🌙 1' : day) + '</span>' +
+                        (isToday ? '<span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-purple-600 z-10"></span>' : '');
+
+                    grid.appendChild(cell);
+                }
+
+                const keyDates = document.getElementById('keyDates');
+                keyDates.innerHTML = '';
+                const entries = Object.entries(special).sort((a, b) => Number(a[0]) - Number(b[0]));
+                if (entries.length === 0) {
+                    keyDates.innerHTML = '<p class="text-sm text-gray-500">No listed events fall within this month.</p>';
+                } else {
+                    entries.forEach(([day, info]) => {
+                        const date = addDays(start, Number(day) - 1);
+                        const style = typeStyles[info.type];
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between bg-white rounded-lg px-4 py-2 text-sm gap-3';
+                        row.innerHTML =
+                            '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + style.dot + ' shrink-0"></span>' +
+                            '<span class="font-medium text-gray-800">' + info.label + '</span></span>' +
+                            '<span class="flex items-center gap-3 shrink-0">' +
+                            '<span class="text-gray-500 text-xs">' + fmtDate(date) + '</span>' +
+                            '<a class="gcal-link text-purple-600 hover:text-purple-800 text-base" title="Add to Google Calendar" href="' + googleCalendarLink(info.label, date) + '" target="_blank" rel="noopener">📅</a>' +
+                            '<button class="ics-btn text-purple-600 hover:text-purple-800 text-base" title="Download .ics">⬇</button>' +
+                            '</span>';
+                        row.querySelector('.ics-btn').addEventListener('click', function() {
+                            downloadICS(slugify(info.label) + '.ics', [buildEventICS('evt-' + index + '-' + day, info.label, date)]);
+                        });
+                        keyDates.appendChild(row);
+                    });
+                }
+            }
+
+            document.getElementById('prevMonthBtn').addEventListener('click', function() {
+                render((current - 1 + islamicMonths.length) % islamicMonths.length);
+            });
+            document.getElementById('nextMonthBtn').addEventListener('click', function() {
+                render((current + 1) % islamicMonths.length);
+            });
+            select.addEventListener('change', function() {
+                render(Number(select.value));
+            });
+            document.getElementById('downloadAllBtn').addEventListener('click', function() {
+                const allVevents = [];
+                islamicMonths.forEach((m, idx) => {
+                    const data = getMonthData(idx);
+                    Object.entries(data.special).forEach(([day, info]) => {
+                        const date = addDays(data.start, Number(day) - 1);
+                        allVevents.push(buildEventICS('evt-' + idx + '-' + day, info.label, date));
+                    });
+                });
+                downloadICS('hussainiya-seoul-islamic-calendar-1448.ics', allVevents);
+            });
+
+            render(current);
+        })();
+        </script>
+    </section>
+</body>
+</html>

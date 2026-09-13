@@ -209,7 +209,7 @@
                     { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua" }
                 ],
                 special: [
-                    { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" },
+                    { date: "2026-09-27", label: "Birth of Imam Hasan Askari(as)", type: "celebration" },
 
                     // 1448 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
                     { date: "2026-06-26", label: "Ashura", type: "commemoration" },
@@ -229,10 +229,55 @@
                     // 1451 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
                     { date: "2029-05-25", label: "Ashura", type: "commemoration" },
                     { date: "2030-02-05", label: "Eid-ul-Fitr", type: "celebration" },
-                    { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" }
+                    { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" },
+
+                    // Late 2026 one-off center events
+                    { date: "2026-10-25", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-12", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-13", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-14", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-15", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-29", label: "Birth of Lady Fatima (sa)", type: "celebration" }
                     // Other KICEA events will be added later
                 ]
             };
+
+            // ---- KICEA fixed annual events (recur every Hijri year automatically) ----
+            // Unlike "special" (exact Gregorian date, one-off) these are keyed by Hijri
+            // month name + day, so they apply to every occurrence of that month across
+            // 1448-1451 (and beyond), the same way eventsByMonth works for Islamic events.
+            const kiceaHussainCommemoration = { label: "Commemoration of Imam Hussain (as) and his companions", type: "commemoration" };
+            const kiceaAnnualByMonth = {
+                "Muharram": {
+                    1: kiceaHussainCommemoration,
+                    2: kiceaHussainCommemoration,
+                    3: kiceaHussainCommemoration,
+                    4: kiceaHussainCommemoration,
+                    5: kiceaHussainCommemoration,
+                    6: kiceaHussainCommemoration,
+                    7: kiceaHussainCommemoration,
+                    8: kiceaHussainCommemoration,
+                    9: kiceaHussainCommemoration
+                },
+                "Ramadan": {
+                    18: { label: "Shab e Zarbat / Laylatul Qadr", type: "commemoration" },
+                    20: { label: "Martyrdom of Imam Ali (as)", type: "commemoration" },
+                    22: { label: "Laylatul Qadr", type: "dua" }
+                }
+                // Dhu al-Hijjah's contribution to the Imam Hussain commemoration (its
+                // last day, 29th or 30th depending on month length) is handled
+                // dynamically in getKiceaAnnualEvent() below rather than listed here.
+            };
+
+            function getKiceaAnnualEvent(monthName, day, length) {
+                if (kiceaAnnualByMonth[monthName] && kiceaAnnualByMonth[monthName][day]) {
+                    return kiceaAnnualByMonth[monthName][day];
+                }
+                if (monthName === "Dhu al-Hijjah" && day === length) {
+                    return kiceaHussainCommemoration;
+                }
+                return null;
+            }
 
             const kiceaTypeStyles = {
                 dua: { border: 'border-b-4 border-b-blue-500', badgeBg: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
@@ -249,9 +294,14 @@
                 return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate());
             }
 
-            function getKiceaEvent(date) {
+            // Priority for the single badge/border shown on a calendar cell: an exact
+            // one-off date wins, then a fixed annual Hijri commemoration, then the
+            // weekly recurring event. All applicable events still appear in the
+            // "List of KICEA Events" section below regardless of this priority.
+            function getKiceaEvent(date, annualEvent) {
                 const special = getKiceaSpecial(date);
                 if (special) return special;
+                if (annualEvent) return annualEvent;
                 const rec = kiceaEvents.recurring.find(r => date.getUTCDay() === r.weekday && date.getTime() >= parseUTC(r.startDate).getTime());
                 if (rec) return rec;
                 return null;
@@ -444,7 +494,14 @@
                         }
                     }
                 }
-                return { month, start, end, length, special };
+
+                const kiceaAnnual = {};
+                for (let day = 1; day <= length; day++) {
+                    const ev = getKiceaAnnualEvent(month.name, day, length);
+                    if (ev) kiceaAnnual[day] = ev;
+                }
+
+                return { month, start, end, length, special, kiceaAnnual };
             }
 
             function hideFutureNotice() {
@@ -461,7 +518,7 @@
                 select.value = index;
                 updateLocationHash(index);
                 hideFutureNotice();
-                const { month, start, end, length, special } = getMonthData(index);
+                const { month, start, end, length, special, kiceaAnnual } = getMonthData(index);
 
                 document.getElementById('monthTitle').textContent = month.name + ' ' + month.year;
                 document.getElementById('monthSubtitle').textContent = 'Begins ' + fmtFullDate(start);
@@ -484,7 +541,7 @@
                     const isToday = date.getTime() === todayUTC;
                     const isGregorianMonthStart = date.getUTCDate() === 1;
                     const isIslamicMonthStart = day === 1;
-                    const kiceaEvent = getKiceaEvent(date);
+                    const kiceaEvent = getKiceaEvent(date, kiceaAnnual[day] || null);
                     const kiceaStyle = kiceaEvent ? kiceaTypeStyles[kiceaEvent.type] : null;
 
                     const cell = document.createElement('div');
@@ -564,12 +621,12 @@
                     kiceaList.appendChild(row);
                 });
 
-                let kiceaSpecialCount = 0;
+                let kiceaCount = 0;
                 for (let day = 1; day <= length; day++) {
                     const date = addDays(start, day - 1);
                     const s = getKiceaSpecial(date);
                     if (!s) continue;
-                    kiceaSpecialCount++;
+                    kiceaCount++;
                     const sStyle = kiceaTypeStyles[s.type];
                     const row = document.createElement('div');
                     row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
@@ -581,7 +638,37 @@
                     kiceaList.appendChild(row);
                 }
 
-                if (kiceaEvents.recurring.length === 0 && kiceaSpecialCount === 0) {
+                // ---- Annual Hijri KICEA events (this month) ----
+                // Consecutive days sharing the same label/type (e.g. the 9-day Imam
+                // Hussain commemoration) are merged into a single date-range row.
+                const annualDays = Object.keys(kiceaAnnual).map(Number).sort((a, b) => a - b);
+                let ai = 0;
+                while (ai < annualDays.length) {
+                    const groupStart = annualDays[ai];
+                    const info = kiceaAnnual[groupStart];
+                    let groupEnd = groupStart;
+                    while (ai + 1 < annualDays.length && annualDays[ai + 1] === groupEnd + 1 &&
+                           kiceaAnnual[annualDays[ai + 1]].label === info.label && kiceaAnnual[annualDays[ai + 1]].type === info.type) {
+                        groupEnd = annualDays[ai + 1];
+                        ai++;
+                    }
+                    ai++;
+                    kiceaCount++;
+                    const aStyle = kiceaTypeStyles[info.type];
+                    const dStart = addDays(start, groupStart - 1);
+                    const dEnd = addDays(start, groupEnd - 1);
+                    const dateLabel = groupStart === groupEnd ? fmtDate(dStart) : fmtDate(dStart) + ' – ' + fmtDate(dEnd);
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                    row.innerHTML =
+                        '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + aStyle.dot + ' shrink-0"></span>' +
+                        '<span class="font-medium text-gray-800">' + info.label + '</span>' +
+                        '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + aStyle.badgeBg + '">' + kiceaTypeLabels[info.type] + '</span></span>' +
+                        '<span class="text-gray-500 text-xs shrink-0">' + dateLabel + '</span>';
+                    kiceaList.appendChild(row);
+                }
+
+                if (kiceaEvents.recurring.length === 0 && kiceaCount === 0) {
                     kiceaList.innerHTML = '<p class="text-sm text-gray-500">No KICEA events fall within this month.</p>';
                 }
             }
@@ -606,6 +693,10 @@
                     Object.entries(data.special).forEach(([day, info]) => {
                         const date = addDays(data.start, Number(day) - 1);
                         allVevents.push(buildEventICS('evt-' + idx + '-' + day, info.label, date));
+                    });
+                    Object.entries(data.kiceaAnnual).forEach(([day, info]) => {
+                        const date = addDays(data.start, Number(day) - 1);
+                        allVevents.push(buildEventICS('kicea-annual-' + idx + '-' + day, info.label, date));
                     });
                 });
                 kiceaEvents.recurring.forEach((r, idx) => {

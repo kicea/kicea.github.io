@@ -11,6 +11,14 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KD5855R3');</script>
     <!-- End Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2T4MLYVPZX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-2T4MLYVPZX');
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -48,7 +56,9 @@
                     <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
                     <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
                     <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other events</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block border border-green-500" style="background-image: repeating-linear-gradient(45deg, rgba(34,197,94,0.45) 0px, rgba(34,197,94,0.45) 2px, transparent 2px, transparent 5px);"></span> KICEA Event</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> KICEA — Dua</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> KICEA — Celebration</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> KICEA — Commemoration</span>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
@@ -165,33 +175,36 @@
             // "recurring": fires every week on the given weekday, indefinitely, starting
             // from startDate (JS getUTCDay(): Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6).
             // "special": one-off events on an exact Gregorian date (YYYY-MM-DD).
+            // "type" drives the accent border color on the calendar cell and the legend.
             const kiceaEvents = {
                 recurring: [
-                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14" }
+                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua" }
                 ],
                 special: [
-                    { date: "2026-09-27", label: "Rabi al-Thani Celebration" }
+                    { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" }
                 ]
             };
 
-            function getKiceaSpecialLabel(date) {
-                const ds = dateStr(date);
-                const s = kiceaEvents.special.find(e => e.date === ds);
-                return s ? s.label : null;
-            }
+            const kiceaTypeStyles = {
+                dua: { border: 'border-b-4 border-b-blue-500', badgeBg: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
+                celebration: { border: 'border-b-4 border-b-red-600', badgeBg: 'bg-red-100 text-red-700', dot: 'bg-red-600' },
+                commemoration: { border: 'border-b-4 border-b-black', badgeBg: 'bg-gray-200 text-gray-800', dot: 'bg-black' }
+            };
 
-            const KICEA_STRIPE_STYLE = 'background-image: repeating-linear-gradient(45deg, rgba(34,197,94,0.4) 0px, rgba(34,197,94,0.4) 2px, transparent 2px, transparent 6px);';
+            function getKiceaSpecial(date) {
+                const ds = dateStr(date);
+                return kiceaEvents.special.find(e => e.date === ds) || null;
+            }
 
             function dateStr(date) {
                 return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate());
             }
 
-            function getKiceaLabel(date) {
-                const ds = dateStr(date);
-                const special = kiceaEvents.special.find(e => e.date === ds);
-                if (special) return special.label;
+            function getKiceaEvent(date) {
+                const special = getKiceaSpecial(date);
+                if (special) return special;
                 const rec = kiceaEvents.recurring.find(r => date.getUTCDay() === r.weekday && date.getTime() >= parseUTC(r.startDate).getTime());
-                if (rec) return rec.label;
+                if (rec) return rec;
                 return null;
             }
 
@@ -420,18 +433,18 @@
                     const isToday = date.getTime() === todayUTC;
                     const isGregorianMonthStart = date.getUTCDate() === 1;
                     const isIslamicMonthStart = day === 1;
-                    const kiceaLabel = getKiceaLabel(date);
+                    const kiceaEvent = getKiceaEvent(date);
+                    const kiceaStyle = kiceaEvent ? kiceaTypeStyles[kiceaEvent.type] : null;
 
                     const cell = document.createElement('div');
                     cell.className = 'relative overflow-hidden aspect-square rounded-lg flex flex-col items-center justify-center text-xs border ' +
                         (style ? style.cell : 'bg-white border-purple-100') +
                         (isToday ? ' ring-2 ring-purple-600 ring-offset-1' : '') +
-                        (isGregorianMonthStart ? ' border-t-4 border-t-amber-500' : '') +
-                        (isIslamicMonthStart ? ' border-b-4 border-b-green-500' : '');
+                        (kiceaStyle ? ' ' + kiceaStyle.border : '');
 
                     let titleParts = [];
                     if (isSpecial) titleParts.push(isSpecial.label);
-                    if (kiceaLabel) titleParts.push('KICEA: ' + kiceaLabel);
+                    if (kiceaEvent) titleParts.push('KICEA: ' + kiceaEvent.label);
                     if (isToday) titleParts.push('Today');
                     if (isGregorianMonthStart) titleParts.push(date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' }) + ' begins');
                     if (isIslamicMonthStart) titleParts.push(month.name + ' begins');
@@ -446,7 +459,6 @@
                     }
 
                     cell.innerHTML =
-                        (kiceaLabel ? '<span class="absolute inset-0 z-10 pointer-events-none" style="' + KICEA_STRIPE_STYLE + '"></span>' : '') +
                         mainNumberHTML +
                         '<span class="relative z-10 text-[10px] ' + (isIslamicMonthStart ? 'text-green-600 font-semibold' : 'text-gray-500') + '">' + (isIslamicMonthStart ? '🌙 1' : day) + '</span>';
 
@@ -460,9 +472,10 @@
                 // standing note, not repeated on every matching day in the list below.
                 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 kiceaEvents.recurring.forEach(r => {
+                    const rStyle = kiceaTypeStyles[r.type];
                     const note = document.createElement('div');
-                    note.className = 'flex items-center gap-2 text-sm text-gray-700 bg-green-50 border border-green-200 rounded-lg px-4 py-2 mb-2';
-                    note.innerHTML = '<span class="w-3 h-3 inline-block border border-green-500 shrink-0" style="' + KICEA_STRIPE_STYLE + '"></span>' +
+                    note.className = 'flex items-center gap-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 mb-2';
+                    note.innerHTML = '<span class="w-3 h-3 inline-block bg-white border border-gray-300 shrink-0 ' + rStyle.border + '"></span>' +
                         '<span>Every ' + dayNames[r.weekday] + ' — <span class="font-medium text-gray-800">' + r.label + '</span></span>';
                     keyDates.appendChild(note);
                 });
@@ -473,7 +486,7 @@
                 for (let day = 1; day <= length; day++) {
                     const date = addDays(start, day - 1);
                     const isl = special[day] || null;
-                    const kic = getKiceaSpecialLabel(date);
+                    const kic = getKiceaSpecial(date);
                     if (isl || kic) {
                         combined[day] = { date, isl, kic };
                     }
@@ -494,8 +507,9 @@
                                 '<span class="font-medium text-gray-800">' + info.isl.label + '</span></span>';
                         }
                         if (info.kic) {
-                            labelHTML += '<span class="flex items-center gap-2 min-w-0' + (info.isl ? ' mt-1' : '') + '"><span class="w-3 h-3 inline-block border border-green-500 shrink-0" style="' + KICEA_STRIPE_STYLE + '"></span>' +
-                                '<span class="font-medium text-gray-800">' + info.kic + '</span> <span class="text-[10px] uppercase tracking-wide text-green-700 bg-green-100 rounded-full px-2 py-0.5">KICEA</span></span>';
+                            const kStyle = kiceaTypeStyles[info.kic.type];
+                            labelHTML += '<span class="flex items-center gap-2 min-w-0' + (info.isl ? ' mt-1' : '') + '"><span class="w-2 h-2 rounded-full inline-block ' + kStyle.dot + ' shrink-0"></span>' +
+                                '<span class="font-medium text-gray-800">' + info.kic.label + '</span> <span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + kStyle.badgeBg + '">KICEA</span></span>';
                         }
 
                         row.innerHTML =

@@ -28,17 +28,14 @@
             <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">Korea Islamic Calendar</h2>
 
             <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 md:p-8 card-hover">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <div>
-                        <h3 id="monthTitle" class="text-2xl font-bold text-gray-800"></h3>
-                        <p id="monthSubtitle" class="text-sm text-gray-600"></p>
-                        <p id="futureNotice" class="hidden text-xs text-amber-700 mt-1">Future months will be added soon.</p>
+                <div class="mb-6 text-center">
+                    <div class="flex items-center justify-center gap-2">
+                        <button id="prevMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">‹</button>
+                        <select id="monthSelect" class="text-xl sm:text-2xl font-bold text-gray-800 bg-transparent border-0 text-center focus:outline-none cursor-pointer px-1"></select>
+                        <button id="nextMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">›</button>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button id="prevMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700">‹</button>
-                        <select id="monthSelect" class="border border-purple-200 rounded-lg px-3 py-2 text-sm bg-white"></select>
-                        <button id="nextMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700">›</button>
-                    </div>
+                    <p id="monthRange" class="text-sm text-gray-600 mt-1"></p>
+                    <p id="futureNotice" class="hidden text-xs text-amber-700 mt-1">Future months will be added soon.</p>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4 mb-6">
@@ -394,17 +391,24 @@
             function fmtDate(date) {
                 return date.toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
             }
-            function fmtFullDate(date) {
-                return date.getUTCDate() + ' ' + date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }) + ' ' + date.getUTCFullYear();
-            }
             function getEnglishRange(index) {
                 const start = parseUTC(islamicMonths[index].start);
                 const end = index < islamicMonths.length - 1
                     ? addDays(parseUTC(islamicMonths[index + 1].start), -1)
                     : addDays(start, 29);
-                const startM = start.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
-                const endM = end.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
-                return startM === endM ? startM : startM + '–' + endM;
+                const startDay = start.getUTCDate();
+                const endDay = end.getUTCDate();
+                const startMonth = start.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+                const endMonth = end.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+                const startYear = start.getUTCFullYear();
+                const endYear = end.getUTCFullYear();
+                // Same-year range ("12 Nov - 11 Dec 2026") only states the year once,
+                // at the end; a range that crosses a Gregorian new year states both
+                // years explicitly ("28 Dec 2026 - 26 Jan 2027") to avoid ambiguity.
+                if (startYear === endYear) {
+                    return startDay + ' ' + startMonth + ' - ' + endDay + ' ' + endMonth + ' ' + endYear;
+                }
+                return startDay + ' ' + startMonth + ' ' + startYear + ' - ' + endDay + ' ' + endMonth + ' ' + endYear;
             }
 
             function findCurrentMonthIndex() {
@@ -470,7 +474,7 @@
             islamicMonths.forEach((m, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = m.name + ' ' + m.year + ' AH (' + getEnglishRange(i) + ')';
+                opt.textContent = m.name + ' ' + m.year;
                 select.appendChild(opt);
             });
 
@@ -613,8 +617,7 @@
                 hideFutureNotice();
                 const { month, start, end, length, special, kiceaAnnual } = getMonthData(index);
 
-                document.getElementById('monthTitle').textContent = month.name + ' ' + month.year;
-                document.getElementById('monthSubtitle').textContent = 'Begins ' + fmtFullDate(start);
+                document.getElementById('monthRange').textContent = getEnglishRange(index);
 
                 const leading = (start.getUTCDay() + 6) % 7;
                 const grid = document.getElementById('calendarGrid');

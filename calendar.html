@@ -44,19 +44,19 @@
                 <div class="grid sm:grid-cols-2 gap-4 mb-6">
                     <div class="border border-gray-200 rounded-lg p-4 bg-white">
                         <h4 class="text-sm font-semibold text-gray-800 mb-3">Islamic Calendar Events</h4>
-                        <div class="flex flex-wrap gap-3 text-xs text-gray-600">
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other Events</span>
+                        <div id="islamicLegend" class="flex flex-wrap gap-3 text-xs text-gray-600">
+                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
+                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
+                            <span data-legend-type="other" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other Events</span>
                         </div>
                     </div>
                     <div class="border border-gray-200 rounded-lg p-4 bg-white">
                         <h4 class="text-sm font-semibold text-gray-800 mb-3">KICEA Events</h4>
-                        <div class="flex flex-wrap gap-3 text-xs text-gray-600">
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> Commemoration</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> Celebration</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> Dua/Amaal</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-green-600"></span> Program</span>
+                        <div id="kiceaLegend" class="flex flex-wrap gap-3 text-xs text-gray-600">
+                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> Commemoration</span>
+                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> Celebration</span>
+                            <span data-legend-type="dua" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> Dua/Amaal</span>
+                            <span data-legend-type="program" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-green-600"></span> Program</span>
                         </div>
                     </div>
                 </div>
@@ -91,6 +91,68 @@
 
         <script>
         (function() {
+            // =================================================================
+            // HOW TO EDIT THIS CALENDAR
+            // (No need to touch any rendering code below — just edit the data.
+            // Legends and lists only ever show types that actually occur in the
+            // month you're viewing, and that updates automatically from these
+            // edits — nothing to keep in sync by hand.)
+            //
+            // 1) ADD AN ISLAMIC CALENDAR EVENT (recurs every Hijri year, e.g. a
+            //    birth/martyrdom anniversary or Eid)
+            //    Find `eventsByMonth` below and add a line inside the right month's
+            //    object, keyed by the Hijri day number:
+            //
+            //        "Rajab": {
+            //            14: { label: "Your Event Name", type: "celebration" },
+            //            ...
+            //        }
+            //
+            //    `type` must be one of: "celebration", "commemoration", "other"
+            //    (these three control both the calendar cell color and the
+            //    "Islamic Calendar Events" legend).
+            //
+            // 2) ADD A KICEA EVENT
+            //    a) One-off event on a specific date -> add to `kiceaEvents.special`
+            //       (further below), keyed by the exact Gregorian date:
+            //
+            //           { date: "2026-12-05", label: "Your Event Name", type: "program" }
+            //
+            //       `type` must be one of: "dua", "celebration", "commemoration",
+            //       "program" (these four control the border color on the calendar
+            //       cell and the "KICEA Events" legend).
+            //
+            //    b) Weekly recurring event -> add to `kiceaEvents.recurring`:
+            //
+            //           { weekday: 4, label: "Your Weekly Event", startDate: "2026-09-14", type: "dua" }
+            //
+            //       `weekday` is 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat.
+            //       `startDate` is the first Gregorian date it applies from.
+            //
+            //    c) Fixed annual event that follows the Hijri calendar every year
+            //       (like Ashura-style commemorations, but for KICEA specifically)
+            //       -> add to `kiceaAnnualByMonth`, keyed by Hijri month name + day,
+            //       same shape as `eventsByMonth` above.
+            //
+            // 3) REMOVE/SKIP ONE OCCURRENCE OF A RECURRING EVENT
+            //    (e.g. cancel the Thursday Dua e Kumayl on one specific week,
+            //    perhaps because a special event replaces it that day)
+            //    Add that date to the `exceptions` array on the recurring entry in
+            //    `kiceaEvents.recurring`:
+            //
+            //        {
+            //            weekday: 4,
+            //            label: "Dua e Kumayl",
+            //            startDate: "2026-09-14",
+            //            type: "dua",
+            //            exceptions: ["2026-11-19"]   // <-- add the date(s) to skip here
+            //        }
+            //
+            //    Each date is a plain "YYYY-MM-DD" string. Add as many as needed,
+            //    separated by commas. That date is skipped both on the calendar
+            //    grid and in the downloadable .ics file's recurrence rule.
+            // =================================================================
+
             // ---- Month name/label definitions (cycle every Hijri year) ----
             const monthDefs = [
                 { name: "Muharram", label: "Muharram" },
@@ -530,6 +592,20 @@
                 if (el) { el.classList.remove('hidden'); }
             }
 
+            // Shows only the legend swatches whose type actually occurs somewhere in
+            // the month currently being rendered; hides the rest. `presentTypes` is a
+            // Set of type strings (e.g. {"celebration", "commemoration"}) built fresh
+            // each render(), so this stays correct automatically as events are added,
+            // removed, or moved between months — nothing needs to be updated by hand.
+            function updateLegendVisibility(containerId, presentTypes) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.querySelectorAll('[data-legend-type]').forEach(function(el) {
+                    const type = el.getAttribute('data-legend-type');
+                    el.style.display = presentTypes.has(type) ? '' : 'none';
+                });
+            }
+
             function render(index) {
                 current = index;
                 select.value = index;
@@ -594,12 +670,14 @@
                 const islamicList = document.getElementById('islamicEventsList');
                 islamicList.innerHTML = '';
                 const islamicEntries = Object.entries(special).sort((a, b) => Number(a[0]) - Number(b[0]));
+                const islamicTypesPresent = new Set();
                 if (islamicEntries.length === 0) {
                     islamicList.innerHTML = '<p class="text-sm text-gray-500">No listed events fall within this month.</p>';
                 } else {
                     islamicEntries.forEach(([day, info]) => {
                         const date = addDays(start, Number(day) - 1);
                         const style = typeStyles[info.type];
+                        islamicTypesPresent.add(info.type);
                         const row = document.createElement('div');
                         row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
                         row.innerHTML =
@@ -609,6 +687,7 @@
                         islamicList.appendChild(row);
                     });
                 }
+                updateLegendVisibility('islamicLegend', islamicTypesPresent);
 
                 // ---- List of KICEA Events (this month) ----
                 // Recurring events (e.g. "every Thursday") are shown as one row naming the
@@ -617,6 +696,7 @@
                 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const kiceaList = document.getElementById('kiceaEventsList');
                 kiceaList.innerHTML = '';
+                const kiceaTypesPresent = new Set();
 
                 kiceaEvents.recurring.forEach(r => {
                     const rStyle = kiceaTypeStyles[r.type];
@@ -628,6 +708,9 @@
                             matchDates.push(fmtDate(date));
                         }
                     }
+                    // Only counts toward the legend/list for months where at least one
+                    // occurrence actually survives the exceptions list this month.
+                    if (matchDates.length) kiceaTypesPresent.add(r.type);
                     const row = document.createElement('div');
                     row.className = 'bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm';
                     row.innerHTML =
@@ -659,6 +742,7 @@
                         }
                         si++;
                         kiceaCount++;
+                        kiceaTypesPresent.add(info.type);
                         const sStyle = kiceaTypeStyles[info.type];
                         const dStart = addDays(start, groupStart - 1);
                         const dEnd = addDays(start, groupEnd - 1);
@@ -690,6 +774,7 @@
                     }
                     ai++;
                     kiceaCount++;
+                    kiceaTypesPresent.add(info.type);
                     const aStyle = kiceaTypeStyles[info.type];
                     const dStart = addDays(start, groupStart - 1);
                     const dEnd = addDays(start, groupEnd - 1);
@@ -707,6 +792,8 @@
                 if (kiceaEvents.recurring.length === 0 && kiceaCount === 0) {
                     kiceaList.innerHTML = '<p class="text-sm text-gray-500">No KICEA events fall within this month.</p>';
                 }
+
+                updateLegendVisibility('kiceaLegend', kiceaTypesPresent);
             }
 
             document.getElementById('prevMonthBtn').addEventListener('click', function() {

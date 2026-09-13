@@ -56,6 +56,7 @@
                             <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> Commemoration</span>
                             <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> Celebration</span>
                             <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> Dua/Amaal</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-green-600"></span> Program</span>
                         </div>
                     </div>
                 </div>
@@ -208,7 +209,7 @@
             // "type" drives the accent border color on the calendar cell and the legend.
             const kiceaEvents = {
                 recurring: [
-                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua", exceptions: ["2026-10-29", "2026-11-19"] }
+                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua", exceptions: ["2026-10-29", "2026-11-19", "2026-12-17"] }
                 ],
                 special: [
                     { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" },
@@ -234,13 +235,19 @@
                     { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" },
 
                     // Late 2026 one-off center events
+                    { date: "2026-10-25", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-10-29", label: "Birth of Imam Zayn al-Abidin (as)", type: "celebration" },
                     { date: "2026-11-12", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-13", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-14", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-15", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-18", label: "Kids Education Program", type: "program" },
                     { date: "2026-11-19", label: "Majlis", type: "commemoration" },
-                    { date: "2026-11-29", label: "Birth of Lady Fatima (sa)", type: "celebration" }
+                    { date: "2026-11-29", label: "Birth of Lady Fatima (sa)", type: "celebration" },
+                    { date: "2026-12-13", label: "Birth of Imam Muhammad Baqir (as)", type: "celebration" },
+                    { date: "2026-12-17", label: "Birth of Imam Ali al-Naqi (as)", type: "celebration" },
+                    { date: "2026-12-20", label: "Birth of Imam Muhammad Taqi (as) and Imam Ali (as)", type: "celebration" },
+                    { date: "2026-12-27", label: "Martyrdom of Lady Zainab (as)", type: "commemoration" }
                     // Other KICEA events will be added later
                 ]
             };
@@ -285,7 +292,8 @@
             const kiceaTypeStyles = {
                 dua: { border: 'border-b-4 border-b-blue-500', badgeBg: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
                 celebration: { border: 'border-b-4 border-b-red-600', badgeBg: 'bg-red-100 text-red-700', dot: 'bg-red-600' },
-                commemoration: { border: 'border-b-4 border-b-black', badgeBg: 'bg-gray-200 text-gray-800', dot: 'bg-black' }
+                commemoration: { border: 'border-b-4 border-b-black', badgeBg: 'bg-gray-200 text-gray-800', dot: 'bg-black' },
+                program: { border: 'border-b-4 border-b-green-600', badgeBg: 'bg-green-100 text-green-700', dot: 'bg-green-600' }
             };
 
             function getKiceaSpecial(date) {
@@ -603,7 +611,7 @@
                 // ---- List of KICEA Events (this month) ----
                 // Recurring events (e.g. "every Thursday") are shown as one row naming the
                 // weekday pattern, with every matching date this month listed alongside it.
-                const kiceaTypeLabels = { dua: 'Dua/Amaal', celebration: 'Celebration', commemoration: 'Commemoration' };
+                const kiceaTypeLabels = { dua: 'Dua/Amaal', celebration: 'Celebration', commemoration: 'Commemoration', program: 'Program' };
                 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const kiceaList = document.getElementById('kiceaEventsList');
                 kiceaList.innerHTML = '';

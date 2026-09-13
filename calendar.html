@@ -202,14 +202,16 @@
             // ---- KICEA Center Events ----
             // "recurring": fires every week on the given weekday, indefinitely, starting
             // from startDate (JS getUTCDay(): Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6).
+            // "exceptions" (optional): specific dates (YYYY-MM-DD) to skip, e.g. weeks
+            // where a special one-off event takes its place.
             // "special": one-off events on an exact Gregorian date (YYYY-MM-DD).
             // "type" drives the accent border color on the calendar cell and the legend.
             const kiceaEvents = {
                 recurring: [
-                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua" }
+                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua", exceptions: ["2026-10-29", "2026-11-19"] }
                 ],
                 special: [
-                    { date: "2026-09-27", label: "Birth of Imam Hasan Askari(as)", type: "celebration" },
+                    { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" },
 
                     // 1448 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
                     { date: "2026-06-26", label: "Ashura", type: "commemoration" },
@@ -232,11 +234,12 @@
                     { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" },
 
                     // Late 2026 one-off center events
-                    { date: "2026-10-25", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-10-29", label: "Birth of Imam Zayn al-Abidin (as)", type: "celebration" },
                     { date: "2026-11-12", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-13", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-14", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
                     { date: "2026-11-15", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-19", label: "Majlis", type: "commemoration" },
                     { date: "2026-11-29", label: "Birth of Lady Fatima (sa)", type: "celebration" }
                     // Other KICEA events will be added later
                 ]
@@ -246,7 +249,7 @@
             // Unlike "special" (exact Gregorian date, one-off) these are keyed by Hijri
             // month name + day, so they apply to every occurrence of that month across
             // 1448-1451 (and beyond), the same way eventsByMonth works for Islamic events.
-            const kiceaHussainCommemoration = { label: "Commemoration of Imam Hussain (as) and his companions", type: "commemoration" };
+            const kiceaHussainCommemoration = { label: "Martyrdom of Imam Hussain (as) and his companions", type: "commemoration" };
             const kiceaAnnualByMonth = {
                 "Muharram": {
                     1: kiceaHussainCommemoration,
@@ -302,7 +305,7 @@
                 const special = getKiceaSpecial(date);
                 if (special) return special;
                 if (annualEvent) return annualEvent;
-                const rec = kiceaEvents.recurring.find(r => date.getUTCDay() === r.weekday && date.getTime() >= parseUTC(r.startDate).getTime());
+                const rec = kiceaEvents.recurring.find(r => date.getUTCDay() === r.weekday && date.getTime() >= parseUTC(r.startDate).getTime() && !(r.exceptions && r.exceptions.includes(dateStr(date))));
                 if (rec) return rec;
                 return null;
             }
@@ -439,19 +442,23 @@
             }
 
             const WEEKDAY_ICS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-            function buildRecurringEventICS(uid, label, weekday, startDate) {
+            function buildRecurringEventICS(uid, label, weekday, startDate, exceptions) {
                 const start = firstWeekdayOnOrAfter(parseUTC(startDate), weekday);
-                return foldICS([
+                const lines = [
                     'BEGIN:VEVENT',
                     'UID:' + uid + '@hussainiya-seoul',
                     'DTSTAMP:' + icsStamp(),
                     'DTSTART;VALUE=DATE:' + icsDate(start),
                     'DTEND;VALUE=DATE:' + icsDate(addDays(start, 1)),
-                    'RRULE:FREQ=WEEKLY;BYDAY=' + WEEKDAY_ICS[weekday],
-                    'SUMMARY:' + escapeICS(label),
-                    'DESCRIPTION:' + escapeICS(label + ' — KICEA weekly event, Hussainiya Seoul'),
-                    'END:VEVENT'
-                ]);
+                    'RRULE:FREQ=WEEKLY;BYDAY=' + WEEKDAY_ICS[weekday]
+                ];
+                (exceptions || []).forEach(function(exDateStr) {
+                    lines.push('EXDATE;VALUE=DATE:' + icsDate(parseUTC(exDateStr)));
+                });
+                lines.push('SUMMARY:' + escapeICS(label));
+                lines.push('DESCRIPTION:' + escapeICS(label + ' — KICEA weekly event, Hussainiya Seoul'));
+                lines.push('END:VEVENT');
+                return foldICS(lines);
             }
 
             function downloadICS(filename, veventsArray) {
@@ -607,7 +614,7 @@
                     const matchDates = [];
                     for (let day = 1; day <= length; day++) {
                         const date = addDays(start, day - 1);
-                        if (date.getUTCDay() === r.weekday && date.getTime() >= rStart.getTime()) {
+                        if (date.getUTCDay() === r.weekday && date.getTime() >= rStart.getTime() && !(r.exceptions && r.exceptions.includes(dateStr(date)))) {
                             matchDates.push(fmtDate(date));
                         }
                     }
@@ -622,20 +629,39 @@
                 });
 
                 let kiceaCount = 0;
-                for (let day = 1; day <= length; day++) {
-                    const date = addDays(start, day - 1);
-                    const s = getKiceaSpecial(date);
-                    if (!s) continue;
-                    kiceaCount++;
-                    const sStyle = kiceaTypeStyles[s.type];
-                    const row = document.createElement('div');
-                    row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
-                    row.innerHTML =
-                        '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + sStyle.dot + ' shrink-0"></span>' +
-                        '<span class="font-medium text-gray-800">' + s.label + '</span>' +
-                        '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + sStyle.badgeBg + '">' + kiceaTypeLabels[s.type] + '</span></span>' +
-                        '<span class="text-gray-500 text-xs shrink-0">' + fmtDate(date) + '</span>';
-                    kiceaList.appendChild(row);
+                {
+                    const specialByDay = {};
+                    for (let day = 1; day <= length; day++) {
+                        const date = addDays(start, day - 1);
+                        const s = getKiceaSpecial(date);
+                        if (s) specialByDay[day] = s;
+                    }
+                    const specialDays = Object.keys(specialByDay).map(Number).sort((a, b) => a - b);
+                    let si = 0;
+                    while (si < specialDays.length) {
+                        const groupStart = specialDays[si];
+                        const info = specialByDay[groupStart];
+                        let groupEnd = groupStart;
+                        while (si + 1 < specialDays.length && specialDays[si + 1] === groupEnd + 1 &&
+                               specialByDay[specialDays[si + 1]].label === info.label && specialByDay[specialDays[si + 1]].type === info.type) {
+                            groupEnd = specialDays[si + 1];
+                            si++;
+                        }
+                        si++;
+                        kiceaCount++;
+                        const sStyle = kiceaTypeStyles[info.type];
+                        const dStart = addDays(start, groupStart - 1);
+                        const dEnd = addDays(start, groupEnd - 1);
+                        const dateLabel = groupStart === groupEnd ? fmtDate(dStart) : fmtDate(dStart) + ' – ' + fmtDate(dEnd);
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                        row.innerHTML =
+                            '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + sStyle.dot + ' shrink-0"></span>' +
+                            '<span class="font-medium text-gray-800">' + info.label + '</span>' +
+                            '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + sStyle.badgeBg + '">' + kiceaTypeLabels[info.type] + '</span></span>' +
+                            '<span class="text-gray-500 text-xs shrink-0">' + dateLabel + '</span>';
+                        kiceaList.appendChild(row);
+                    }
                 }
 
                 // ---- Annual Hijri KICEA events (this month) ----
@@ -700,7 +726,7 @@
                     });
                 });
                 kiceaEvents.recurring.forEach((r, idx) => {
-                    allVevents.push(buildRecurringEventICS('kicea-rec-' + idx, r.label, r.weekday, r.startDate));
+                    allVevents.push(buildRecurringEventICS('kicea-rec-' + idx, r.label, r.weekday, r.startDate, r.exceptions));
                 });
                 kiceaEvents.special.forEach((s, idx) => {
                     allVevents.push(buildEventICS('kicea-special-' + idx, s.label, parseUTC(s.date)));

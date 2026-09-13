@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korea Islamic Calendar — Korea Islamic Cultural Exchange Association</title>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KD5855R3');</script>
-    <!-- End Google Tag Manager -->
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2T4MLYVPZX"></script>
     <script>
@@ -29,10 +22,6 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD5855R3"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <!-- Islamic Calendar Section -->
     <section id="calendar" class="py-16 bg-white">
         <div class="max-w-5xl mx-auto px-4">
@@ -52,13 +41,23 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4 mb-4 text-xs text-gray-600">
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other events</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> KICEA — Dua</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> KICEA — Celebration</span>
-                    <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> KICEA — Commemoration</span>
+                <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-3">Islamic Calendar Events</h4>
+                        <div class="flex flex-wrap gap-3 text-xs text-gray-600">
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other Events</span>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-3">KICEA Events</h4>
+                        <div class="flex flex-wrap gap-3 text-xs text-gray-600">
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> Commemoration</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> Celebration</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> Dua/Amaal</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
@@ -67,7 +66,16 @@
 
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
 
-                <div id="keyDates" class="mt-6 space-y-2"></div>
+                <div class="grid sm:grid-cols-2 gap-4 mt-6">
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-800 mb-2">List of Islamic Events</h4>
+                        <div id="islamicEventsList" class="space-y-2"></div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-800 mb-2">List of KICEA Events</h4>
+                        <div id="kiceaEventsList" class="space-y-2"></div>
+                    </div>
+                </div>
 
                 <div class="mt-6 text-center">
                     <button id="downloadAllBtn" class="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition">Add to Personal Calendar</button>
@@ -465,58 +473,73 @@
                     grid.appendChild(cell);
                 }
 
-                const keyDates = document.getElementById('keyDates');
-                keyDates.innerHTML = '';
+                // ---- List of Islamic Events (this month) ----
+                const islamicList = document.getElementById('islamicEventsList');
+                islamicList.innerHTML = '';
+                const islamicEntries = Object.entries(special).sort((a, b) => Number(a[0]) - Number(b[0]));
+                if (islamicEntries.length === 0) {
+                    islamicList.innerHTML = '<p class="text-sm text-gray-500">No listed events fall within this month.</p>';
+                } else {
+                    islamicEntries.forEach(([day, info]) => {
+                        const date = addDays(start, Number(day) - 1);
+                        const style = typeStyles[info.type];
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                        row.innerHTML =
+                            '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + style.dot + ' shrink-0"></span>' +
+                            '<span class="font-medium text-gray-800">' + info.label + '</span></span>' +
+                            '<span class="text-gray-500 text-xs shrink-0">' + fmtDate(date) + '</span>';
+                        islamicList.appendChild(row);
+                    });
+                }
 
-                // Recurring KICEA events (e.g. "every Thursday") are shown once as a
-                // standing note, not repeated on every matching day in the list below.
+                // ---- List of KICEA Events (this month) ----
+                // Recurring events (e.g. "every Thursday") are shown as one row naming the
+                // weekday pattern, with every matching date this month listed alongside it.
+                const kiceaTypeLabels = { dua: 'Dua/Amaal', celebration: 'Celebration', commemoration: 'Commemoration' };
                 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const kiceaList = document.getElementById('kiceaEventsList');
+                kiceaList.innerHTML = '';
+
                 kiceaEvents.recurring.forEach(r => {
                     const rStyle = kiceaTypeStyles[r.type];
-                    const note = document.createElement('div');
-                    note.className = 'flex items-center gap-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 mb-2';
-                    note.innerHTML = '<span class="w-3 h-3 inline-block bg-white border border-gray-300 shrink-0 ' + rStyle.border + '"></span>' +
-                        '<span>Every ' + dayNames[r.weekday] + ' — <span class="font-medium text-gray-800">' + r.label + '</span></span>';
-                    keyDates.appendChild(note);
+                    const rStart = parseUTC(r.startDate);
+                    const matchDates = [];
+                    for (let day = 1; day <= length; day++) {
+                        const date = addDays(start, day - 1);
+                        if (date.getUTCDay() === r.weekday && date.getTime() >= rStart.getTime()) {
+                            matchDates.push(fmtDate(date));
+                        }
+                    }
+                    const row = document.createElement('div');
+                    row.className = 'bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm';
+                    row.innerHTML =
+                        '<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block ' + rStyle.dot + ' shrink-0"></span>' +
+                        '<span class="font-medium text-gray-800">' + r.label + '</span>' +
+                        '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + rStyle.badgeBg + '">' + kiceaTypeLabels[r.type] + '</span></div>' +
+                        '<div class="text-gray-500 text-xs mt-1">Every ' + dayNames[r.weekday] + (matchDates.length ? ' — ' + matchDates.join(', ') : '') + '</div>';
+                    kiceaList.appendChild(row);
                 });
 
-                // Build a combined day-by-day list of Islamic occasions and one-off KICEA
-                // events for this month, keyed by Hijri day-of-month, sorted by day.
-                const combined = {};
+                let kiceaSpecialCount = 0;
                 for (let day = 1; day <= length; day++) {
                     const date = addDays(start, day - 1);
-                    const isl = special[day] || null;
-                    const kic = getKiceaSpecial(date);
-                    if (isl || kic) {
-                        combined[day] = { date, isl, kic };
-                    }
+                    const s = getKiceaSpecial(date);
+                    if (!s) continue;
+                    kiceaSpecialCount++;
+                    const sStyle = kiceaTypeStyles[s.type];
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                    row.innerHTML =
+                        '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + sStyle.dot + ' shrink-0"></span>' +
+                        '<span class="font-medium text-gray-800">' + s.label + '</span>' +
+                        '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + sStyle.badgeBg + '">' + kiceaTypeLabels[s.type] + '</span></span>' +
+                        '<span class="text-gray-500 text-xs shrink-0">' + fmtDate(date) + '</span>';
+                    kiceaList.appendChild(row);
                 }
-                const entries = Object.entries(combined).sort((a, b) => Number(a[0]) - Number(b[0]));
 
-                if (entries.length === 0 && kiceaEvents.recurring.length === 0) {
-                    keyDates.innerHTML = '<p class="text-sm text-gray-500">No listed events fall within this month.</p>';
-                } else {
-                    entries.forEach(([day, info]) => {
-                        const row = document.createElement('div');
-                        row.className = 'flex items-center justify-between bg-white rounded-lg px-4 py-2 text-sm gap-3';
-
-                        let labelHTML = '';
-                        if (info.isl) {
-                            const style = typeStyles[info.isl.type];
-                            labelHTML += '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + style.dot + ' shrink-0"></span>' +
-                                '<span class="font-medium text-gray-800">' + info.isl.label + '</span></span>';
-                        }
-                        if (info.kic) {
-                            const kStyle = kiceaTypeStyles[info.kic.type];
-                            labelHTML += '<span class="flex items-center gap-2 min-w-0' + (info.isl ? ' mt-1' : '') + '"><span class="w-2 h-2 rounded-full inline-block ' + kStyle.dot + ' shrink-0"></span>' +
-                                '<span class="font-medium text-gray-800">' + info.kic.label + '</span> <span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + kStyle.badgeBg + '">KICEA</span></span>';
-                        }
-
-                        row.innerHTML =
-                            '<span class="flex flex-col min-w-0">' + labelHTML + '</span>' +
-                            '<span class="text-gray-500 text-xs shrink-0">' + fmtDate(info.date) + '</span>';
-                        keyDates.appendChild(row);
-                    });
+                if (kiceaEvents.recurring.length === 0 && kiceaSpecialCount === 0) {
+                    kiceaList.innerHTML = '<p class="text-sm text-gray-500">No KICEA events fall within this month.</p>';
                 }
             }
 

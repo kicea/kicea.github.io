@@ -90,23 +90,43 @@
 
         <script>
         (function() {
-            const islamicMonths = [
-                { name: "Muharram", label: "Muharram", start: "2026-06-17" },
-                { name: "Safar", label: "Safar", start: "2026-07-16" },
-                { name: "Rabi' al-Awwal", label: "Rabiul Awwal", start: "2026-08-15" },
-                { name: "Rabi' al-Thani", label: "Rabiussani", start: "2026-09-14" },
-                { name: "Jumada al-Awwal", label: "Jamadiul Awwal", start: "2026-10-14" },
-                { name: "Jumada al-Thani", label: "Jamadius Sani", start: "2026-11-12" },
-                { name: "Rajab", label: "Rajab", start: "2026-12-12" },
-                { name: "Sha'ban", label: "Shaban", start: "2027-01-10" },
-                { name: "Ramadan", label: "Ramadan", start: "2027-02-09" },
-                { name: "Shawwal", label: "Shawwal", start: "2027-03-10" },
-                { name: "Dhu al-Qi'dah", label: "Zeeqada", start: "2027-04-09" },
-                { name: "Dhu al-Hijjah", label: "Zilhijja", start: "2027-05-08" }
+            // ---- Month name/label definitions (cycle every Hijri year) ----
+            const monthDefs = [
+                { name: "Muharram", label: "Muharram" },
+                { name: "Safar", label: "Safar" },
+                { name: "Rabi' al-Awwal", label: "Rabiul Awwal" },
+                { name: "Rabi' al-Thani", label: "Rabiussani" },
+                { name: "Jumada al-Awwal", label: "Jamadiul Awwal" },
+                { name: "Jumada al-Thani", label: "Jamadius Sani" },
+                { name: "Rajab", label: "Rajab" },
+                { name: "Sha'ban", label: "Shaban" },
+                { name: "Ramadan", label: "Ramadan" },
+                { name: "Shawwal", label: "Shawwal" },
+                { name: "Dhu al-Qi'dah", label: "Zeeqada" },
+                { name: "Dhu al-Hijjah", label: "Zilhijja" }
             ];
 
-            const HIJRI_YEAR = 1448;
+            // ---- Estimated Gregorian start dates for each Hijri month, by year ----
+            const yearStartDates = {
+                1448: ["2026-06-17", "2026-07-16", "2026-08-15", "2026-09-14", "2026-10-14", "2026-11-12", "2026-12-12", "2027-01-10", "2027-02-09", "2027-03-10", "2027-04-09", "2027-05-08"],
+                1449: ["2027-06-07", "2027-07-06", "2027-08-05", "2027-09-03", "2027-10-03", "2027-11-01", "2027-12-01", "2027-12-30", "2028-01-29", "2028-02-28", "2028-03-28", "2028-04-27"],
+                1450: ["2028-05-26", "2028-06-25", "2028-07-24", "2028-08-23", "2028-09-21", "2028-10-21", "2028-11-19", "2028-12-18", "2029-01-17", "2029-02-16", "2029-03-17", "2029-04-16"],
+                1451: ["2029-05-16", "2029-06-14", "2029-07-14", "2029-08-13", "2029-09-11", "2029-10-10", "2029-11-09", "2029-12-08", "2030-01-06", "2030-02-05", "2030-03-06", "2030-04-05"]
+            };
 
+            // Flatten into a single chronological list. Each entry keeps its Hijri
+            // year and its 1-12 month number (used for the deep-link hash), plus
+            // the month name/label (used to look up recurring Islamic events).
+            const islamicMonths = [];
+            Object.keys(yearStartDates).sort((a, b) => Number(a) - Number(b)).forEach(function(year) {
+                yearStartDates[year].forEach(function(start, i) {
+                    islamicMonths.push(Object.assign({}, monthDefs[i], { start: start, year: Number(year), num: i + 1 }));
+                });
+            });
+
+            // Islamic calendar events fall on the same Hijri day every year, so they
+            // are keyed by month name (not year) and apply automatically to every
+            // occurrence of that month across 1448-1451.
             const eventsByMonth = {
                 "Muharram": {
                     1: { label: "Beginning of the Hijri Year", type: "other" },
@@ -189,7 +209,28 @@
                     { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua" }
                 ],
                 special: [
-                    { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" }
+                    { date: "2026-09-27", label: "Rabi al-Thani Celebration", type: "celebration" },
+
+                    // 1448 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
+                    { date: "2026-06-26", label: "Ashura", type: "commemoration" },
+                    { date: "2027-03-10", label: "Eid-ul-Fitr", type: "celebration" },
+                    { date: "2027-05-17", label: "Eid-ul-Azha", type: "celebration" },
+
+                    // 1449 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
+                    { date: "2027-06-16", label: "Ashura", type: "commemoration" },
+                    { date: "2028-02-28", label: "Eid-ul-Fitr", type: "celebration" },
+                    { date: "2028-05-06", label: "Eid-ul-Azha", type: "celebration" },
+
+                    // 1450 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
+                    { date: "2028-06-04", label: "Ashura", type: "commemoration" },
+                    { date: "2029-02-16", label: "Eid-ul-Fitr", type: "celebration" },
+                    { date: "2029-04-25", label: "Eid-ul-Azha", type: "celebration" },
+
+                    // 1451 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
+                    { date: "2029-05-25", label: "Ashura", type: "commemoration" },
+                    { date: "2030-02-05", label: "Eid-ul-Fitr", type: "celebration" },
+                    { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" }
+                    // Other KICEA events will be added later
                 ]
             };
 
@@ -254,21 +295,22 @@
                 return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
             }
 
-            // ---- Deep-linking: /1448/1 (Muharram) ... /1448/12 (Dhu al-Hijjah) ----
-            // Matches either a URL hash (#1448/3) or a path segment (/1448/3), so the
+            // ---- Deep-linking: /1448/1 (Muharram) ... /1451/12 (Dhu al-Hijjah) ----
+            // Matches either a URL hash (#1449/3) or a path segment (/1449/3), so the
             // link works both as a plain fragment (no server config needed) and, if the
             // page is served with rewrites so unknown paths fall back to this file, as a
-            // real path.
+            // real path. Now resolved against a specific (year, month-number) pair since
+            // the calendar spans several Hijri years.
             function parseMonthFromLocation() {
                 try {
                     const candidates = [window.location.hash.replace(/^#\/?/, ''), window.location.pathname];
                     for (const candidate of candidates) {
                         const match = candidate.match(/(\d{3,4})\/(\d{1,2})(?:\/|$)/);
                         if (match) {
-                            const monthNum = parseInt(match[2], 10);
-                            if (monthNum >= 1 && monthNum <= islamicMonths.length) {
-                                return monthNum - 1;
-                            }
+                            const year = parseInt(match[1], 10);
+                            const num = parseInt(match[2], 10);
+                            const idx = islamicMonths.findIndex(m => m.year === year && m.num === num);
+                            if (idx !== -1) return idx;
                         }
                     }
                 } catch (e) {
@@ -278,7 +320,8 @@
             }
 
             function monthHash(index) {
-                return '#' + HIJRI_YEAR + '/' + (index + 1);
+                const m = islamicMonths[index];
+                return '#' + m.year + '/' + m.num;
             }
 
             // Some embedded/sandboxed contexts (like an about:srcdoc preview iframe)
@@ -302,7 +345,7 @@
             islamicMonths.forEach((m, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = m.name + ' (' + getEnglishRange(i) + ')';
+                opt.textContent = m.name + ' ' + m.year + ' AH (' + getEnglishRange(i) + ')';
                 select.appendChild(opt);
             });
 
@@ -420,7 +463,7 @@
                 hideFutureNotice();
                 const { month, start, end, length, special } = getMonthData(index);
 
-                document.getElementById('monthTitle').textContent = month.name + ' ' + HIJRI_YEAR;
+                document.getElementById('monthTitle').textContent = month.name + ' ' + month.year;
                 document.getElementById('monthSubtitle').textContent = 'Begins ' + fmtFullDate(start);
 
                 const leading = (start.getUTCDay() + 6) % 7;
@@ -571,11 +614,11 @@
                 kiceaEvents.special.forEach((s, idx) => {
                     allVevents.push(buildEventICS('kicea-special-' + idx, s.label, parseUTC(s.date)));
                 });
-                downloadICS('hussainiya-seoul-islamic-calendar-1448.ics', allVevents);
+                downloadICS('hussainiya-seoul-islamic-calendar-1448-1451.ics', allVevents);
             });
 
             // Support browser back/forward and manually-typed/edited hashes (e.g. someone
-            // pastes a link with #1448/9 into the address bar of an already-open page).
+            // pastes a link with #1449/9 into the address bar of an already-open page).
             window.addEventListener('hashchange', function() {
                 const idx = parseMonthFromLocation();
                 if (idx !== null && idx !== current) {

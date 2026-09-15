@@ -754,18 +754,20 @@
                     }
                 });
 
-                return groupConsecutiveEntries(entries);
+                const now = new Date();
+                const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                return groupConsecutiveEntries(entries).filter(r => r.end.getTime() >= today);
             }
 
             const kiceaTypeLabels = { dua: 'Dua/Amaal', celebration: 'Celebration', commemoration: 'Commemoration', program: 'Program' };
             const islamicTypeLabels = { celebration: 'Celebration', commemoration: 'Commemoration', other: 'Other Events' };
             const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            function rowHTML(dotClass, badgeBg, badgeLabel, label, dateLabel, rowId = '') {
+            function rowHTML(dotClass, badgeBg, badgeLabel, label, dateLabel, rowId = '', dayTag = '') {
                 return '<div id="' + rowId + '" class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3">' +
                     '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + dotClass + ' shrink-0"></span>' +
                     '<span class="font-medium text-gray-800">' + label + '</span></span>' +
-                    '<span class="text-gray-500 text-xs shrink-0 text-right">' + dateLabel + '</span></div>';
+                    '<span class="text-gray-500 text-xs shrink-0 text-right flex items-center gap-2">' + (dayTag ? '<span class="text-[10px] font-semibold rounded-full px-2 py-0.5 bg-purple-100 text-purple-700">' + dayTag + '</span>' : '') + '<span>' + dateLabel + '</span></span></div>';
             }
 
             function getClosestUpcomingRowId(rows, prefix) {
@@ -822,17 +824,9 @@
             function showAllKiceaEvents() {
                 let html = '<p class="text-xs text-gray-500 mb-3">Every KICEA event across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH, including weekly and annual recurring events.</p>';
 
-                if (kiceaEvents.recurring.length) {
-                    html += '<h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-1 mb-2">Weekly</h5>';
-                    kiceaEvents.recurring.forEach(r => {
-                        const style = kiceaTypeStyles[r.type];
-                        html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, 'Every ' + dayNames[r.weekday]);
-                    });
-                }
-
                 const rows = getAllKiceaDatedEntries();
                 let closestRowId = '';
-                html += '<h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-4 mb-2">Dated events</h5>';
+                html += '<h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-1 mb-2">Upcoming events</h5>';
 
                 if (rows.length === 0) {
                     html += '<p class="text-sm text-gray-500">No dated events listed yet.</p>';
@@ -841,7 +835,7 @@
                     rows.forEach((r, index) => {
                         const style = kiceaTypeStyles[r.type];
                         const dateLabel = r.start.getTime() === r.end.getTime() ? fmtDateWithYear(r.start) : fmtDateWithYear(r.start) + ' – ' + fmtDateWithYear(r.end);
-                        html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel, 'kicea-event-' + index);
+                        html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel, 'kicea-event-' + index, dayNames[r.start.getUTCDay()].slice(0, 3));
                     });
                 }
                 openEventListModal('All KICEA Events', html, closestRowId);

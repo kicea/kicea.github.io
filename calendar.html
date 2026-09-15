@@ -805,7 +805,7 @@
 
             function showAllIslamicEvents() {
                 const rows = getAllIslamicEventEntries();
-                let html = '<p class="text-xs text-gray-500 mb-3">Every Islamic calendar event across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH (recurring events appear once per Hijri year).</p>';
+                let html = '<p class="text-xs text-gray-500 mb-3">Islamic calendar events across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH.</p>';
                 let closestRowId = '';
 
                 if (rows.length === 0) {
@@ -822,7 +822,7 @@
             }
 
             function showAllKiceaEvents() {
-                let html = '<p class="text-xs text-gray-500 mb-3">Every KICEA event across ' + islamicMonths[0].year + ' AH. </p>';
+                let html = '<p class="text-xs text-gray-500 mb-3">Remaining KICEA event across ' + islamicMonths[0].year + ' AH. </p>';
 
                 const rows = getAllKiceaDatedEntries();
                 let closestRowId = '';

@@ -726,19 +726,40 @@
             const islamicTypeLabels = { celebration: 'Celebration', commemoration: 'Commemoration', other: 'Other Events' };
             const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            function rowHTML(dotClass, badgeBg, badgeLabel, label, dateLabel) {
-                return '<div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3">' +
+            function rowHTML(dotClass, badgeBg, badgeLabel, label, dateLabel, rowId = '') {
+                return '<div id="' + rowId + '" class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3">' +
                     '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + dotClass + ' shrink-0"></span>' +
-                    '<span class="font-medium text-gray-800">' + label + '</span>' +
-                    '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + badgeBg + ' shrink-0">' + badgeLabel + '</span></span>' +
+                    '<span class="font-medium text-gray-800">' + label + '</span></span>' +
                     '<span class="text-gray-500 text-xs shrink-0 text-right">' + dateLabel + '</span></div>';
             }
 
-            function openEventListModal(title, bodyHTML) {
+            function getClosestUpcomingRowId(rows, prefix) {
+                if (!rows || rows.length === 0) return '';
+
+                const now = new Date();
+                const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+                const upcoming = rows.find(r => r.start.getTime() >= today);
+                const closest = upcoming || rows[rows.length - 1];
+
+                return prefix + '-' + rows.indexOf(closest);
+            }
+
+            function openEventListModal(title, bodyHTML, closestRowId = '') {
                 document.getElementById('eventListTitle').textContent = title;
-                document.getElementById('eventListBody').innerHTML = bodyHTML;
+                const body = document.getElementById('eventListBody');
+                body.innerHTML = bodyHTML;
                 document.getElementById('eventListModal').classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
+
+                if (closestRowId) {
+                    requestAnimationFrame(() => {
+                        const closestRow = document.getElementById(closestRowId);
+                        if (closestRow) {
+                            closestRow.scrollIntoView({ behavior: 'auto', block: 'center' });
+                            closestRow.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-50');
+                        }
+                    });
+                }
             }
             function closeEventListModal() {
                 document.getElementById('eventListModal').classList.add('hidden');
@@ -748,16 +769,19 @@
             function showAllIslamicEvents() {
                 const rows = getAllIslamicEventEntries();
                 let html = '<p class="text-xs text-gray-500 mb-3">Every Islamic calendar event across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH (recurring events appear once per Hijri year).</p>';
+                let closestRowId = '';
+
                 if (rows.length === 0) {
                     html += '<p class="text-sm text-gray-500">No events listed yet.</p>';
                 } else {
-                    rows.forEach(r => {
+                    closestRowId = getClosestUpcomingRowId(rows, 'islamic-event');
+                    rows.forEach((r, index) => {
                         const style = typeStyles[r.type];
                         const dateLabel = r.start.getTime() === r.end.getTime() ? fmtDateWithYear(r.start) : fmtDateWithYear(r.start) + ' – ' + fmtDateWithYear(r.end);
-                        html += rowHTML(style.dot, 'bg-gray-100 text-gray-600', islamicTypeLabels[r.type], r.label, dateLabel);
+                        html += rowHTML(style.dot, 'bg-gray-100 text-gray-600', islamicTypeLabels[r.type], r.label, dateLabel, 'islamic-event-' + index);
                     });
                 }
-                openEventListModal('All Islamic Calendar Events', html);
+                openEventListModal('All Islamic Calendar Events', html, closestRowId);
             }
 
             function showAllKiceaEvents() {
@@ -772,17 +796,20 @@
                 }
 
                 const rows = getAllKiceaDatedEntries();
+                let closestRowId = '';
                 html += '<h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-4 mb-2">Dated events</h5>';
+
                 if (rows.length === 0) {
                     html += '<p class="text-sm text-gray-500">No dated events listed yet.</p>';
                 } else {
-                    rows.forEach(r => {
+                    closestRowId = getClosestUpcomingRowId(rows, 'kicea-event');
+                    rows.forEach((r, index) => {
                         const style = kiceaTypeStyles[r.type];
                         const dateLabel = r.start.getTime() === r.end.getTime() ? fmtDateWithYear(r.start) : fmtDateWithYear(r.start) + ' – ' + fmtDateWithYear(r.end);
-                        html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel);
+                        html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel, 'kicea-event-' + index);
                     });
                 }
-                openEventListModal('All KICEA Events', html);
+                openEventListModal('All KICEA Events', html, closestRowId);
             }
 
             document.getElementById('viewAllIslamicBtn').addEventListener('click', showAllIslamicEvents);

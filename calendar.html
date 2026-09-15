@@ -710,15 +710,50 @@
 
             function getAllKiceaDatedEntries() {
                 const entries = [];
+
+                // Exact one-off KICEA events.
                 kiceaEvents.special.forEach(s => {
                     entries.push({ date: parseUTC(s.date), label: s.label, type: s.type });
                 });
+
+                // Fixed annual KICEA events based on the Hijri calendar.
                 islamicMonths.forEach((m, idx) => {
                     const data = getMonthData(idx);
                     Object.entries(data.kiceaAnnual).forEach(([day, info]) => {
-                        entries.push({ date: addDays(data.start, Number(day) - 1), label: info.label, type: info.type });
+                        entries.push({
+                            date: addDays(data.start, Number(day) - 1),
+                            label: info.label,
+                            type: info.type
+                        });
                     });
                 });
+
+                // Weekly recurring KICEA events.
+                // Add only occurrences that fall within the calendar range.
+                // Exceptions are deliberately excluded because those dates
+                // do not appear as programs on the calendar.
+                kiceaEvents.recurring.forEach(r => {
+                    const firstDate = parseUTC(r.startDate);
+                    const lastDate = addDays(
+                        parseUTC(islamicMonths[islamicMonths.length - 1].start),
+                        29
+                    );
+
+                    for (let date = firstWeekdayOnOrAfter(firstDate, r.weekday);
+                         date <= lastDate;
+                         date = addDays(date, 7)) {
+                        const ds = dateStr(date);
+
+                        if (r.exceptions && r.exceptions.includes(ds)) continue;
+
+                        entries.push({
+                            date: date,
+                            label: r.label,
+                            type: r.type
+                        });
+                    }
+                });
+
                 return groupConsecutiveEntries(entries);
             }
 

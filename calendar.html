@@ -13,6 +13,9 @@
       gtag('config', 'G-2T4MLYVPZX');
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -21,56 +24,62 @@
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
     <!-- Islamic Calendar Section -->
-    <section id="calendar" class="py-16 bg-white">
+    <section id="calendar" class="py-16 bg-white dark:bg-gray-950 transition-colors duration-200">
         <div class="max-w-5xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">KICEA Calendar</h2>
+            <div class="relative mb-4">
+                <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100 text-center">KICEA Calendar</h2>
+                <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
 
-            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 md:p-8 card-hover">
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 rounded-xl p-6 md:p-8 card-hover transition-colors duration-200">
                 <div class="mb-6 text-center">
                     <div class="flex items-center justify-center gap-2">
-                        <button id="prevMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">‹</button>
-                        <select id="monthSelect" class="text-xl sm:text-2xl font-bold text-gray-800 bg-transparent border-0 text-center focus:outline-none cursor-pointer px-1"></select>
-                        <button id="nextMonthBtn" class="w-9 h-9 rounded-full bg-white shadow hover:bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">›</button>
+                        <button id="prevMonthBtn" class="w-9 h-9 rounded-full bg-white dark:bg-gray-700 shadow hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-200 shrink-0">‹</button>
+                        <select id="monthSelect" class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 bg-transparent border-0 text-center focus:outline-none cursor-pointer px-1"></select>
+                        <button id="nextMonthBtn" class="w-9 h-9 rounded-full bg-white dark:bg-gray-700 shadow hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-200 shrink-0">›</button>
                     </div>
-                    <p id="monthRange" class="text-sm text-gray-600 mt-1"></p>
-                    <p id="futureNotice" class="hidden text-xs text-amber-700 mt-1">Future months will be added soon.</p>
+                    <p id="monthRange" class="text-sm text-gray-600 dark:text-gray-400 mt-1"></p>
+                    <p id="futureNotice" class="hidden text-xs text-amber-700 dark:text-amber-400 mt-1">Future months will be added soon.</p>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-4 mb-6">
-                    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800">
                         <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-sm font-semibold text-gray-800">Islamic Calendar Events</h4>
-                            <button id="viewAllIslamicBtn" type="button" class="text-xs font-medium text-purple-700 hover:text-purple-900 hover:underline flex items-center gap-1">
+                            <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100">Islamic Calendar Events</h4>
+                            <button id="viewAllIslamicBtn" type="button" class="text-xs font-medium text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 hover:underline flex items-center gap-1">
                                 View full list
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
                             </button>
                         </div>
-                        <div id="islamicLegend" class="flex flex-wrap gap-3 text-xs text-gray-600">
-                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 border border-red-300"></span> Celebration</span>
-                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 border border-gray-400"></span> Commemoration</span>
-                            <span data-legend-type="other" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 border border-blue-300"></span> Other Events</span>
+                        <div id="islamicLegend" class="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
+                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-red-100 dark:bg-red-950/40 border border-red-300 dark:border-red-800"></span> Celebration</span>
+                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-gray-200 dark:bg-gray-700 border border-gray-400 dark:border-gray-500"></span> Commemoration</span>
+                            <span data-legend-type="other" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-blue-100 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800"></span> Other Events</span>
                         </div>
                     </div>
-                    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800">
                         <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-sm font-semibold text-gray-800">KICEA Events</h4>
-                            <button id="viewAllKiceaBtn" type="button" class="text-xs font-medium text-purple-700 hover:text-purple-900 hover:underline flex items-center gap-1">
+                            <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100">KICEA Events</h4>
+                            <button id="viewAllKiceaBtn" type="button" class="text-xs font-medium text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 hover:underline flex items-center gap-1">
                                 View full list
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
                             </button>
                         </div>
-                        <div id="kiceaLegend" class="flex flex-wrap gap-3 text-xs text-gray-600">
-                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-black"></span> Commemoration</span>
-                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-red-600"></span> Celebration</span>
-                            <span data-legend-type="dua" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-blue-500"></span> Dua/Amaal</span>
-                            <span data-legend-type="program" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white border border-gray-200 border-b-4 border-b-green-600"></span> Program</span>
+                        <div id="kiceaLegend" class="flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
+                            <span data-legend-type="commemoration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 border-b-4 border-b-black dark:border-b-white"></span> Commemoration</span>
+                            <span data-legend-type="celebration" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 border-b-4 border-b-red-600 dark:border-b-red-400"></span> Celebration</span>
+                            <span data-legend-type="dua" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 border-b-4 border-b-blue-500 dark:border-b-blue-400"></span> Dua/Amaal</span>
+                            <span data-legend-type="program" class="flex items-center gap-1"><span class="w-3 h-3 inline-block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 border-b-4 border-b-green-600 dark:border-b-green-400"></span> Program</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
                     <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
                 </div>
 
@@ -78,20 +87,20 @@
 
                 <div class="grid sm:grid-cols-2 gap-4 mt-6">
                     <div>
-                        <h4 class="text-sm font-semibold text-gray-800 mb-2">List of Islamic Events</h4>
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">List of Islamic Events</h4>
                         <div id="islamicEventsList" class="space-y-2"></div>
                     </div>
                     <div>
-                        <h4 class="text-sm font-semibold text-gray-800 mb-2">List of KICEA Events</h4>
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">List of KICEA Events</h4>
                         <div id="kiceaEventsList" class="space-y-2"></div>
                     </div>
                 </div>
 
                 <div class="mt-6 text-center">
-                    <button id="downloadAllBtn" class="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition">Add to Personal Calendar</button>
+                    <button id="downloadAllBtn" class="bg-purple-600 dark:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition">Add to Personal Calendar</button>
                 </div>
 
-                <p class="text-xs text-gray-500 mt-6">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-6">
                     ⓘ Estimates based on moonsighting predictions, subject to change.<br>
                     "Add to Personal Calendar" downloads a file you can import into Google Calendar, Apple Calendar, Outlook, or any other calendar app.
                 </p>
@@ -101,12 +110,18 @@
         <!-- Full event list modal (shared by Islamic and KICEA "View full list" buttons) -->
         <div id="eventListModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
             <div id="eventListBackdrop" class="absolute inset-0 bg-black/50"></div>
-            <div class="relative bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h3 id="eventListTitle" class="text-lg font-bold text-gray-800"></h3>
-                    <button id="eventListCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 shrink-0" aria-label="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <h3 id="eventListTitle" class="text-lg font-bold text-gray-800 dark:text-gray-100"></h3>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button id="eventListCopyLinkBtn" type="button" class="text-xs font-medium text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 hover:underline px-2 py-1 rounded-md hover:bg-purple-50 dark:hover:bg-purple-900/40 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5" /></svg>
+                            <span id="eventListCopyLinkLabel">Copy link</span>
+                        </button>
+                        <button id="eventListCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 shrink-0" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
                 </div>
                 <div id="eventListBody" class="overflow-y-auto px-5 py-4 space-y-2"></div>
             </div>
@@ -181,6 +196,51 @@
             // above (every event across the whole 1448–1451 range). You never
             // need to touch anything past this comment block.
             // =================================================================
+
+            // ---- Dark mode ----
+            // Manual toggle (persisted in localStorage), falling back to the
+            // visitor's OS-level preference on first visit.
+            const THEME_KEY = 'kicea-calendar-theme';
+            function getStoredTheme() {
+                try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+            }
+            function storeTheme(value) {
+                try { localStorage.setItem(THEME_KEY, value); } catch (e) { /* ignore */ }
+            }
+            function systemPrefersDark() {
+                return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+            function applyTheme(isDark) {
+                document.documentElement.classList.toggle('dark', isDark);
+                const moonIcon = document.getElementById('themeIconMoon');
+                const sunIcon = document.getElementById('themeIconSun');
+                if (moonIcon && sunIcon) {
+                    // Show the moon (click to go dark) while in light mode, and the
+                    // sun (click to go light) while in dark mode.
+                    moonIcon.classList.toggle('hidden', isDark);
+                    sunIcon.classList.toggle('hidden', !isDark);
+                }
+            }
+            let isDarkMode = getStoredTheme() ? getStoredTheme() === 'dark' : systemPrefersDark();
+            applyTheme(isDarkMode);
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', function() {
+                    isDarkMode = !isDarkMode;
+                    applyTheme(isDarkMode);
+                    storeTheme(isDarkMode ? 'dark' : 'light');
+                });
+            }
+            // Follow the OS setting live, but only until the visitor picks a
+            // preference of their own via the toggle button.
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                    if (!getStoredTheme()) {
+                        isDarkMode = e.matches;
+                        applyTheme(isDarkMode);
+                    }
+                });
+            }
 
             // ---- Month name/label definitions (cycle every Hijri year) ----
             const monthDefs = [
@@ -396,10 +456,10 @@
             }
 
             const kiceaTypeStyles = {
-                dua: { border: 'border-b-4 border-b-blue-500', badgeBg: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
-                celebration: { border: 'border-b-4 border-b-red-600', badgeBg: 'bg-red-100 text-red-700', dot: 'bg-red-600' },
-                commemoration: { border: 'border-b-4 border-b-black', badgeBg: 'bg-gray-200 text-gray-800', dot: 'bg-black' },
-                program: { border: 'border-b-4 border-b-green-600', badgeBg: 'bg-green-100 text-green-700', dot: 'bg-green-600' }
+                dua: { border: 'border-b-4 border-b-blue-500 dark:border-b-blue-400', badgeBg: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300', dot: 'bg-blue-500' },
+                celebration: { border: 'border-b-4 border-b-red-600 dark:border-b-red-400', badgeBg: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300', dot: 'bg-red-600' },
+                commemoration: { border: 'border-b-4 border-b-black dark:border-b-white', badgeBg: 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200', dot: 'bg-black' },
+                program: { border: 'border-b-4 border-b-green-600 dark:border-b-green-400', badgeBg: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300', dot: 'bg-green-600' }
             };
 
             function getKiceaSpecial(date) {
@@ -496,17 +556,36 @@
                 return null;
             }
 
+            // ---- Deep-linking to a specific "View full list" modal: #events/islamic
+            // or #events/kicea. Lets the "Copy link" button in the modal produce a URL
+            // that opens the page with that modal already showing.
+            function parseEventsListFromLocation() {
+                try {
+                    const candidates = [window.location.hash.replace(/^#\/?/, ''), window.location.pathname];
+                    for (const candidate of candidates) {
+                        const match = candidate.match(/^events\/(islamic|kicea)(?:\/|$)/);
+                        if (match) return match[1];
+                    }
+                } catch (e) {
+                    // Ignore in sandboxed contexts where location isn't readable.
+                }
+                return null;
+            }
+
             function monthHash(index) {
                 const m = islamicMonths[index];
                 return '#' + m.year + '/' + m.num;
             }
 
+            function eventsHash(kind) {
+                return '#events/' + kind;
+            }
+
             // Some embedded/sandboxed contexts (like an about:srcdoc preview iframe)
             // block history.replaceState with a SecurityError. That must never be
             // allowed to interrupt render(), so it's fully isolated here.
-            function updateLocationHash(index) {
+            function updateLocationHash(newHash) {
                 try {
-                    const newHash = monthHash(index);
                     if (window.location.hash !== newHash) {
                         history.replaceState(null, '', newHash);
                     }
@@ -527,9 +606,9 @@
             });
 
             const typeStyles = {
-                celebration: { cell: 'bg-red-100 border-red-300', dot: 'bg-red-500' },
-                commemoration: { cell: 'bg-gray-200 border-gray-400', dot: 'bg-gray-500' },
-                other: { cell: 'bg-blue-100 border-blue-300', dot: 'bg-blue-500' }
+                celebration: { cell: 'bg-red-100 border-red-300 dark:bg-red-950/40 dark:border-red-800', dot: 'bg-red-500' },
+                commemoration: { cell: 'bg-gray-200 border-gray-400 dark:bg-gray-700 dark:border-gray-500', dot: 'bg-gray-500' },
+                other: { cell: 'bg-blue-100 border-blue-300 dark:bg-blue-950/40 dark:border-blue-800', dot: 'bg-blue-500' }
             };
 
             // ---- Add to Calendar helpers ----
@@ -761,10 +840,10 @@
             const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
             function rowHTML(dotClass, badgeBg, badgeLabel, label, dateLabel, rowId = '', dayTag = '') {
-                return '<div id="' + rowId + '" class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3">' +
+                return '<div id="' + rowId + '" class="flex items-center justify-between bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-2 text-sm gap-3">' +
                     '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + dotClass + ' shrink-0"></span>' +
-                    '<span class="font-medium text-gray-800">' + label + '</span></span>' +
-                    '<span class="text-gray-500 text-xs shrink-0 text-right flex items-center gap-2">' + (dayTag ? '<span class="text-[10px] font-semibold rounded-full px-2 py-0.5 bg-purple-100 text-purple-700">' + dayTag + '</span>' : '') + '<span>' + dateLabel + '</span></span></div>';
+                    '<span class="font-medium text-gray-800 dark:text-gray-100">' + label + '</span></span>' +
+                    '<span class="text-gray-500 dark:text-gray-400 text-xs shrink-0 text-right flex items-center gap-2">' + (dayTag ? '<span class="text-[10px] font-semibold rounded-full px-2 py-0.5 bg-purple-100 text-purple-700">' + dayTag + '</span>' : '') + '<span>' + dateLabel + '</span></span></div>';
             }
 
             function getClosestUpcomingRowId(rows, prefix) {
@@ -778,12 +857,17 @@
                 return prefix + '-' + rows.indexOf(closest);
             }
 
-            function openEventListModal(title, bodyHTML, closestRowId = '') {
+            let copyLinkResetTimer = null;
+            function openEventListModal(title, bodyHTML, closestRowId, hash) {
                 document.getElementById('eventListTitle').textContent = title;
                 const body = document.getElementById('eventListBody');
                 body.innerHTML = bodyHTML;
                 document.getElementById('eventListModal').classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
+                document.getElementById('eventListModal').dataset.hash = hash || '';
+                const copyLabel = document.getElementById('eventListCopyLinkLabel');
+                if (copyLabel) copyLabel.textContent = 'Copy link';
+                if (hash) updateLocationHash(hash);
 
                 if (closestRowId) {
                     requestAnimationFrame(() => {
@@ -798,15 +882,58 @@
             function closeEventListModal() {
                 document.getElementById('eventListModal').classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
+                if (copyLinkResetTimer) { clearTimeout(copyLinkResetTimer); copyLinkResetTimer = null; }
+                // Restore the URL to the currently viewed month once the shared
+                // events-list link has been opened/closed.
+                updateLocationHash(monthHash(current));
+            }
+
+            function copyCurrentEventListLink() {
+                const modal = document.getElementById('eventListModal');
+                const hash = modal.dataset.hash;
+                if (!hash) return;
+                const url = window.location.href.split('#')[0] + hash;
+                const label = document.getElementById('eventListCopyLinkLabel');
+                function showCopied() {
+                    if (!label) return;
+                    label.textContent = 'Copied!';
+                    if (copyLinkResetTimer) clearTimeout(copyLinkResetTimer);
+                    copyLinkResetTimer = setTimeout(() => { label.textContent = 'Copy link'; }, 1500);
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(showCopied).catch(function() {
+                        fallbackCopy(url, showCopied);
+                    });
+                } else {
+                    fallbackCopy(url, showCopied);
+                }
+            }
+
+            function fallbackCopy(text, onDone) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    onDone();
+                } catch (e) {
+                    // Clipboard unavailable in this context — link is still in the
+                    // address bar for the user to copy manually.
+                }
             }
 
             function showAllIslamicEvents() {
                 const rows = getAllIslamicEventEntries();
-                let html = '<p class="text-xs text-gray-500 mb-3">Islamic calendar events across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH.</p>';
+                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Islamic calendar events across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH.</p>';
                 let closestRowId = '';
 
                 if (rows.length === 0) {
-                    html += '<p class="text-sm text-gray-500">No events listed yet.</p>';
+                    html += '<p class="text-sm text-gray-500 dark:text-gray-400">No events listed yet.</p>';
                 } else {
                     closestRowId = getClosestUpcomingRowId(rows, 'islamic-event');
                     rows.forEach((r, index) => {
@@ -815,18 +942,18 @@
                         html += rowHTML(style.dot, 'bg-gray-100 text-gray-600', islamicTypeLabels[r.type], r.label, dateLabel, 'islamic-event-' + index);
                     });
                 }
-                openEventListModal('All Islamic Calendar Events', html, closestRowId);
+                openEventListModal('All Islamic Calendar Events', html, closestRowId, eventsHash('islamic'));
             }
 
             function showAllKiceaEvents() {
-                let html = '<p class="text-xs text-gray-500 mb-3">Remaining KICEA event across ' + islamicMonths[0].year + ' AH. </p>';
+                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Remaining KICEA event across ' + islamicMonths[0].year + ' AH. </p>';
 
                 const rows = getAllKiceaDatedEntries();
                 let closestRowId = '';
-                html += '<h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mt-1 mb-2">Upcoming events</h5>';
+                html += '<h5 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1 mb-2">Upcoming events</h5>';
 
                 if (rows.length === 0) {
-                    html += '<p class="text-sm text-gray-500">No dated events listed yet.</p>';
+                    html += '<p class="text-sm text-gray-500 dark:text-gray-400">No dated events listed yet.</p>';
                 } else {
                     closestRowId = getClosestUpcomingRowId(rows, 'kicea-event');
                     rows.forEach((r, index) => {
@@ -835,13 +962,14 @@
                         html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel, 'kicea-event-' + index, dayNames[r.start.getUTCDay()].slice(0, 3));
                     });
                 }
-                openEventListModal('All KICEA Events', html, closestRowId);
+                openEventListModal('All KICEA Events', html, closestRowId, eventsHash('kicea'));
             }
 
             document.getElementById('viewAllIslamicBtn').addEventListener('click', showAllIslamicEvents);
             document.getElementById('viewAllKiceaBtn').addEventListener('click', showAllKiceaEvents);
             document.getElementById('eventListCloseBtn').addEventListener('click', closeEventListModal);
             document.getElementById('eventListBackdrop').addEventListener('click', closeEventListModal);
+            document.getElementById('eventListCopyLinkBtn').addEventListener('click', copyCurrentEventListLink);
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeEventListModal();
             });
@@ -849,7 +977,7 @@
             function render(index) {
                 current = index;
                 select.value = index;
-                updateLocationHash(index);
+                updateLocationHash(monthHash(index));
                 hideFutureNotice();
                 const { month, start, end, length, special, kiceaAnnual } = getMonthData(index);
 
@@ -878,8 +1006,8 @@
 
                     const cell = document.createElement('div');
                     cell.className = 'relative overflow-hidden aspect-square rounded-lg flex flex-col items-center justify-center text-xs border ' +
-                        (style ? style.cell : 'bg-white border-purple-100') +
-                        (isToday ? ' ring-2 ring-purple-600 ring-offset-1' : '') +
+                        (style ? style.cell : 'bg-white border-purple-100 dark:bg-gray-800 dark:border-purple-900/40') +
+                        (isToday ? ' ring-2 ring-purple-600 dark:ring-purple-400 ring-offset-1 dark:ring-offset-gray-900' : '') +
                         (kiceaStyle ? ' ' + kiceaStyle.border : '');
 
                     let titleParts = [];
@@ -893,14 +1021,14 @@
                     let mainNumberHTML;
                     if (isGregorianMonthStart) {
                         const gregMonthLabel = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
-                        mainNumberHTML = '<span class="relative z-10 font-bold text-orange-600 text-[10px] sm:text-xs whitespace-nowrap">' + date.getUTCDate() + ' ' + gregMonthLabel + '</span>';
+                        mainNumberHTML = '<span class="relative z-10 font-bold text-orange-600 dark:text-orange-400 text-[10px] sm:text-xs whitespace-nowrap">' + date.getUTCDate() + ' ' + gregMonthLabel + '</span>';
                     } else {
-                        mainNumberHTML = '<span class="relative z-10 font-semibold text-gray-800">' + date.getUTCDate() + '</span>';
+                        mainNumberHTML = '<span class="relative z-10 font-semibold text-gray-800 dark:text-gray-100">' + date.getUTCDate() + '</span>';
                     }
 
                     cell.innerHTML =
                         mainNumberHTML +
-                        '<span class="relative z-10 text-[10px] ' + (isIslamicMonthStart ? 'text-green-600 font-semibold' : 'text-gray-500') + '">' + (isIslamicMonthStart ? '🌙 1' : day) + '</span>';
+                        '<span class="relative z-10 text-[10px] ' + (isIslamicMonthStart ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-gray-500 dark:text-gray-400') + '">' + (isIslamicMonthStart ? '🌙 1' : day) + '</span>';
 
                     grid.appendChild(cell);
                 }
@@ -911,18 +1039,18 @@
                 const islamicEntries = Object.entries(special).sort((a, b) => Number(a[0]) - Number(b[0]));
                 const islamicTypesPresent = new Set();
                 if (islamicEntries.length === 0) {
-                    islamicList.innerHTML = '<p class="text-sm text-gray-500">No listed events fall within this month.</p>';
+                    islamicList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">No listed events fall within this month.</p>';
                 } else {
                     islamicEntries.forEach(([day, info]) => {
                         const date = addDays(start, Number(day) - 1);
                         const style = typeStyles[info.type];
                         islamicTypesPresent.add(info.type);
                         const row = document.createElement('div');
-                        row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                        row.className = 'flex items-center justify-between bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-2 text-sm gap-3';
                         row.innerHTML =
                             '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + style.dot + ' shrink-0"></span>' +
-                            '<span class="font-medium text-gray-800">' + info.label + '</span></span>' +
-                            '<span class="text-gray-500 text-xs shrink-0">' + fmtDate(date) + '</span>';
+                            '<span class="font-medium text-gray-800 dark:text-gray-100">' + info.label + '</span></span>' +
+                            '<span class="text-gray-500 dark:text-gray-400 text-xs shrink-0">' + fmtDate(date) + '</span>';
                         islamicList.appendChild(row);
                     });
                 }
@@ -949,12 +1077,12 @@
                     // occurrence actually survives the exceptions list this month.
                     if (matchDates.length) kiceaTypesPresent.add(r.type);
                     const row = document.createElement('div');
-                    row.className = 'bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm';
+                    row.className = 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-2 text-sm';
                     row.innerHTML =
                         '<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block ' + rStyle.dot + ' shrink-0"></span>' +
-                        '<span class="font-medium text-gray-800">' + r.label + '</span>' +
+                        '<span class="font-medium text-gray-800 dark:text-gray-100">' + r.label + '</span>' +
                         '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + rStyle.badgeBg + '">' + kiceaTypeLabels[r.type] + '</span></div>' +
-                        '<div class="text-gray-500 text-xs mt-1">Every ' + dayNames[r.weekday] + (matchDates.length ? ' — ' + matchDates.join(', ') : '') + '</div>';
+                        '<div class="text-gray-500 dark:text-gray-400 text-xs mt-1">Every ' + dayNames[r.weekday] + (matchDates.length ? ' — ' + matchDates.join(', ') : '') + '</div>';
                     kiceaList.appendChild(row);
                 });
 
@@ -985,12 +1113,12 @@
                         const dEnd = addDays(start, groupEnd - 1);
                         const dateLabel = groupStart === groupEnd ? fmtDate(dStart) : fmtDate(dStart) + ' – ' + fmtDate(dEnd);
                         const row = document.createElement('div');
-                        row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                        row.className = 'flex items-center justify-between bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-2 text-sm gap-3';
                         row.innerHTML =
                             '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + sStyle.dot + ' shrink-0"></span>' +
-                            '<span class="font-medium text-gray-800">' + info.label + '</span>' +
+                            '<span class="font-medium text-gray-800 dark:text-gray-100">' + info.label + '</span>' +
                             '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + sStyle.badgeBg + '">' + kiceaTypeLabels[info.type] + '</span></span>' +
-                            '<span class="text-gray-500 text-xs shrink-0">' + dateLabel + '</span>';
+                            '<span class="text-gray-500 dark:text-gray-400 text-xs shrink-0">' + dateLabel + '</span>';
                         kiceaList.appendChild(row);
                     }
                 }
@@ -1017,17 +1145,17 @@
                     const dEnd = addDays(start, groupEnd - 1);
                     const dateLabel = groupStart === groupEnd ? fmtDate(dStart) : fmtDate(dStart) + ' – ' + fmtDate(dEnd);
                     const row = document.createElement('div');
-                    row.className = 'flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2 text-sm gap-3';
+                    row.className = 'flex items-center justify-between bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-2 text-sm gap-3';
                     row.innerHTML =
                         '<span class="flex items-center gap-2 min-w-0"><span class="w-2 h-2 rounded-full inline-block ' + aStyle.dot + ' shrink-0"></span>' +
-                        '<span class="font-medium text-gray-800">' + info.label + '</span>' +
+                        '<span class="font-medium text-gray-800 dark:text-gray-100">' + info.label + '</span>' +
                         '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + aStyle.badgeBg + '">' + kiceaTypeLabels[info.type] + '</span></span>' +
-                        '<span class="text-gray-500 text-xs shrink-0">' + dateLabel + '</span>';
+                        '<span class="text-gray-500 dark:text-gray-400 text-xs shrink-0">' + dateLabel + '</span>';
                     kiceaList.appendChild(row);
                 }
 
                 if (kiceaEvents.recurring.length === 0 && kiceaCount === 0) {
-                    kiceaList.innerHTML = '<p class="text-sm text-gray-500">No KICEA events fall within this month.</p>';
+                    kiceaList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">No KICEA events fall within this month.</p>';
                 }
 
                 updateLegendVisibility('kiceaLegend', kiceaTypesPresent);
@@ -1069,15 +1197,36 @@
             });
 
             // Support browser back/forward and manually-typed/edited hashes (e.g. someone
-            // pastes a link with #1449/9 into the address bar of an already-open page).
+            // pastes a link with #1449/9 or #events/islamic into the address bar of an
+            // already-open page).
             window.addEventListener('hashchange', function() {
+                const eventsKind = parseEventsListFromLocation();
+                if (eventsKind) {
+                    if (eventsKind === 'islamic') showAllIslamicEvents();
+                    else showAllKiceaEvents();
+                    return;
+                }
                 const idx = parseMonthFromLocation();
                 if (idx !== null && idx !== current) {
                     render(idx);
                 }
+                if (idx === null) {
+                    // Hash no longer points to a month or an events list (e.g. modal
+                    // was closed) — nothing further to do, current render stands.
+                }
             });
 
             render(current);
+
+            // If the page was opened via a shared "View full list" link
+            // (#events/islamic or #events/kicea), open that modal automatically
+            // once the base calendar has rendered.
+            const initialEventsKind = parseEventsListFromLocation();
+            if (initialEventsKind === 'islamic') {
+                showAllIslamicEvents();
+            } else if (initialEventsKind === 'kicea') {
+                showAllKiceaEvents();
+            }
         })();
         </script>
     </section>

@@ -141,6 +141,47 @@
     color: var(--text);
     border-radius: 6px;
   }
+  .lang-picker { position: relative; }
+  #langPickerBtn {
+    font: inherit;
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 200px;
+    text-align: left;
+  }
+  .lang-picker-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  .lang-picker-dropdown label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+  .lang-picker-dropdown hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 6px 0;
+  }
+  #langPickerDropdown button {
+    width: 100%;
+    text-align: left;
+    padding: 3px 8px;
+  }
   .verse .translit {
     margin: 10px 0 0;
     font-style: italic;
@@ -272,16 +313,24 @@
       <option value="slides">Slides</option>
     </select>
   </label>
-  <label><input type="checkbox" id="tgAr" checked> Arabic</label>
-  <label><input type="checkbox" id="tgTr" checked> Transliteration</label>
-  <label><input type="checkbox" id="tgEn" checked> English</label>
-  <label><input type="checkbox" id="tgUr" checked> Urdu</label>
-  <label><input type="checkbox" id="tgHi" checked> Hindi</label>
-  <label><input type="checkbox" id="tgKo" checked> Korean</label>
+  <div class="lang-picker">
+    <button type="button" id="langPickerBtn" aria-haspopup="true" aria-expanded="false">All (no transliteration) ▼</button>
+    <div class="lang-picker-dropdown" id="langPickerDropdown" hidden>
+      <button type="button" class="lang-preset-btn" data-preset="all-no-tr">All (no transliteration)</button>
+      <button type="button" class="lang-preset-btn" data-preset="all">All (with transliteration)</button>
+      <hr>
+      <label><input type="checkbox" class="lang-cb" data-lang="ar"> Arabic</label>
+      <label><input type="checkbox" class="lang-cb" data-lang="tr"> Transliteration</label>
+      <label><input type="checkbox" class="lang-cb" data-lang="en"> English</label>
+      <label><input type="checkbox" class="lang-cb" data-lang="ur"> Urdu</label>
+      <label><input type="checkbox" class="lang-cb" data-lang="hi"> Hindi</label>
+      <label><input type="checkbox" class="lang-cb" data-lang="ko"> Korean</label>
+    </div>
+  </div>
   <label>Script
     <select id="script" aria-label="Arabic script style">
-         <option value="ip">IndoPak</option>      
-         <option value="naskh">Naskh</option>
+      <option value="ip">IndoPak</option>
+      <option value="naskh">Naskh</option>
     </select>
   </label>
   <label>Size <input type="range" id="size" min="20" max="56" value="30" aria-label="Arabic text size"></label>
@@ -348,20 +397,78 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 };
 
-function bindToggle(id, cls, key) {
-  const box = document.getElementById(id);
-  const saved = store.get(key);
-  if (saved !== null) box.checked = saved === "1";
-  const apply = () => { body.classList.toggle(cls, !box.checked); store.set(key, box.checked ? "1" : "0"); };
-  box.addEventListener("change", apply);
-  apply();
+const LANGUAGES = ['ar', 'tr', 'en', 'ur', 'hi', 'ko'];
+const langPickerBtn = document.getElementById("langPickerBtn");
+const langPickerDropdown = document.getElementById("langPickerDropdown");
+const langCbs = document.querySelectorAll(".lang-cb");
+const presetBtns = document.querySelectorAll(".lang-preset-btn");
+
+let currentLangs = ['ar', 'en', 'ur', 'hi', 'ko']; // default: all except transliteration
+const savedLangs = store.get("dk-lang");
+if (savedLangs) {
+  try {
+    const parsed = JSON.parse(savedLangs);
+    if (Array.isArray(parsed) && parsed.every(l => LANGUAGES.includes(l))) {
+      currentLangs = parsed;
+    }
+  } catch(e) {}
 }
-bindToggle("tgAr", "hide-ar", "dk-ar");
-bindToggle("tgTr", "hide-tr", "dk-tr");
-bindToggle("tgEn", "hide-en", "dk-en");
-bindToggle("tgUr", "hide-ur", "dk-ur");
-bindToggle("tgHi", "hide-hi", "dk-hi");
-bindToggle("tgKo", "hide-ko", "dk-ko");
+function applyLangs() {
+  LANGUAGES.forEach(lang => {
+    body.classList.toggle(`hide-${lang}`, !currentLangs.includes(lang));
+  });
+  langCbs.forEach(cb => { cb.checked = currentLangs.includes(cb.dataset.lang); });
+  const btnText = currentLangs.length === LANGUAGES.length
+    ? "All (with transliteration) ▼"
+    : (currentLangs.length === 5 && !currentLangs.includes('tr')
+        ? "All (no transliteration) ▼"
+        : currentLangs.length + " selected ▼");
+  langPickerBtn.textContent = btnText;
+  store.set("dk-lang", JSON.stringify(currentLangs));
+}
+function toggleDropdown() {
+  const expanded = langPickerBtn.getAttribute("aria-expanded") === "true";
+  langPickerDropdown.hidden = expanded;
+  langPickerBtn.setAttribute("aria-expanded", !expanded);
+}
+function closeDropdown() {
+  langPickerDropdown.hidden = true;
+  langPickerBtn.setAttribute("aria-expanded", "false");
+}
+presetBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const preset = btn.dataset.preset;
+    currentLangs = preset === 'all-no-tr'
+      ? ['ar', 'en', 'ur', 'hi', 'ko']
+      : ['ar', 'tr', 'en', 'ur', 'hi', 'ko'];
+    applyLangs();
+    renderSlide();
+    closeDropdown();
+  });
+});
+langCbs.forEach(cb => {
+  cb.addEventListener("change", () => {
+    if (cb.checked) {
+      currentLangs.push(cb.dataset.lang);
+    } else {
+      currentLangs = currentLangs.filter(l => l !== cb.dataset.lang);
+    }
+    applyLangs();
+    renderSlide();
+  });
+});
+langPickerBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleDropdown(); });
+document.addEventListener("click", (e) => {
+  if (!langPickerBtn.contains(e.target) && !langPickerDropdown.contains(e.target)) {
+    closeDropdown();
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && langPickerBtn.getAttribute("aria-expanded") === "true") {
+    closeDropdown();
+  }
+});
+applyLangs();
 
 const size = document.getElementById("size");
 const savedSize = store.get("dk-size");
@@ -485,8 +592,6 @@ stageSel.addEventListener("change", applyStageSize);
 prevBtn.addEventListener("click", () => go(-1));
 nextBtn.addEventListener("click", () => go(1));
 cleanBtn.addEventListener("click", () => setClean(true));
-["tgAr", "tgTr", "tgEn", "tgUr", "tgHi", "tgKo"].forEach(id =>
-  document.getElementById(id).addEventListener("change", renderSlide));
 scriptSel.addEventListener("change", renderSlide);
 size.addEventListener("input", fitSlide);
 

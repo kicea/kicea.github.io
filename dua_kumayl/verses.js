@@ -19,7 +19,7 @@ const VERSES = [
   },
   {
     ar: "اللَّهُمَّ إِنِّي أَسْألُكَ بِرَحْمَتِكَ الَّتِي وَسِعَتْ كُلَّ شَيْء",
-    tr: "Dua e Kumail                                               KICEA",
+    tr: "allahumma in-nī as-aluka bi-raḥ-matikal-latī wasi`at kul-lā shay",
     en: "O Allah, I ask You by Your mercy, which embraces all things;",
     ur: "اے معبود میں تجھ سے سوال کرتا ہوں تیری رحمت کے ذریعے جوہر شی پر محیط ہے",
     hi: "ऐ अल्लाह मै तुझ से इल्तेजा करता हूँ, तुझे तेरी उस रहमत का वास्ता जो हर चीज़ को घेरे हुए है,",

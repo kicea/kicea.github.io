@@ -314,10 +314,10 @@
     </select>
   </label>
   <div class="lang-picker">
-    <button type="button" id="langPickerBtn" aria-haspopup="true" aria-expanded="false">All (no transliteration) ▼</button>
+    <button type="button" id="langPickerBtn" aria-haspopup="true" aria-expanded="false">All ▼</button>
     <div class="lang-picker-dropdown" id="langPickerDropdown" hidden>
+      <button type="button" class="lang-preset-btn" data-preset="all">All</button>
       <button type="button" class="lang-preset-btn" data-preset="all-no-tr">All (no transliteration)</button>
-      <button type="button" class="lang-preset-btn" data-preset="all">All (with transliteration)</button>
       <hr>
       <label><input type="checkbox" class="lang-cb" data-lang="ar"> Arabic</label>
       <label><input type="checkbox" class="lang-cb" data-lang="tr"> Transliteration</label>
@@ -403,7 +403,7 @@ const langPickerDropdown = document.getElementById("langPickerDropdown");
 const langCbs = document.querySelectorAll(".lang-cb");
 const presetBtns = document.querySelectorAll(".lang-preset-btn");
 
-let currentLangs = ['ar', 'en', 'ur', 'hi', 'ko']; // default: all except transliteration
+let currentLangs = ['ar', 'tr', 'en', 'ur', 'hi', 'ko']; // default: all including transliteration
 const savedLangs = store.get("dk-lang");
 if (savedLangs) {
   try {
@@ -419,7 +419,7 @@ function applyLangs() {
   });
   langCbs.forEach(cb => { cb.checked = currentLangs.includes(cb.dataset.lang); });
   const btnText = currentLangs.length === LANGUAGES.length
-    ? "All (with transliteration) ▼"
+    ? "All ▼"
     : (currentLangs.length === 5 && !currentLangs.includes('tr')
         ? "All (no transliteration) ▼"
         : currentLangs.length + " selected ▼");

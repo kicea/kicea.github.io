@@ -25,6 +25,11 @@
     --sh: 720px;
     --u: 1px;
     --k: 1px;
+    --obs-info-bg: #e8efed;
+    --obs-info-text: #18302c;
+    --obs-social-bg: #d3dfdc;
+    --obs-social-text: #17312d;
+    --obs-border: rgba(31,111,102,.24);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -35,6 +40,11 @@
   :root[data-theme="dark"] {
     --bg: #0f1a19; --panel: #16241f; --text: #e4efec;
     --muted: #93a8a4; --accent: #5fc2b5; --line: #2a3d39;
+    --obs-info-bg: #203a35;
+    --obs-info-text: #e8f3f0;
+    --obs-social-bg: #162b27;
+    --obs-social-text: #d9e9e5;
+    --obs-border: rgba(95,194,181,.28);
   }
 
   * { box-sizing: border-box; }
@@ -275,7 +285,7 @@
     background-size: contain;
   }
   .logo-header { height: 88px; max-width: 240px; margin: 0 auto 12px; }
-  #stage .logo { flex: 0 0 calc(72 * var(--u)); margin-bottom: calc(12 * var(--u)); }
+  #stage .logo { flex: 0 0 calc(110 * var(--u)); margin-bottom: calc(16 * var(--u)); }
   #stage .slide-body {
     flex: 1 1 0;
     min-height: 0;
@@ -283,6 +293,85 @@
     align-items: center;
     justify-content: center;
   }
+
+  /* ---------- OBS broadcast footer ---------- */
+  .obs-overlay { display: none; }
+  body.obs-mode .obs-overlay { display: flex; }
+  .obs-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    flex-direction: column;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+  .obs-info-bar {
+    min-height: calc(58 * var(--u));
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    gap: calc(18 * var(--u));
+    padding: calc(10 * var(--u)) calc(34 * var(--u));
+    background: var(--obs-info-bg);
+    color: var(--obs-info-text);
+    border-top: 1px solid var(--obs-border);
+    border-bottom: 1px solid var(--obs-border);
+    font-size: calc(22 * var(--u));
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .obs-date { text-align: left; white-space: nowrap; }
+  .obs-title { text-align: center; white-space: nowrap; }
+  .obs-time { text-align: right; white-space: nowrap; }
+  .obs-social-bar {
+    min-height: calc(52 * var(--u));
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    background: var(--obs-social-bg);
+    color: var(--obs-social-text);
+    border-bottom: 1px solid var(--obs-border);
+  }
+  .obs-ticker-track {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(34 * var(--u));
+    white-space: nowrap;
+    padding-left: calc(34 * var(--u));
+    animation: obsTicker 28s linear infinite;
+    font-size: calc(20 * var(--u));
+    font-weight: 500;
+  }
+  .obs-follow { font-weight: 700; }
+  .obs-slide-number {
+    position: absolute; right: calc(14 * var(--u)); bottom: calc(116 * var(--u));
+    z-index: 31; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: calc(14 * var(--u)); line-height: 1; font-weight: 500;
+    color: var(--obs-info-text); opacity: .62; pointer-events: none;
+  }
+  .obs-social-item { display: inline-flex; align-items: center; gap: calc(8 * var(--u)); }
+  .obs-social-item svg { display:block; width: calc(22 * var(--u)); height: calc(22 * var(--u)); flex: 0 0 auto; fill: currentColor; }
+  @keyframes obsTicker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .obs-ticker-track { animation: none; } }
+
+  body.obs-mode { overflow: hidden; }
+  body.obs-mode header.title,
+  body.obs-mode main,
+  body.obs-mode .controls { display: none; }
+  body.obs-mode #stage {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    padding: calc(32 * var(--u)) calc(40 * var(--u)) calc(110 * var(--u));
+    z-index: 10;
+  }
+  body.obs-mode #stage .slide-body { padding-bottom: calc(8 * var(--u)); }
+  body.obs-mode .obs-overlay { position: absolute; }
 
   @media (max-width: 520px) {
     header.title .ar { font-size: 2.1rem; }
@@ -336,7 +425,7 @@
   <label>Size <input type="range" id="size" min="20" max="56" value="30" aria-label="Arabic text size"></label>
   <span class="slide-nav slide-only">
     <button type="button" id="prev" aria-label="Previous slide">‹ Prev</button>
-    <span id="counter" aria-live="polite" title="Keys: arrows / space / PageUp / PageDown, Home / End, H hides controls, Esc returns to list">1 / 1</span>
+    <span id="counter" aria-live="polite" title="Keys: arrows / space / PageUp / PageDown, Home / End, H hides controls, Esc returns to list (ignored in OBS mode)">1 / 1</span>
     <button type="button" id="next" aria-label="Next slide">Next ›</button>
   </span>
   <label class="slide-only">Slide size
@@ -352,7 +441,46 @@
 
 <main id="dua"></main>
 
-<div id="stage" role="region" aria-label="Slide"></div>
+<div id="stage" role="region" aria-label="Slide">
+  <div class="obs-overlay" id="obsOverlay" aria-label="OBS broadcast information">
+    <div class="obs-info-bar">
+      <div class="obs-date" id="obsDate">25 September 2026</div>
+      <div class="obs-title">Dua e Kumayl, Hussainiya Seoul, South Korea</div>
+      <div class="obs-time" id="obsTime">11:54 PM KST</div>
+    </div>
+    <div class="obs-social-bar">
+      <div class="obs-ticker-track">
+        <span class="obs-follow">Follow us on social media</span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.8v8h3.4Z"/></svg>
+          facebook.com/hussainiya.seoul
+        </span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.9 1.5a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+          instagram.com/hussainiya_seoul
+        </span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.1a2.8 2.8 0 0 0-2-2C17.9 4.6 12 4.6 12 4.6s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C1.9 8.8 1.9 12 1.9 12s0 3.2.5 4.9a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.5-1.7.5-4.9.5-4.9s0-3.2-.5-4.9ZM10 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
+          youtube.com/@hussainiyaseoul
+        </span>
+        <span class="obs-follow">Follow us on social media</span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.8v8h3.4Z"/></svg>
+          facebook.com/hussainiya.seoul
+        </span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.9 1.5a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+          instagram.com/hussainiya_seoul
+        </span>
+        <span class="obs-social-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21.6 7.1a2.8 2.8 0 0 0-2-2C17.9 4.6 12 4.6 12 4.6s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C1.9 8.8 1.9 12 1.9 12s0 3.2.5 4.9a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.5-1.7.5-4.9.5-4.9s0-3.2-.5-4.9ZM10 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
+          youtube.com/@hussainiyaseoul
+        </span>
+      </div>
+    </div>
+    <div class="obs-slide-number" id="obsSlideNumber" aria-hidden="true">1</div>
+  </div>
+</div>
 
 <script src="dua_kumayl/verses.js"></script>
 <script>
@@ -509,9 +637,31 @@ const cleanBtn = document.getElementById("clean");
 const controls = document.querySelector(".controls");
 let idx = 0;
 let remote = null;
+let obsMode = new URLSearchParams(window.location.search).has("obs");
 
 const inSlides = () => body.classList.contains("slides");
 const stageDims = () => stageSel.value.split("x").map(Number);
+
+function updateObsClock() {
+  const dateEl = document.getElementById("obsDate");
+  const timeEl = document.getElementById("obsTime");
+  if (!dateEl || !timeEl) return;
+  const now = new Date();
+  const dateFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul", day: "2-digit", month: "long", year: "numeric"
+  });
+  const timeFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul", hour: "numeric", minute: "2-digit", hour12: true
+  });
+  dateEl.textContent = dateFmt.format(now);
+  timeEl.textContent = timeFmt.format(now) + " KST";
+}
+updateObsClock();
+setInterval(updateObsClock, 1000);
+
+function applyObsState() {
+  body.classList.toggle("obs-mode", obsMode);
+}
 
 /* Shrink the text until the slide fits inside the fixed stage. */
 function fitSlide() {
@@ -531,8 +681,17 @@ function fitSlide() {
 
 function renderSlide() {
   if (!inSlides()) return;
-  stage.textContent = "";
-  if (!VERSES.length) { counter.textContent = "0 / 0"; return; }
+
+  // Keep the OBS overlay mounted: it is fixed to the stage and must survive
+  // every slide change. Only rebuild the slide content itself.
+  const obsOverlay = document.getElementById("obsOverlay");
+  stage.querySelectorAll(":scope > :not(#obsOverlay)").forEach(el => el.remove());
+  if (!VERSES.length) {
+    counter.textContent = "0 / 0";
+    const obsNum = document.getElementById("obsSlideNumber");
+    if (obsNum) obsNum.textContent = "0";
+    return;
+  }
   idx = Math.max(0, Math.min(idx, VERSES.length - 1));
   const v = VERSES[idx];
   const wrap = document.createElement("section");
@@ -561,7 +720,10 @@ function renderSlide() {
   slideBody.appendChild(wrap);
   stage.appendChild(logo);
   stage.appendChild(slideBody);
+  if (obsOverlay) stage.appendChild(obsOverlay);
   counter.textContent = (idx + 1) + " / " + VERSES.length;
+  const obsNum = document.getElementById("obsSlideNumber");
+  if (obsNum) obsNum.textContent = String(idx + 1);
   prevBtn.disabled = idx === 0;
   nextBtn.disabled = idx === VERSES.length - 1;
   fitSlide();
@@ -573,19 +735,29 @@ function applyStageSize() {
   root.style.setProperty("--sw", w + "px");
   root.style.setProperty("--sh", h + "px");
   root.style.setProperty("--u", (h / 720) + "px");
-  store.set("dk-stage", stageSel.value);
+  if (!obsMode) store.set("dk-stage", stageSel.value);
   fitSlide();
 }
 
 function setView(mode) {
   body.classList.toggle("slides", mode === "slides");
   if (mode !== "slides") body.classList.remove("clean");
-  store.set("dk-view", mode);
+  if (!obsMode) store.set("dk-view", mode);
   renderSlide();
   updateRemote();
 }
 
 function go(d) { idx += d; renderSlide(); }
+
+// OBS click navigation: the faint center line divides the canvas.
+// Click right half for next; click left half for previous.
+stage.addEventListener("click", e => {
+  if (!obsMode || !inSlides()) return;
+  if (e.target.closest(".obs-overlay")) return;
+  const rect = stage.getBoundingClientRect();
+  if (!rect.width) return;
+  go((e.clientX - rect.left) >= rect.width / 2 ? 1 : -1);
+});
 
 viewSel.addEventListener("change", () => setView(viewSel.value));
 stageSel.addEventListener("change", applyStageSize);
@@ -620,7 +792,7 @@ function onKey(e, fromRemote) {
     case "End": e.preventDefault(); idx = VERSES.length - 1; renderSlide(); break;
     case "h": case "H": setClean(!body.classList.contains("clean")); break;
     case "Escape":
-      if (fromRemote) break;
+      if (fromRemote || obsMode) break;
       viewSel.value = "list"; setView("list"); break;
   }
 }
@@ -746,15 +918,46 @@ async function openRemote() {
 }
 
 document.getElementById("remoteBtn").addEventListener("click", openRemote);
+
 window.addEventListener("pagehide", () => { if (remoteAlive()) { try { remote.close(); } catch (e) {} } });
 
+// Dedicated OBS URL: ?obs always opens a clean 1920×1080 broadcast view,
+// independent of saved normal-page preferences.
+if (obsMode) {
+  root.setAttribute("data-theme", "dark");
+  currentLangs = ['ar', 'en', 'ur', 'ko'];
+  scriptSel.value = "naskh";
+  size.value = "30";
+  stageSel.value = "1920x1080";
+  viewSel.value = "slides";
+  LANGUAGES.forEach(lang => body.classList.toggle(`hide-${lang}`, !currentLangs.includes(lang)));
+  body.classList.remove("hide-ar", "hide-en", "hide-ur", "hide-ko");
+  body.classList.add("hide-tr", "hide-hi");
+}
+
 const savedStage = store.get("dk-stage");
-if (savedStage && [...stageSel.options].some(o => o.value === savedStage)) stageSel.value = savedStage;
+if (!obsMode && savedStage && [...stageSel.options].some(o => o.value === savedStage)) stageSel.value = savedStage;
 applyStageSize();
-if (store.get("dk-view") === "slides") viewSel.value = "slides";
+if (!obsMode && store.get("dk-view") === "slides") viewSel.value = "slides";
+if (obsMode) {
+  stageSel.value = "1920x1080";
+  root.setAttribute("data-theme", "dark");
+  currentLangs = ['ar', 'en', 'ur', 'ko'];
+  LANGUAGES.forEach(lang => body.classList.toggle(`hide-${lang}`, !currentLangs.includes(lang)));
+  viewSel.value = "slides";
+}
 setView(viewSel.value);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSlide);
-if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", fitSlide);
+applyObsState();
+if (obsMode) {
+  // Do not persist OBS-only overrides into the normal page preferences.
+  body.classList.add("obs-mode");
+  document.documentElement.style.setProperty("--sw", "1920px");
+  document.documentElement.style.setProperty("--sh", "1080px");
+  document.documentElement.style.setProperty("--u", "1.5px");
+  renderSlide();
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fitSlide(); });
+if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", () => { fitSlide(); });
 </script>
 </body>
 </html>

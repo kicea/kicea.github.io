@@ -1,4 +1,4 @@
-name: Generate KICEA Calendar Feed
+name: Generate KICEA Calendar Feeds
 
 on:
   push:
@@ -22,33 +22,34 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Generate KICEA calendar feed
+      - name: Generate Islamic and KICEA ICS feeds
+        run: node generate_ics.js
+
+      - name: Verify generated feeds
         run: |
-          node generate_ics.js
+          set -e
 
-      - name: Verify generated ICS
-        run: |
-          if [ ! -f kicea-calendar.ics ]; then
-            echo "ERROR: kicea-calendar.ics was not created"
-            exit 1
-          fi
+          test -f islamic-calendar.ics
+          test -f kicea-events.ics
 
-          echo "ICS file successfully generated:"
-          ls -lh kicea-calendar.ics
+          echo "Islamic calendar feed:"
+          ls -lh islamic-calendar.ics
+          echo "Events: $(grep -c 'BEGIN:VEVENT' islamic-calendar.ics)"
 
-          echo "Number of calendar events:"
-          grep -c "BEGIN:VEVENT" kicea-calendar.ics
+          echo "KICEA events feed:"
+          ls -lh kicea-events.ics
+          echo "Events: $(grep -c 'BEGIN:VEVENT' kicea-events.ics)"
 
-      - name: Commit and push ICS
+      - name: Commit and push generated feeds
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add kicea-calendar.ics
+          git add islamic-calendar.ics kicea-events.ics
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update KICEA calendar feed"
+            git commit -m "Update KICEA calendar feeds"
             git push
           fi

@@ -29,7 +29,7 @@
     <section id="calendar" class="py-16 bg-white dark:bg-gray-950 transition-colors duration-200">
         <div class="max-w-5xl mx-auto px-4">
             <div class="relative mb-4">
-                <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100 text-center">KICEA Calendar</h2>
+                <div class="text-center"><h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100">KICEA Calendar</h2><p class="text-sm font-semibold text-purple-700 dark:text-purple-300 mt-1">1448 AH</p></div>
                 <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                     <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -97,13 +97,69 @@
                 </div>
 
                 <div class="mt-6 text-center">
-                    <button id="downloadAllBtn" class="bg-purple-600 dark:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition">Add to Personal Calendar</button>
+                    <button id="subscribeCalendarBtn" type="button" class="bg-purple-600 dark:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition">Subscribe to KICEA Calendar</button>
                 </div>
 
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-6">
                     ⓘ Estimates based on moonsighting predictions, subject to change.<br>
-                    "Add to Personal Calendar" downloads a file you can import into Google Calendar, Apple Calendar, Outlook, or any other calendar app.
+                    Subscribe once to keep 1448 AH KICEA events in a separate calendar that you can turn on/off or remove later.
                 </p>
+            </div>
+        </div>
+
+        <!-- Calendar subscription modal -->
+        <div id="calendarSubscribeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div id="calendarSubscribeBackdrop" class="absolute inset-0 bg-black/50"></div>
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Subscribe to KICEA Calendar</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">A separate, read-only calendar that stays connected to KICEA.</p>
+                    </div>
+                    <button id="calendarSubscribeCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                <div class="px-5 py-5 space-y-5">
+                    <div class="rounded-lg border border-purple-200 dark:border-purple-900/60 bg-purple-50 dark:bg-purple-950/30 p-4">
+                        <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Your calendar subscription URL</p>
+                        <div class="flex gap-2">
+                            <input id="calendarFeedUrl" type="text" readonly class="min-w-0 flex-1 text-xs sm:text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-700 dark:text-gray-200 focus:outline-none">
+                            <button id="copyCalendarFeedUrlBtn" type="button" class="shrink-0 px-3 py-2 rounded-lg bg-gray-800 dark:bg-gray-700 text-white text-xs font-semibold hover:bg-gray-900 dark:hover:bg-gray-600">Copy</button>
+                        </div>
+                        <p id="calendarFeedCopyStatus" class="text-xs text-green-700 dark:text-green-400 mt-2 hidden">Copied.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">Google Calendar</h4>
+                        <a id="googleCalendarSubscribeLink" href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener" class="block text-center bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 px-4 py-3 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition">Open Google Calendar</a>
+                        <ol class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1 list-decimal list-inside">
+                            <li>Open Google Calendar on a computer.</li>
+                            <li>Choose <strong>Other calendars → From URL</strong>.</li>
+                            <li>Paste the KICEA subscription URL above and click <strong>Add calendar</strong>.</li>
+                        </ol>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">Apple Calendar</h4>
+                        <a id="appleCalendarSubscribeLink" href="#" class="block text-center bg-black text-white dark:bg-white dark:text-black px-4 py-3 rounded-lg font-semibold hover:opacity-90 transition">Subscribe with Apple Calendar</a>
+                        <ol class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1 list-decimal list-inside">
+                            <li>On iPhone/iPad, use <strong>Calendar → Add Calendar → Add Subscription Calendar</strong>.</li>
+                            <li>On Mac, use <strong>Calendar → File → New Calendar Subscription</strong>.</li>
+                            <li>Use the KICEA subscription URL above.</li>
+                        </ol>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4">
+                        <p class="text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Why this is a separate calendar</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">KICEA events are subscribed as their own calendar. Users can hide/show it without affecting their personal calendars, and can unsubscribe/remove it whenever they want. The subscription is read-only.</p>
+                    </div>
+
+                    <p class="text-[11px] leading-relaxed text-gray-400 dark:text-gray-500">
+                        The subscription URL must point to a publicly reachable <code class="font-mono">.ics</code> feed. Keep the feed at the same URL so existing subscribers continue receiving future updates.
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -193,13 +249,13 @@
             // ALL OF THE ABOVE IS AUTOMATICALLY REFLECTED in: the monthly grid,
             // the two "List of ... Events" panels below the grid (current month
             // only), AND the "View full list" modals opened from the legends
-            // above (every event across the whole 1448–1451 range). You never
+            // above (every event across the 1448 AH range). You never
             // need to touch anything past this comment block.
             // =================================================================
 
             // ---- Dark mode ----
-            // Manual toggle (persisted in localStorage), falling back to the
-            // visitor's OS-level preference on first visit.
+            // Manual toggle (persisted in localStorage). Light mode is the default
+            // regardless of the visitor's device or browser theme.
             const THEME_KEY = 'kicea-calendar-theme';
             function getStoredTheme() {
                 try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
@@ -221,7 +277,7 @@
                     sunIcon.classList.toggle('hidden', !isDark);
                 }
             }
-            let isDarkMode = getStoredTheme() ? getStoredTheme() === 'dark' : systemPrefersDark();
+            let isDarkMode = getStoredTheme() === 'dark';
             applyTheme(isDarkMode);
             const themeToggleBtn = document.getElementById('themeToggleBtn');
             if (themeToggleBtn) {
@@ -229,16 +285,6 @@
                     isDarkMode = !isDarkMode;
                     applyTheme(isDarkMode);
                     storeTheme(isDarkMode ? 'dark' : 'light');
-                });
-            }
-            // Follow the OS setting live, but only until the visitor picks a
-            // preference of their own via the toggle button.
-            if (window.matchMedia) {
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                    if (!getStoredTheme()) {
-                        isDarkMode = e.matches;
-                        applyTheme(isDarkMode);
-                    }
                 });
             }
 
@@ -260,15 +306,14 @@
 
             // ---- Estimated Gregorian start dates for each Hijri month, by year ----
             const yearStartDates = {
-                1448: ["2026-06-17", "2026-07-16", "2026-08-15", "2026-09-14", "2026-10-14", "2026-11-12", "2026-12-12", "2027-01-10", "2027-02-09", "2027-03-10", "2027-04-09", "2027-05-08"],
-                1449: ["2027-06-07", "2027-07-06", "2027-08-05", "2027-09-03", "2027-10-03", "2027-11-01", "2027-12-01", "2027-12-30", "2028-01-29", "2028-02-28", "2028-03-28", "2028-04-27"],
-                1450: ["2028-05-26", "2028-06-25", "2028-07-24", "2028-08-23", "2028-09-21", "2028-10-21", "2028-11-19", "2028-12-18", "2029-01-17", "2029-02-16", "2029-03-17", "2029-04-16"],
-                1451: ["2029-05-16", "2029-06-14", "2029-07-14", "2029-08-13", "2029-09-11", "2029-10-10", "2029-11-09", "2029-12-08", "2030-01-06", "2030-02-05", "2030-03-06", "2030-04-05"]
+                // Add future Hijri years here when they are ready.
+                1448: ["2026-06-17", "2026-07-16", "2026-08-15", "2026-09-14", "2026-10-14", "2026-11-12", "2026-12-12", "2027-01-10", "2027-02-09", "2027-03-10", "2027-04-09", "2027-05-08"]
             };
 
             // Flatten into a single chronological list. Each entry keeps its Hijri
             // year and its 1-12 month number (used for the deep-link hash), plus
             // the month name/label (used to look up recurring Islamic events).
+            // The calendar currently contains only 1448 AH.
             const islamicMonths = [];
             Object.keys(yearStartDates).sort((a, b) => Number(a) - Number(b)).forEach(function(year) {
                 yearStartDates[year].forEach(function(start, i) {
@@ -278,7 +323,7 @@
 
             // Islamic calendar events fall on the same Hijri day every year, so they
             // are keyed by month name (not year) and apply automatically to every
-            // occurrence of that month across 1448-1451.
+            // occurrence of that month for 1448 AH.
             const eventsByMonth = {
                 "Muharram": {
                     1: { label: "Beginning of the Hijri Year", type: "other" },
@@ -360,7 +405,7 @@
             // "type" drives the accent border color on the calendar cell and the legend.
             const kiceaEvents = {
                 recurring: [
-                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua", exceptions: ["2026-10-29", "2026-11-12", "2026-11-19", "2026-12-17", "2026-12-24", "2027-01-07", "2027-02-25", "2027-03-11", "2027-03-18",, "2027-05-13"] }
+                    { weekday: 4, label: "Dua e Kumayl", startDate: "2026-09-14", type: "dua", exceptions: ["2026-10-29", "2026-11-12", "2026-11-19", "2026-12-17", "2026-12-24", "2027-01-07", "2027-02-25", "2027-03-11", "2027-03-18", "2027-05-13"] }
                 ],
                 special: [
                     { date: "2026-09-27", label: "Birth of Imam Hasan Askari (as)", type: "celebration" },
@@ -369,21 +414,6 @@
                     { date: "2026-06-26", label: "Ashura", type: "commemoration" },
                     { date: "2027-03-10", label: "Eid-ul-Fitr", type: "celebration" },
                     { date: "2027-05-17", label: "Eid-ul-Azha", type: "celebration" },
-
-                    // 1449 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
-                    { date: "2027-06-16", label: "Ashura", type: "commemoration" },
-                    { date: "2028-02-28", label: "Eid-ul-Fitr", type: "celebration" },
-                    { date: "2028-05-06", label: "Eid-ul-Azha", type: "celebration" },
-
-                    // 1450 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
-                    { date: "2028-06-04", label: "Ashura", type: "commemoration" },
-                    { date: "2029-02-16", label: "Eid-ul-Fitr", type: "celebration" },
-                    { date: "2029-04-25", label: "Eid-ul-Azha", type: "celebration" },
-
-                    // 1451 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
-                    { date: "2029-05-25", label: "Ashura", type: "commemoration" },
-                    { date: "2030-02-05", label: "Eid-ul-Fitr", type: "celebration" },
-                    { date: "2030-04-14", label: "Eid-ul-Azha", type: "celebration" },
 
                     // Late 2026 one-off center events
                     { date: "2026-10-25", label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
@@ -421,7 +451,7 @@
             // ---- KICEA fixed annual events (recur every Hijri year automatically) ----
             // Unlike "special" (exact Gregorian date, one-off) these are keyed by Hijri
             // month name + day, so they apply to every occurrence of that month across
-            // 1448-1451 (and beyond), the same way eventsByMonth works for Islamic events.
+            // 1448 AH, the same way eventsByMonth works for Islamic events.
             const kiceaHussainCommemoration = { label: "Martyrdom of Imam Hussain (as) and his companions", type: "commemoration" };
             const kiceaAnnualByMonth = {
                 "Muharram": {
@@ -532,12 +562,12 @@
                 return today < parseUTC(islamicMonths[0].start).getTime() ? 0 : islamicMonths.length - 1;
             }
 
-            // ---- Deep-linking: /1448/1 (Muharram) ... /1451/12 (Dhu al-Hijjah) ----
+            // ---- Deep-linking: /1448/1 (Muharram) ... /1448/12 (Dhu al-Hijjah) ----
             // Matches either a URL hash (#1449/3) or a path segment (/1449/3), so the
             // link works both as a plain fragment (no server config needed) and, if the
             // page is served with rewrites so unknown paths fall back to this file, as a
             // real path. Now resolved against a specific (year, month-number) pair since
-            // the calendar spans several Hijri years.
+            // the calendar currently contains only 1448 AH.
             function parseMonthFromLocation() {
                 try {
                     const candidates = [window.location.hash.replace(/^#\/?/, ''), window.location.pathname];
@@ -601,7 +631,7 @@
             islamicMonths.forEach((m, i) => {
                 const opt = document.createElement('option');
                 opt.value = i;
-                opt.textContent = m.name + ' ' + m.year;
+                opt.textContent = m.name;
                 select.appendChild(opt);
             });
 
@@ -662,6 +692,57 @@
                 lines.push('DESCRIPTION:' + escapeICS(label + ' — KICEA weekly event, Hussainiya Seoul'));
                 lines.push('END:VEVENT');
                 return foldICS(lines);
+            }
+
+            // =================================================================
+            // CALENDAR SUBSCRIPTION
+            // Keep this feed URL stable. Upload/serve the generated KICEA .ics
+            // feed at this URL so Google/Apple subscriptions continue working.
+            // If this HTML and the .ics file are hosted in the same folder, the
+            // default relative URL below needs no editing.
+            // =================================================================
+            const CALENDAR_FEED_URL = new URL('kicea-calendar.ics', window.location.href).href;
+
+            function openCalendarSubscribeModal() {
+                const modal = document.getElementById('calendarSubscribeModal');
+                const feedInput = document.getElementById('calendarFeedUrl');
+                const appleLink = document.getElementById('appleCalendarSubscribeLink');
+                if (feedInput) feedInput.value = CALENDAR_FEED_URL;
+                if (appleLink) {
+                    appleLink.href = CALENDAR_FEED_URL.replace(/^https?:/, 'webcal:');
+                }
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
+                }
+            }
+
+            function closeCalendarSubscribeModal() {
+                const modal = document.getElementById('calendarSubscribeModal');
+                if (modal) modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            async function copyCalendarFeedUrl() {
+                const status = document.getElementById('calendarFeedCopyStatus');
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(CALENDAR_FEED_URL);
+                    } else {
+                        fallbackCopy(CALENDAR_FEED_URL, function() {});
+                    }
+                    if (status) {
+                        status.classList.remove('hidden');
+                        setTimeout(function() { status.classList.add('hidden'); }, 1800);
+                    }
+                } catch (e) {
+                    fallbackCopy(CALENDAR_FEED_URL, function() {
+                        if (status) {
+                            status.classList.remove('hidden');
+                            setTimeout(function() { status.classList.add('hidden'); }, 1800);
+                        }
+                    });
+                }
             }
 
             function downloadICS(filename, veventsArray) {
@@ -738,7 +819,7 @@
             }
 
             // =================================================================
-            // FULL EVENT LIST (all months, entire 1448–1451 range) — used by the
+            // FULL EVENT LIST (all months, the 1448 AH range) — used by the
             // "View full list" buttons above the legends. These walk every month
             // in `islamicMonths` and pull straight from the same data/helpers the
             // monthly grid uses, so anything added per the instructions above
@@ -946,7 +1027,7 @@
             }
 
             function showAllKiceaEvents() {
-                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Remaining KICEA event across ' + islamicMonths[0].year + ' AH. </p>';
+                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Remaining KICEA events across ' + islamicMonths[0].year + ' AH. </p>';
 
                 const rows = getAllKiceaDatedEntries();
                 let closestRowId = '';
@@ -1174,26 +1255,12 @@
             select.addEventListener('change', function() {
                 render(Number(select.value));
             });
-            document.getElementById('downloadAllBtn').addEventListener('click', function() {
-                const allVevents = [];
-                islamicMonths.forEach((m, idx) => {
-                    const data = getMonthData(idx);
-                    Object.entries(data.special).forEach(([day, info]) => {
-                        const date = addDays(data.start, Number(day) - 1);
-                        allVevents.push(buildEventICS('evt-' + idx + '-' + day, info.label, date));
-                    });
-                    Object.entries(data.kiceaAnnual).forEach(([day, info]) => {
-                        const date = addDays(data.start, Number(day) - 1);
-                        allVevents.push(buildEventICS('kicea-annual-' + idx + '-' + day, info.label, date));
-                    });
-                });
-                kiceaEvents.recurring.forEach((r, idx) => {
-                    allVevents.push(buildRecurringEventICS('kicea-rec-' + idx, r.label, r.weekday, r.startDate, r.exceptions));
-                });
-                kiceaEvents.special.forEach((s, idx) => {
-                    allVevents.push(buildEventICS('kicea-special-' + idx, s.label, parseUTC(s.date)));
-                });
-                downloadICS('hussainiya-seoul-islamic-calendar-1448-1451.ics', allVevents);
+            document.getElementById('subscribeCalendarBtn').addEventListener('click', openCalendarSubscribeModal);
+            document.getElementById('calendarSubscribeCloseBtn').addEventListener('click', closeCalendarSubscribeModal);
+            document.getElementById('calendarSubscribeBackdrop').addEventListener('click', closeCalendarSubscribeModal);
+            document.getElementById('copyCalendarFeedUrlBtn').addEventListener('click', copyCalendarFeedUrl);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeCalendarSubscribeModal();
             });
 
             // Support browser back/forward and manually-typed/edited hashes (e.g. someone

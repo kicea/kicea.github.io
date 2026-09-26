@@ -2,7 +2,9 @@ const fs = require('fs');
 const vm = require('vm');
 
 const HTML_FILE = 'calendar.html';
-const ICS_FILE = 'kicea-calendar.ics';
+
+const ISLAMIC_ICS = 'islamic-calendar.ics';
+const KICEA_ICS = 'kicea-events.ics';
 
 const html = fs.readFileSync(HTML_FILE, 'utf8');
 
@@ -13,577 +15,810 @@ const start = html.indexOf(startMarker);
 const end = html.indexOf(endMarker, start);
 
 if (start < 0 || end < 0) {
-  throw new Error('Could not find the KICEA event data in calendar.html');
+    throw new Error(
+        'Could not find the calendar data in calendar.html'
+    );
 }
 
 /*
  * Extract the calendar data from calendar.html.
  *
- * We execute only the data section inside a sandbox.
- * This allows the GitHub Action to use the existing
- * calendar data without maintaining a second copy.
+ * The calendar itself remains the single source of truth.
+ * This script does not maintain a second copy of the events.
  */
 const dataSource =
-  html.slice(start, end) +
-  `
+    html.slice(start, end) +
+    `
 globalThis.__KICEA_DATA = {
-  yearStartDates,
-  eventsByMonth,
-  kiceaEvents,
-  kiceaAnnualByMonth,
-  kiceaHussainCommemoration
+    yearStartDates,
+    eventsByMonth,
+    kiceaEvents,
+    kiceaAnnualByMonth,
+    kiceaHussainCommemoration
 };
 `;
 
 const sandbox = {};
 
 vm.runInNewContext(dataSource, sandbox, {
-  filename: HTML_FILE
+    filename: HTML_FILE
 });
 
 const {
-  yearStartDates,
-  eventsByMonth,
-  kiceaEvents,
-  kiceaAnnualByMonth,
-  kiceaHussainCommemoration
+    yearStartDates,
+    eventsByMonth,
+    kiceaEvents,
+    kiceaAnnualByMonth,
+    kiceaHussainCommemoration
 } = sandbox.__KICEA_DATA;
 
 
-/* -------------------------------------------------------
-   Basic helpers
-------------------------------------------------------- */
+/* =========================================================
+   Helpers
+========================================================= */
 
 const monthNames = [
-  'Muharram',
-  'Safar',
-  "Rabi' al-Awwal",
-  "Rabi' al-Thani",
-  'Jumada al-Awwal',
-  'Jumada al-Thani',
-  'Rajab',
-  "Sha'ban",
-  'Ramadan',
-  'Shawwal',
-  "Dhu al-Qi'dah",
-  'Dhu al-Hijjah'
+    'Muharram',
+    'Safar',
+    "Rabi' al-Awwal",
+    "Rabi' al-Thani",
+    'Jumada al-Awwal',
+    'Jumada al-Thani',
+    'Rajab',
+    "Sha'ban",
+    'Ramadan',
+    'Shawwal',
+    "Dhu al-Qi'dah",
+    'Dhu al-Hijjah'
 ];
 
-const pad = n => String(n).padStart(2, '0');
-
-function parseUTC(s) {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d));
+function pad(n) {
+    return String(n).padStart(2, '0');
 }
 
-function addDays(date, n) {
-  const d = new Date(date);
-  d.setUTCDate(d.getUTCDate() + n);
-  return d;
+function parseUTC(value) {
+    const [y, m, d] = value.split('-').map(Number);
+
+    return new Date(
+        Date.UTC(y, m - 1, d)
+    );
+}
+
+function addDays(date, amount) {
+    const result = new Date(date);
+
+    result.setUTCDate(
+        result.getUTCDate() + amount
+    );
+
+    return result;
 }
 
 function icsDate(date) {
-  return (
-    date.getUTCFullYear() +
-    pad(date.getUTCMonth() + 1) +
-    pad(date.getUTCDate())
-  );
+    return (
+        date.getUTCFullYear() +
+        pad(date.getUTCMonth() + 1) +
+        pad(date.getUTCDate())
+    );
 }
 
-function escapeICS(text) {
-  return String(text)
-    .replace(/\\/g, '\\\\')
-    .replace(/([,;])/g, '\\$1')
-    .replace(/\r?\n/g, '\\n');
+function escapeICS(value) {
+    return String(value)
+        .replace(/\\/g, '\\\\')
+        .replace(/([,;])/g, '\\$1')
+        .replace(/\r?\n/g, '\\n');
 }
 
-function icsStamp() {
-  const n = new Date();
+function icsTimestamp() {
+    const now = new Date();
 
-  return (
-    n.getUTCFullYear() +
-    pad(n.getUTCMonth() + 1) +
-    pad(n.getUTCDate()) +
-    'T' +
-    pad(n.getUTCHours()) +
-    pad(n.getUTCMinutes()) +
-    pad(n.getUTCSeconds()) +
-    'Z'
-  );
+    return (
+        now.getUTCFullYear() +
+        pad(now.getUTCMonth() + 1) +
+        pad(now.getUTCDate()) +
+        'T' +
+        pad(now.getUTCHours()) +
+        pad(now.getUTCMinutes()) +
+        pad(now.getUTCSeconds()) +
+        'Z'
+    );
 }
 
 function firstWeekdayOnOrAfter(date, weekday) {
-  const diff =
-    (weekday - date.getUTCDay() + 7) % 7;
+    const difference =
+        (weekday - date.getUTCDay() + 7) % 7;
 
-  return addDays(date, diff);
+    return addDays(date, difference);
 }
 
-function uidFor(kind, parts) {
-  return `${kind}-${parts.join('-')}@hussainiya-seoul`;
+function makeUID(prefix, parts) {
+    return (
+        prefix +
+        '-' +
+        parts.join('-') +
+        '@kicea.github.io'
+    );
 }
 
 
-/* -------------------------------------------------------
-   Build the Hijri month list
-------------------------------------------------------- */
+/* =========================================================
+   Build Hijri month list
+========================================================= */
 
 const months = [];
 
-for (
-  const year of Object.keys(yearStartDates)
+Object.keys(yearStartDates)
     .sort((a, b) => Number(a) - Number(b))
-) {
-  yearStartDates[year].forEach((startDate, i) => {
-    months.push({
-      year: Number(year),
-      num: i + 1,
-      name: monthNames[i],
-      start: parseUTC(startDate)
+    .forEach(year => {
+
+        yearStartDates[year].forEach(
+            (startDate, index) => {
+
+                months.push({
+
+                    year: Number(year),
+
+                    number: index + 1,
+
+                    name: monthNames[index],
+
+                    start: parseUTC(startDate)
+
+                });
+
+            }
+        );
+
     });
-  });
-}
 
 if (months.length === 0) {
-  throw new Error('No Hijri months found in calendar.html');
+    throw new Error(
+        'No Hijri months were found.'
+    );
 }
 
 
-/* -------------------------------------------------------
+/* =========================================================
    Calendar boundaries
-------------------------------------------------------- */
+========================================================= */
 
-const calendarStart = months[0].start;
+const calendarStart =
+    months[0].start;
 
 const calendarEnd =
-  months.length > 1
-    ? addDays(months[months.length - 1].start, 29)
-    : addDays(calendarStart, 29);
-
-
-/* -------------------------------------------------------
-   Determine month length
-------------------------------------------------------- */
-
-function monthLength(index) {
-  if (index < months.length - 1) {
-    return Math.round(
-      (months[index + 1].start - months[index].start) /
-      86400000
-    );
-  }
-
-  return 30;
-}
-
-
-/* -------------------------------------------------------
-   KICEA annual events
-------------------------------------------------------- */
-
-function annualEvent(monthName, day, length) {
-
-  if (
-    kiceaAnnualByMonth[monthName] &&
-    kiceaAnnualByMonth[monthName][day]
-  ) {
-    return kiceaAnnualByMonth[monthName][day];
-  }
-
-  if (
-    monthName === 'Dhu al-Hijjah' &&
-    day === length
-  ) {
-    return kiceaHussainCommemoration;
-  }
-
-  return null;
-}
-
-
-/* -------------------------------------------------------
-   Generate events
-------------------------------------------------------- */
-
-const entries = [];
-
-
-/* -------------------------------------------------------
-   Islamic events
-------------------------------------------------------- */
-
-months.forEach((month, index) => {
-
-  const length = monthLength(index);
-
-  const special = {
-    ...(eventsByMonth[month.name] || {})
-  };
-
-
-  /*
-   * Jumu'ah al-Wida:
-   * Find the final Friday of Ramadan.
-   */
-  if (month.name === 'Ramadan') {
-
-    for (let day = length; day >= 1; day--) {
-
-      const d = addDays(
-        month.start,
-        day - 1
-      );
-
-      if (d.getUTCDay() === 5) {
-
-        if (special[day]) {
-
-          special[day] = {
-            label:
-              special[day].label +
-              " · Jumu'ah al-Wida",
-
-            type:
-              special[day].type
-          };
-
-        } else {
-
-          special[day] = {
-            label:
-              "Jumu'ah al-Wida (last Friday of Ramadan)",
-
-            type: 'other'
-          };
-
-        }
-
-        break;
-      }
-    }
-  }
-
-
-  /*
-   * Standard Islamic events.
-   */
-  Object.entries(special).forEach(
-    ([day, info]) => {
-
-      const date = addDays(
-        month.start,
-        Number(day) - 1
-      );
-
-      if (
-        date >= calendarStart &&
-        date <= calendarEnd
-      ) {
-
-        entries.push({
-
-          date,
-
-          label: info.label,
-
-          description:
-            info.label +
-            ' — Hussainiya Seoul Islamic Calendar',
-
-          uid: uidFor(
-            'evt',
-            [index, day]
-          )
-        });
-
-      }
-    }
-  );
-
-
-  /*
-   * KICEA annual Hijri events.
-   */
-  for (
-    let day = 1;
-    day <= length;
-    day++
-  ) {
-
-    const info = annualEvent(
-      month.name,
-      day,
-      length
-    );
-
-    if (!info) continue;
-
-    const date = addDays(
-      month.start,
-      day - 1
-    );
-
-    entries.push({
-
-      date,
-
-      label: info.label,
-
-      description:
-        info.label +
-        ' — KICEA annual event, Hussainiya Seoul',
-
-      uid: uidFor(
-        'kicea-annual',
-        [index, day]
-      )
-    });
-  }
-});
-
-
-/* -------------------------------------------------------
-   One-off KICEA events
-------------------------------------------------------- */
-
-kiceaEvents.special.forEach(event => {
-
-  const date = parseUTC(event.date);
-
-  if (
-    date < calendarStart ||
-    date > calendarEnd
-  ) {
-    return;
-  }
-
-  entries.push({
-
-    date,
-
-    label: event.label,
-
-    description:
-      event.label +
-      ' — KICEA event, Hussainiya Seoul',
-
-    uid: uidFor(
-      'kicea-special',
-      [event.date]
-    )
-  });
-});
-
-
-/* -------------------------------------------------------
-   Weekly KICEA events
-------------------------------------------------------- */
-
-kiceaEvents.recurring.forEach(event => {
-
-  const first =
-    firstWeekdayOnOrAfter(
-      parseUTC(event.startDate),
-      event.weekday
-    );
-
-  if (first > calendarEnd) {
-    return;
-  }
-
-
-  const lastOccurrence =
     addDays(
-      calendarEnd,
-      -(
-        (
-          calendarEnd.getUTCDay() -
-          event.weekday +
-          7
-        ) % 7
-      )
+        months[months.length - 1].start,
+        29
     );
 
 
-  if (lastOccurrence < first) {
-    return;
-  }
+/* =========================================================
+   Determine Hijri month length
+========================================================= */
+
+function getMonthLength(index) {
+
+    if (index < months.length - 1) {
+
+        return Math.round(
+            (
+                months[index + 1].start -
+                months[index].start
+            ) / 86400000
+        );
+
+    }
+
+    return 30;
+}
 
 
-  entries.push({
+/* =========================================================
+   Event collections
+========================================================= */
 
-    date: first,
-
-    label: event.label,
-
-    description:
-      event.label +
-      ' — KICEA weekly event, Hussainiya Seoul',
-
-    uid: uidFor(
-      'kicea-weekly',
-      [
-        event.label
-          .replace(
-            /[^A-Za-z0-9]+/g,
-            '-'
-          )
-          .replace(
-            /^-|-$/g,
-            ''
-          )
-      ]
-    ),
-
-    recurring: true,
-
-    weekday: event.weekday,
-
-    until: lastOccurrence,
-
-    exceptions:
-      event.exceptions || []
-  });
-
-});
+const islamicEvents = [];
+const kiceaEventsList = [];
 
 
-/* -------------------------------------------------------
-   Sort events
-------------------------------------------------------- */
+/* =========================================================
+   Islamic calendar events
+========================================================= */
 
-entries.sort(
-  (a, b) =>
-    a.date - b.date ||
-    a.label.localeCompare(b.label)
-);
+months.forEach((month, monthIndex) => {
 
+    const monthLength =
+        getMonthLength(monthIndex);
 
-/* -------------------------------------------------------
-   Build ICS
-------------------------------------------------------- */
-
-const stamp = icsStamp();
-
-const lines = [
-
-  'BEGIN:VCALENDAR',
-
-  'VERSION:2.0',
-
-  'PRODID:-//KICEA//Islamic Calendar 1448 AH//EN',
-
-  'CALSCALE:GREGORIAN',
-
-  'X-WR-CALNAME:KICEA Calendar — 1448 AH',
-
-  'X-WR-CALDESC:KICEA Islamic Calendar — 1448 AH'
-];
-
-
-/* -------------------------------------------------------
-   Write VEVENT blocks
-------------------------------------------------------- */
-
-for (const event of entries) {
-
-  lines.push(
-
-    'BEGIN:VEVENT',
-
-    'UID:' + event.uid,
-
-    'DTSTAMP:' + stamp,
-
-    'DTSTART;VALUE=DATE:' +
-      icsDate(event.date),
-
-    'DTEND;VALUE=DATE:' +
-      icsDate(
-        addDays(event.date, 1)
-      )
-  );
-
-
-  /*
-   * Weekly recurring event.
-   */
-  if (event.recurring) {
-
-    const weekdayCodes = [
-      'SU',
-      'MO',
-      'TU',
-      'WE',
-      'TH',
-      'FR',
-      'SA'
-    ];
-
-    lines.push(
-
-      'RRULE:FREQ=WEEKLY;BYDAY=' +
-        weekdayCodes[event.weekday] +
-        ';UNTIL=' +
-        icsDate(event.until)
-    );
+    const monthEvents = {
+        ...(eventsByMonth[month.name] || {})
+    };
 
 
     /*
-     * Remove exceptional dates.
+     * Jumu'ah al-Wida is part of the Islamic calendar feed.
+     * It is the final Friday of Ramadan.
      */
-    for (
-      const exception of event.exceptions
+    if (month.name === 'Ramadan') {
+
+        for (
+            let day = monthLength;
+            day >= 1;
+            day--
+        ) {
+
+            const date = addDays(
+                month.start,
+                day - 1
+            );
+
+            if (date.getUTCDay() !== 5) {
+                continue;
+            }
+
+            if (monthEvents[day]) {
+
+                monthEvents[day] = {
+
+                    ...monthEvents[day],
+
+                    label:
+                        monthEvents[day].label +
+                        ' · Jumu\'ah al-Wida'
+
+                };
+
+            } else {
+
+                monthEvents[day] = {
+
+                    label:
+                        'Jumu\'ah al-Wida (last Friday of Ramadan)',
+
+                    type: 'other'
+
+                };
+
+            }
+
+            break;
+        }
+    }
+
+
+    Object.entries(monthEvents)
+        .forEach(([day, info]) => {
+
+            const date = addDays(
+                month.start,
+                Number(day) - 1
+            );
+
+            if (
+                date < calendarStart ||
+                date > calendarEnd
+            ) {
+                return;
+            }
+
+            islamicEvents.push({
+
+                date,
+
+                label: info.label,
+
+                description:
+                    info.label +
+                    ' — KICEA Islamic Calendar',
+
+                type:
+                    info.type || 'other',
+
+                uid:
+                    makeUID(
+                        'islamic',
+                        [
+                            month.year,
+                            month.number,
+                            day,
+                            info.label
+                                .replace(
+                                    /[^A-Za-z0-9]+/g,
+                                    '-'
+                                )
+                        ]
+                    )
+
+            });
+
+        });
+
+});
+
+
+/* =========================================================
+   KICEA one-off events
+========================================================= */
+
+(kiceaEvents.special || [])
+    .forEach(event => {
+
+        const date =
+            parseUTC(event.date);
+
+        if (
+            date < calendarStart ||
+            date > calendarEnd
+        ) {
+            return;
+        }
+
+        kiceaEventsList.push({
+
+            date,
+
+            label: event.label,
+
+            description:
+                event.label +
+                ' — KICEA Event',
+
+            type:
+                event.type || 'program',
+
+            uid:
+                makeUID(
+                    'kicea-special',
+                    [
+                        event.date,
+                        event.label
+                            .replace(
+                                /[^A-Za-z0-9]+/g,
+                                '-'
+                            )
+                    ]
+                )
+
+        });
+
+    });
+
+
+/* =========================================================
+   KICEA fixed annual Hijri events
+========================================================= */
+
+months.forEach((month, monthIndex) => {
+
+    const monthLength =
+        getMonthLength(monthIndex);
+
+    const annual =
+        kiceaAnnualByMonth || {};
+
+    const monthAnnual =
+        annual[month.name] || {};
+
+
+    Object.entries(monthAnnual)
+        .forEach(([day, info]) => {
+
+            const date = addDays(
+                month.start,
+                Number(day) - 1
+            );
+
+            if (
+                date < calendarStart ||
+                date > calendarEnd
+            ) {
+                return;
+            }
+
+            kiceaEventsList.push({
+
+                date,
+
+                label: info.label,
+
+                description:
+                    info.label +
+                    ' — KICEA Event',
+
+                type:
+                    info.type || 'program',
+
+                uid:
+                    makeUID(
+                        'kicea-annual',
+                        [
+                            month.year,
+                            month.number,
+                            day,
+                            info.label
+                                .replace(
+                                    /[^A-Za-z0-9]+/g,
+                                    '-'
+                                )
+                        ]
+                    )
+
+            });
+
+        });
+
+
+    /*
+     * The Hussain commemoration is dynamically applied
+     * to the last day of Dhu al-Hijjah.
+     */
+    if (
+        month.name === 'Dhu al-Hijjah'
     ) {
 
-      const exDate =
-        parseUTC(exception);
-
-      if (
-        exDate >= event.date &&
-        exDate <= event.until
-      ) {
-
-        lines.push(
-          'EXDATE;VALUE=DATE:' +
-          icsDate(exDate)
+        const date = addDays(
+            month.start,
+            monthLength - 1
         );
 
-      }
+        if (
+            date >= calendarStart &&
+            date <= calendarEnd
+        ) {
+
+            kiceaEventsList.push({
+
+                date,
+
+                label:
+                    kiceaHussainCommemoration.label,
+
+                description:
+                    kiceaHussainCommemoration.label +
+                    ' — KICEA Event',
+
+                type:
+                    kiceaHussainCommemoration.type ||
+                    'commemoration',
+
+                uid:
+                    makeUID(
+                        'kicea-hussain',
+                        [
+                            month.year,
+                            month.number,
+                            monthLength
+                        ]
+                    )
+
+            });
+
+        }
     }
-  }
+
+});
 
 
-  lines.push(
+/* =========================================================
+   KICEA weekly recurring events
+========================================================= */
 
-    'SUMMARY:' +
-      escapeICS(event.label),
+(kiceaEvents.recurring || [])
+    .forEach(event => {
 
-    'DESCRIPTION:' +
-      escapeICS(event.description),
+        const firstDate =
+            parseUTC(event.startDate);
 
-    'END:VEVENT'
-  );
+        const firstOccurrence =
+            firstWeekdayOnOrAfter(
+                firstDate,
+                event.weekday
+            );
+
+        if (
+            firstOccurrence > calendarEnd
+        ) {
+            return;
+        }
+
+        const exceptions =
+            event.exceptions || [];
+
+        const weekdayCodes = [
+            'SU',
+            'MO',
+            'TU',
+            'WE',
+            'TH',
+            'FR',
+            'SA'
+        ];
+
+        /*
+         * Create a single recurring event.
+         * Its RRULE is limited to the current
+         * calendar year/range.
+         */
+        let lastOccurrence =
+            calendarEnd;
+
+        const lastWeekday =
+            calendarEnd.getUTCDay();
+
+        const daysBack =
+            (
+                lastWeekday -
+                event.weekday +
+                7
+            ) % 7;
+
+        lastOccurrence =
+            addDays(
+                calendarEnd,
+                -daysBack
+            );
+
+        if (
+            lastOccurrence <
+            firstOccurrence
+        ) {
+            return;
+        }
+
+        const filteredExceptions =
+            exceptions.filter(
+                dateString => {
+
+                    const date =
+                        parseUTC(dateString);
+
+                    return (
+                        date >= firstOccurrence &&
+                        date <= lastOccurrence
+                    );
+
+                }
+            );
+
+        kiceaEventsList.push({
+
+            date: firstOccurrence,
+
+            label: event.label,
+
+            description:
+                event.label +
+                ' — KICEA Event',
+
+            type:
+                event.type || 'program',
+
+            uid:
+                makeUID(
+                    'kicea-weekly',
+                    [
+                        event.label
+                            .replace(
+                                /[^A-Za-z0-9]+/g,
+                                '-'
+                            )
+                            .replace(
+                                /^-|-$/g,
+                                ''
+                            )
+                    ]
+                ),
+
+            recurring: true,
+
+            weekday:
+                weekdayCodes[event.weekday],
+
+            until:
+                lastOccurrence,
+
+            exceptions:
+                filteredExceptions
+
+        });
+
+    });
+
+
+/* =========================================================
+   Generate one ICS file
+========================================================= */
+
+function buildICS(
+    events,
+    calendarName,
+    calendarDescription,
+    category
+) {
+
+    const lines = [
+
+        'BEGIN:VCALENDAR',
+
+        'VERSION:2.0',
+
+        'PRODID:-//KICEA//Calendar//EN',
+
+        'CALSCALE:GREGORIAN',
+
+        'METHOD:PUBLISH',
+
+        'X-WR-CALNAME:' +
+            escapeICS(calendarName),
+
+        'X-WR-CALDESC:' +
+            escapeICS(calendarDescription)
+
+    ];
+
+    const timestamp =
+        icsTimestamp();
+
+
+    events
+        .sort((a, b) => {
+
+            const difference =
+                a.date - b.date;
+
+            if (difference !== 0) {
+                return difference;
+            }
+
+            return a.label.localeCompare(
+                b.label
+            );
+
+        })
+        .forEach(event => {
+
+            lines.push(
+                'BEGIN:VEVENT',
+
+                'UID:' + event.uid,
+
+                'DTSTAMP:' + timestamp,
+
+                'DTSTART;VALUE=DATE:' +
+                    icsDate(event.date),
+
+                'DTEND;VALUE=DATE:' +
+                    icsDate(
+                        addDays(
+                            event.date,
+                            1
+                        )
+                    ),
+
+                'SUMMARY:' +
+                    escapeICS(event.label),
+
+                'CATEGORIES:' +
+                    category,
+
+                'DESCRIPTION:' +
+                    escapeICS(
+                        event.description
+                    )
+            );
+
+
+            /*
+             * Weekly KICEA event.
+             */
+            if (event.recurring) {
+
+                lines.push(
+
+                    'RRULE:FREQ=WEEKLY;BYDAY=' +
+                    event.weekday +
+                    ';UNTIL=' +
+                    icsDate(event.until) +
+                    'T000000Z'
+
+                );
+
+
+                /*
+                 * Skip cancelled/exception dates.
+                 */
+                event.exceptions
+                    .forEach(exception => {
+
+                        lines.push(
+
+                            'EXDATE;VALUE=DATE:' +
+                            icsDate(
+                                parseUTC(
+                                    exception
+                                )
+                            )
+
+                        );
+
+                    });
+
+            }
+
+
+            lines.push(
+                'END:VEVENT'
+            );
+
+        });
+
+
+    lines.push(
+        'END:VCALENDAR'
+    );
+
+
+    return (
+        lines.join('\r\n') +
+        '\r\n'
+    );
 }
 
 
-/* -------------------------------------------------------
-   Finish calendar
-------------------------------------------------------- */
+/* =========================================================
+   Write both subscription feeds
+========================================================= */
 
-lines.push('END:VCALENDAR');
+const islamicICS = buildICS(
 
+    islamicEvents,
 
-/* -------------------------------------------------------
-   Write file
-------------------------------------------------------- */
+    'KICEA Islamic Calendar — 1448 AH',
+
+    'Islamic calendar events — KICEA',
+
+    'ISLAMIC'
+
+);
+
+const kiceaICS = buildICS(
+
+    kiceaEventsList,
+
+    'KICEA Events — 1448 AH',
+
+    'KICEA programs and events',
+
+    'KICEA'
+
+);
+
 
 fs.writeFileSync(
-  ICS_FILE,
-  lines.join('\r\n') + '\r\n',
-  'utf8'
+    ISLAMIC_ICS,
+    islamicICS,
+    'utf8'
+);
+
+fs.writeFileSync(
+    KICEA_ICS,
+    kiceaICS,
+    'utf8'
+);
+
+
+console.log(
+    `Generated ${islamicEvents.length} Islamic events`
 );
 
 console.log(
-  `Generated ${entries.length} events in ${ICS_FILE}`
+    `Generated ${kiceaEventsList.length} KICEA events`
+);
+
+console.log(
+    `Created ${ISLAMIC_ICS}`
+);
+
+console.log(
+    `Created ${KICEA_ICS}`
 );

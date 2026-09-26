@@ -1,0 +1,415 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//KICEA//Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:KICEA Events — 1448 AH
+X-WR-CALDESC:KICEA programs and events
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-1-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260617
+DTEND;VALUE=DATE:20260618
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-2-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260618
+DTEND;VALUE=DATE:20260619
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-3-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260619
+DTEND;VALUE=DATE:20260620
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-4-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260620
+DTEND;VALUE=DATE:20260621
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-5-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260621
+DTEND;VALUE=DATE:20260622
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-6-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260622
+DTEND;VALUE=DATE:20260623
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-7-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260623
+DTEND;VALUE=DATE:20260624
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-8-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260624
+DTEND;VALUE=DATE:20260625
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-1-9-Martyrdom-of-Imam-Hussain-as-and-his-companions@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260625
+DTEND;VALUE=DATE:20260626
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-06-26-Ashura@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260626
+DTEND;VALUE=DATE:20260627
+SUMMARY:Ashura
+CATEGORIES:KICEA
+DESCRIPTION:Ashura — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-weekly-Dua-e-Kumayl@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260917
+DTEND;VALUE=DATE:20260918
+SUMMARY:Dua e Kumayl
+CATEGORIES:KICEA
+DESCRIPTION:Dua e Kumayl — KICEA Event
+RRULE:FREQ=WEEKLY;BYDAY=TH;UNTIL=20270603T000000Z
+EXDATE;VALUE=DATE:20261029
+EXDATE;VALUE=DATE:20261112
+EXDATE;VALUE=DATE:20261119
+EXDATE;VALUE=DATE:20261217
+EXDATE;VALUE=DATE:20261224
+EXDATE;VALUE=DATE:20270107
+EXDATE;VALUE=DATE:20270225
+EXDATE;VALUE=DATE:20270311
+EXDATE;VALUE=DATE:20270318
+EXDATE;VALUE=DATE:20270513
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-09-27-Birth-of-Imam-Hasan-Askari-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20260927
+DTEND;VALUE=DATE:20260928
+SUMMARY:Birth of Imam Hasan Askari (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Hasan Askari (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-10-25-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261025
+DTEND;VALUE=DATE:20261026
+SUMMARY:Martyrdom of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-10-29-Birth-of-Imam-Zayn-al-Abidin-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261029
+DTEND;VALUE=DATE:20261030
+SUMMARY:Birth of Imam Zayn al-Abidin (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Zayn al-Abidin (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-12-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+SUMMARY:Martyrdom of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-13-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261113
+DTEND;VALUE=DATE:20261114
+SUMMARY:Martyrdom of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-14-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261114
+DTEND;VALUE=DATE:20261115
+SUMMARY:Martyrdom of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-15-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261115
+DTEND;VALUE=DATE:20261116
+SUMMARY:Martyrdom of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-19-Majlis@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261119
+DTEND;VALUE=DATE:20261120
+SUMMARY:Majlis
+CATEGORIES:KICEA
+DESCRIPTION:Majlis — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-11-29-Birth-of-Lady-Fatima-sa-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261129
+DTEND;VALUE=DATE:20261130
+SUMMARY:Birth of Lady Fatima (sa)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Lady Fatima (sa) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-12-13-Birth-of-Imam-Muhammad-Baqir-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261213
+DTEND;VALUE=DATE:20261214
+SUMMARY:Birth of Imam Muhammad Baqir (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Muhammad Baqir (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-12-17-Birth-of-Imam-Ali-al-Naqi-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261217
+DTEND;VALUE=DATE:20261218
+SUMMARY:Birth of Imam Ali al-Naqi (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Ali al-Naqi (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-12-20-Birth-of-Imam-Muhammad-Taqi-as-and-Imam-Ali-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261220
+DTEND;VALUE=DATE:20261221
+SUMMARY:Birth of Imam Muhammad Taqi (as) and Imam Ali (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Muhammad Taqi (as) and Imam Ali (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-12-24-Birth-of-Imam-Ali-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261225
+SUMMARY:Birth of Imam Ali (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Ali (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2026-12-27-Martyrdom-of-Lady-Zainab-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20261227
+DTEND;VALUE=DATE:20261228
+SUMMARY:Martyrdom of Lady Zainab (as)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Lady Zainab (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-01-07-Martyrdom-of-Imam-Musa-Kazim-as-Departure-from-Medina@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270107
+DTEND;VALUE=DATE:20270108
+SUMMARY:Martyrdom of Imam Musa Kazim (as) / Departure from Medina
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Musa Kazim (as) / Departure from Medina — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-01-10-Birth-of-Seyyeda-Zainab-sa-Hazrat-Abbas-as-and-Imam-Hussain-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270110
+DTEND;VALUE=DATE:20270111
+SUMMARY:Birth of Seyyeda Zainab (sa)\, Hazrat Abbas (as) and Imam Hussain (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Seyyeda Zainab (sa)\, Hazrat Abbas (as) and Imam Hussain (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-01-23-Birth-of-Imam-Zamana-atfs-Amaal-e-Shab-e-Bara-at@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270123
+DTEND;VALUE=DATE:20270124
+SUMMARY:Birth of Imam Zamana (atfs) / Amaal e Shab e Bara'at
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Zamana (atfs) / Amaal e Shab e Bara'at — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-02-13-Dua-during-Holy-Month-of-Ramadan@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270213
+DTEND;VALUE=DATE:20270214
+SUMMARY:Dua during Holy Month of Ramadan
+CATEGORIES:KICEA
+DESCRIPTION:Dua during Holy Month of Ramadan — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-02-20-Birth-of-Imam-Hasan-as-Dua@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270220
+DTEND;VALUE=DATE:20270221
+SUMMARY:Birth of Imam Hasan (as) & Dua
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Hasan (as) & Dua — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-9-18-Shab-e-Zarbat-Laylatul-Qadr@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270226
+DTEND;VALUE=DATE:20270227
+SUMMARY:Shab e Zarbat / Laylatul Qadr
+CATEGORIES:KICEA
+DESCRIPTION:Shab e Zarbat / Laylatul Qadr — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-9-20-Martyrdom-of-Imam-Ali-as-Laylatul-Qadr@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270228
+DTEND;VALUE=DATE:20270301
+SUMMARY:Martyrdom of Imam Ali (as) / Laylatul Qadr
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Ali (as) / Laylatul Qadr — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-annual-1448-9-22-Laylatul-Qadr@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270302
+DTEND;VALUE=DATE:20270303
+SUMMARY:Laylatul Qadr
+CATEGORIES:KICEA
+DESCRIPTION:Laylatul Qadr — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-03-06-Dua-during-Holy-Month-of-Ramadan@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270306
+DTEND;VALUE=DATE:20270307
+SUMMARY:Dua during Holy Month of Ramadan
+CATEGORIES:KICEA
+DESCRIPTION:Dua during Holy Month of Ramadan — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-03-10-Eid-ul-Fitr@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+SUMMARY:Eid-ul-Fitr
+CATEGORIES:KICEA
+DESCRIPTION:Eid-ul-Fitr — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-03-18-Commemoration-of-Demolition-of-Jannatul-Baqi@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270318
+DTEND;VALUE=DATE:20270319
+SUMMARY:Commemoration of Demolition of Jannatul Baqi
+CATEGORIES:KICEA
+DESCRIPTION:Commemoration of Demolition of Jannatul Baqi — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-03-28-Martyrdom-of-Imam-Jafar-Sadiq-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270328
+DTEND;VALUE=DATE:20270329
+SUMMARY:Martyrdom of Imam Jafar Sadiq (as)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Jafar Sadiq (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-04-18-Birth-of-Imam-Ali-Reza-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270418
+DTEND;VALUE=DATE:20270419
+SUMMARY:Birth of Imam Ali Reza (as)
+CATEGORIES:KICEA
+DESCRIPTION:Birth of Imam Ali Reza (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-05-09-Martyrdom-of-Imam-Muhammad-Taqi-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270509
+DTEND;VALUE=DATE:20270510
+SUMMARY:Martyrdom of Imam Muhammad Taqi (as)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Muhammad Taqi (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-05-13-Martyrdom-of-Imam-Muhammad-Baqir-as-Hazrat-Muslim-as-@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270513
+DTEND;VALUE=DATE:20270514
+SUMMARY:Martyrdom of Imam Muhammad Baqir (as) & Hazrat Muslim (as)
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Muhammad Baqir (as) & Hazrat Muslim (as) — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-05-17-Eid-ul-Azha@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+SUMMARY:Eid-ul-Azha
+CATEGORIES:KICEA
+DESCRIPTION:Eid-ul-Azha — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-05-23-Eid-al-Ghadir@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270523
+DTEND;VALUE=DATE:20270524
+SUMMARY:Eid-al-Ghadir
+CATEGORIES:KICEA
+DESCRIPTION:Eid-al-Ghadir — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-special-2027-05-30-Eid-al-Mubahela@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270530
+DTEND;VALUE=DATE:20270531
+SUMMARY:Eid-al-Mubahela
+CATEGORIES:KICEA
+DESCRIPTION:Eid-al-Mubahela — KICEA Event
+END:VEVENT
+BEGIN:VEVENT
+UID:kicea-hussain-1448-12-30@kicea.github.io
+DTSTAMP:20260926T134858Z
+DTSTART;VALUE=DATE:20270606
+DTEND;VALUE=DATE:20270607
+SUMMARY:Martyrdom of Imam Hussain (as) and his companions
+CATEGORIES:KICEA
+DESCRIPTION:Martyrdom of Imam Hussain (as) and his companions — KICEA Event
+END:VEVENT
+END:VCALENDAR

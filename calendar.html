@@ -97,9 +97,8 @@
                 </div>
 
                 <div class="mt-6 text-center">
-                    <button id="subscribeCalendarBtn" type="button" class="bg-purple-600 dark:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition">Subscribe to KICEA Calendar</button>
+                    <button id="subscribeCalendarBtn" type="button" class="bg-purple-600 dark:bg-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition">Add to Personal Calendars</button>
                 </div>
-
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-6">
                     ⓘ Estimates based on moonsighting predictions, subject to change.<br>
                     Subscribe once to keep 1448 AH KICEA events in a separate calendar that you can turn on/off or remove later.
@@ -107,61 +106,7 @@
             </div>
         </div>
 
-        <!-- Calendar subscription modal -->
-        <div id="calendarSubscribeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div id="calendarSubscribeBackdrop" class="absolute inset-0 bg-black/50"></div>
-            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Subscribe to KICEA Calendar</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">A separate, read-only calendar that stays connected to KICEA.</p>
-                    </div>
-                    <button id="calendarSubscribeCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400" aria-label="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                </div>
 
-                <div class="px-5 py-5 space-y-5">
-                    <div class="rounded-lg border border-purple-200 dark:border-purple-900/60 bg-purple-50 dark:bg-purple-950/30 p-4">
-                        <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Your calendar subscription URL</p>
-                        <div class="flex gap-2">
-                            <input id="calendarFeedUrl" type="text" readonly class="min-w-0 flex-1 text-xs sm:text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-700 dark:text-gray-200 focus:outline-none">
-                            <button id="copyCalendarFeedUrlBtn" type="button" class="shrink-0 px-3 py-2 rounded-lg bg-gray-800 dark:bg-gray-700 text-white text-xs font-semibold hover:bg-gray-900 dark:hover:bg-gray-600">Copy</button>
-                        </div>
-                        <p id="calendarFeedCopyStatus" class="text-xs text-green-700 dark:text-green-400 mt-2 hidden">Copied.</p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">Google Calendar</h4>
-                        <a id="googleCalendarSubscribeLink" href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener" class="block text-center bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 px-4 py-3 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition">Open Google Calendar</a>
-                        <ol class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1 list-decimal list-inside">
-                            <li>Open Google Calendar on a computer.</li>
-                            <li>Choose <strong>Other calendars → From URL</strong>.</li>
-                            <li>Paste the KICEA subscription URL above and click <strong>Add calendar</strong>.</li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">Apple Calendar</h4>
-                        <a id="appleCalendarSubscribeLink" href="#" class="block text-center bg-black text-white dark:bg-white dark:text-black px-4 py-3 rounded-lg font-semibold hover:opacity-90 transition">Subscribe with Apple Calendar</a>
-                        <ol class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1 list-decimal list-inside">
-                            <li>On iPhone/iPad, use <strong>Calendar → Add Calendar → Add Subscription Calendar</strong>.</li>
-                            <li>On Mac, use <strong>Calendar → File → New Calendar Subscription</strong>.</li>
-                            <li>Use the KICEA subscription URL above.</li>
-                        </ol>
-                    </div>
-
-                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4">
-                        <p class="text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Why this is a separate calendar</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">KICEA events are subscribed as their own calendar. Users can hide/show it without affecting their personal calendars, and can unsubscribe/remove it whenever they want. The subscription is read-only.</p>
-                    </div>
-
-                    <p class="text-[11px] leading-relaxed text-gray-400 dark:text-gray-500">
-                        The subscription URL must point to a publicly reachable <code class="font-mono">.ics</code> feed. Keep the feed at the same URL so existing subscribers continue receiving future updates.
-                    </p>
-                </div>
-            </div>
-        </div>
 
         <!-- Full event list modal (shared by Islamic and KICEA "View full list" buttons) -->
         <div id="eventListModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -180,6 +125,75 @@
                     </div>
                 </div>
                 <div id="eventListBody" class="overflow-y-auto px-5 py-4 space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Calendar subscription modal -->
+        <div id="calendarSubscribeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div id="calendarSubscribeBackdrop" class="absolute inset-0 bg-black/50"></div>
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100">Add to Personal Calendars</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Subscribe using the method below to ensure your calendars stay updated</p>
+                    </div>
+                    <button id="calendarSubscribeCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                <div class="px-5 py-5 space-y-5">
+                    <div class="rounded-lg border border-purple-200 dark:border-purple-900/60 bg-purple-50 dark:bg-purple-950/30 p-4">
+                        <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-1">Choose which calendar to subscribe to</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">You can add both. Your calendar app can give each subscription its own color.</p>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                        <div class="flex items-center justify-between gap-3 mb-2">
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100">Islamic Calendar</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Islamic/Hijri observances — 1448 AH</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input id="islamicCalendarFeedUrl" type="text" readonly class="min-w-0 flex-1 text-xs sm:text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-700 dark:text-gray-200 focus:outline-none">
+                            <button id="copyIslamicCalendarFeedUrlBtn" type="button" class="shrink-0 px-3 py-2 rounded-lg bg-gray-800 dark:bg-gray-700 text-white text-xs font-semibold hover:bg-gray-900 dark:hover:bg-gray-600">Copy</button>
+                        </div>
+                        <p id="islamicCalendarFeedCopyStatus" class="text-xs text-green-700 dark:text-green-400 mt-2 hidden">Copied.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+                            <a href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener" class="block text-center bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 px-3 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition">Google Calendar</a>
+                            <a id="islamicAppleCalendarSubscribeLink" href="#" class="block text-center bg-black text-white dark:bg-white dark:text-black px-3 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition">Apple Calendar</a>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                        <div class="flex items-center justify-between gap-3 mb-2">
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100">KICEA Events</h4>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">KICEA programs and center events — 1448 AH</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input id="kiceaCalendarFeedUrl" type="text" readonly class="min-w-0 flex-1 text-xs sm:text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-gray-700 dark:text-gray-200 focus:outline-none">
+                            <button id="copyKiceaCalendarFeedUrlBtn" type="button" class="shrink-0 px-3 py-2 rounded-lg bg-gray-800 dark:bg-gray-700 text-white text-xs font-semibold hover:bg-gray-900 dark:hover:bg-gray-600">Copy</button>
+                        </div>
+                        <p id="kiceaCalendarFeedCopyStatus" class="text-xs text-green-700 dark:text-green-400 mt-2 hidden">Copied.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+                            <a href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener" class="block text-center bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 px-3 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition">Google Calendar</a>
+                            <a id="kiceaAppleCalendarSubscribeLink" href="#" class="block text-center bg-black text-white dark:bg-white dark:text-black px-3 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition">Apple Calendar</a>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-4">
+                        <p class="text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">How to subscribe</p>
+                        <ol class="text-xs text-gray-500 dark:text-gray-400 space-y-1 list-decimal list-inside">
+                            <li>For Google Calendar, open Google Calendar on a computer and choose <strong>Other calendars → From URL</strong>.</li>
+                            <li>Paste the URL for the calendar you want and click <strong>Add calendar</strong>.</li>
+                            <li>For Apple Calendar, use the Apple Calendar button or add the subscription URL as a subscription calendar.</li>
+                            <li>Subscribe to both feeds if you want Islamic dates and KICEA events separately.</li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -390,7 +404,7 @@
                 "Dhu al-Hijjah": {
                     1: { label: "Marriage of Imam Ali (as) and Lady Fatima (sa)", type: "celebration" },
                     7: { label: "Martyrdom of Imam Muhammad Baqir (as)", type: "commemoration" },
-                    10: { label: "Eid al-Azha", type: "celebration" },
+                    10: { label: "Eid al-Adha", type: "celebration" },
                     18: { label: "Eid al-Ghadeer", type: "celebration" },
                     24: { label: "Eid al-Mubahela", type: "celebration" }
                 }
@@ -695,22 +709,25 @@
             }
 
             // =================================================================
-            // CALENDAR SUBSCRIPTION
-            // Keep this feed URL stable. Upload/serve the generated KICEA .ics
-            // feed at this URL so Google/Apple subscriptions continue working.
-            // If this HTML and the .ics file are hosted in the same folder, the
-            // default relative URL below needs no editing.
+            // CALENDAR SUBSCRIPTIONS
+            // Keep these feed URLs stable. GitHub Actions regenerates both .ics
+            // files automatically whenever the calendar data changes.
             // =================================================================
-            const CALENDAR_FEED_URL = new URL('kicea-calendar.ics', window.location.href).href;
+            const ISLAMIC_CALENDAR_FEED_URL = new URL('islamic-calendar.ics', window.location.href).href;
+            const KICEA_EVENTS_FEED_URL = new URL('kicea-events.ics', window.location.href).href;
 
             function openCalendarSubscribeModal() {
                 const modal = document.getElementById('calendarSubscribeModal');
-                const feedInput = document.getElementById('calendarFeedUrl');
-                const appleLink = document.getElementById('appleCalendarSubscribeLink');
-                if (feedInput) feedInput.value = CALENDAR_FEED_URL;
-                if (appleLink) {
-                    appleLink.href = CALENDAR_FEED_URL.replace(/^https?:/, 'webcal:');
-                }
+                const islamicInput = document.getElementById('islamicCalendarFeedUrl');
+                const kiceaInput = document.getElementById('kiceaCalendarFeedUrl');
+                const islamicApple = document.getElementById('islamicAppleCalendarSubscribeLink');
+                const kiceaApple = document.getElementById('kiceaAppleCalendarSubscribeLink');
+
+                if (islamicInput) islamicInput.value = ISLAMIC_CALENDAR_FEED_URL;
+                if (kiceaInput) kiceaInput.value = KICEA_EVENTS_FEED_URL;
+                if (islamicApple) islamicApple.href = ISLAMIC_CALENDAR_FEED_URL.replace(/^https?:/, 'webcal:');
+                if (kiceaApple) kiceaApple.href = KICEA_EVENTS_FEED_URL.replace(/^https?:/, 'webcal:');
+
                 if (modal) {
                     modal.classList.remove('hidden');
                     document.body.classList.add('overflow-hidden');
@@ -723,25 +740,24 @@
                 document.body.classList.remove('overflow-hidden');
             }
 
-            async function copyCalendarFeedUrl() {
-                const status = document.getElementById('calendarFeedCopyStatus');
-                try {
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        await navigator.clipboard.writeText(CALENDAR_FEED_URL);
-                    } else {
-                        fallbackCopy(CALENDAR_FEED_URL, function() {});
-                    }
+            async function copyFeedUrl(url, statusId) {
+                const status = document.getElementById(statusId);
+                const showStatus = function() {
                     if (status) {
                         status.classList.remove('hidden');
                         setTimeout(function() { status.classList.add('hidden'); }, 1800);
                     }
+                };
+
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(url);
+                        showStatus();
+                    } else {
+                        fallbackCopy(url, showStatus);
+                    }
                 } catch (e) {
-                    fallbackCopy(CALENDAR_FEED_URL, function() {
-                        if (status) {
-                            status.classList.remove('hidden');
-                            setTimeout(function() { status.classList.add('hidden'); }, 1800);
-                        }
-                    });
+                    fallbackCopy(url, showStatus);
                 }
             }
 
@@ -1258,7 +1274,12 @@
             document.getElementById('subscribeCalendarBtn').addEventListener('click', openCalendarSubscribeModal);
             document.getElementById('calendarSubscribeCloseBtn').addEventListener('click', closeCalendarSubscribeModal);
             document.getElementById('calendarSubscribeBackdrop').addEventListener('click', closeCalendarSubscribeModal);
-            document.getElementById('copyCalendarFeedUrlBtn').addEventListener('click', copyCalendarFeedUrl);
+            document.getElementById('copyIslamicCalendarFeedUrlBtn').addEventListener('click', function() {
+                copyFeedUrl(ISLAMIC_CALENDAR_FEED_URL, 'islamicCalendarFeedCopyStatus');
+            });
+            document.getElementById('copyKiceaCalendarFeedUrlBtn').addEventListener('click', function() {
+                copyFeedUrl(KICEA_EVENTS_FEED_URL, 'kiceaCalendarFeedCopyStatus');
+            });
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeCalendarSubscribeModal();
             });
@@ -1296,6 +1317,18 @@
             }
         })();
         </script>
+
+        <!-- Feedback -->
+        <div class="max-w-5xl mx-auto px-4 pb-12">
+            <div class="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-5 text-center">
+                <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100">Have feedback about the calendar?</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-3">Suggestions, corrections, or other feedback are welcome.</p>
+                <a href="mailto:kiceaofficial@gmail.com?subject=KICEA%20Calendar%20Feedback" class="inline-flex items-center gap-2 bg-gray-800 dark:bg-gray-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition">
+                    Send Feedback
+                </a>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">kiceaofficial@gmail.com</p>
+            </div>
+        </div>
     </section>
 </body>
 </html>

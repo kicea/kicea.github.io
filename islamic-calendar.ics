@@ -7,7 +7,7 @@ X-WR-CALNAME:KICEA Islamic Calendar — 1448 AH
 X-WR-CALDESC:Islamic calendar events — KICEA
 BEGIN:VEVENT
 UID:islamic-1448-1-1-Beginning-of-the-Hijri-Year@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260617
 DTEND;VALUE=DATE:20260618
 SUMMARY:Beginning of the Hijri Year
@@ -16,7 +16,7 @@ DESCRIPTION:Beginning of the Hijri Year — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-1-2-Arrival-of-Imam-al-Hussain-as-to-Karbala@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260618
 DTEND;VALUE=DATE:20260619
 SUMMARY:Arrival of Imam al-Hussain (as) to Karbala
@@ -25,7 +25,7 @@ DESCRIPTION:Arrival of Imam al-Hussain (as) to Karbala — KICEA Islamic Calenda
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-1-10-Ashura@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260626
 DTEND;VALUE=DATE:20260627
 SUMMARY:Ashura
@@ -34,7 +34,7 @@ DESCRIPTION:Ashura — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-1-25-Martyrdom-of-Imam-Zayn-al-Abidin-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260711
 DTEND;VALUE=DATE:20260712
 SUMMARY:Martyrdom of Imam Zayn al-Abidin (as)
@@ -43,7 +43,7 @@ DESCRIPTION:Martyrdom of Imam Zayn al-Abidin (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-2-7-Birth-of-Imam-Musa-Kazim-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260722
 DTEND;VALUE=DATE:20260723
 SUMMARY:Birth of Imam Musa Kazim (as)
@@ -52,7 +52,7 @@ DESCRIPTION:Birth of Imam Musa Kazim (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-2-10-Martyrdom-of-Ruqayya-bint-Imam-al-Hussain-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260725
 DTEND;VALUE=DATE:20260726
 SUMMARY:Martyrdom of Ruqayya bint Imam al-Hussain (as)
@@ -61,7 +61,7 @@ DESCRIPTION:Martyrdom of Ruqayya bint Imam al-Hussain (as) — KICEA Islamic Cal
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-2-17-Martyrdom-of-Imam-Ali-al-Rida-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260801
 DTEND;VALUE=DATE:20260802
 SUMMARY:Martyrdom of Imam Ali al-Rida (as)
@@ -70,7 +70,7 @@ DESCRIPTION:Martyrdom of Imam Ali al-Rida (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-2-20-Arba-een@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260804
 DTEND;VALUE=DATE:20260805
 SUMMARY:Arba'een
@@ -79,7 +79,7 @@ DESCRIPTION:Arba'een — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-2-28-Martyrdom-of-Imam-Hasan-as-and-Prophet-Muhammad-pbuh-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260812
 DTEND;VALUE=DATE:20260813
 SUMMARY:Martyrdom of Imam Hasan (as) and Prophet Muhammad (pbuh)
@@ -88,7 +88,7 @@ DESCRIPTION:Martyrdom of Imam Hasan (as) and Prophet Muhammad (pbuh) — KICEA I
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-3-8-Martyrdom-of-Imam-al-Askari-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260822
 DTEND;VALUE=DATE:20260823
 SUMMARY:Martyrdom of Imam al-Askari (as)
@@ -97,7 +97,7 @@ DESCRIPTION:Martyrdom of Imam al-Askari (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-3-9-Eid-al-Zahra-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260823
 DTEND;VALUE=DATE:20260824
 SUMMARY:Eid al-Zahra (as)
@@ -106,7 +106,7 @@ DESCRIPTION:Eid al-Zahra (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-3-17-Birth-of-Prophet-Muhammad-pbuh-and-Imam-Ja-far-al-Sadiq-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260831
 DTEND;VALUE=DATE:20260901
 SUMMARY:Birth of Prophet Muhammad (pbuh) and Imam Ja'far al-Sadiq (as)
@@ -115,7 +115,7 @@ DESCRIPTION:Birth of Prophet Muhammad (pbuh) and Imam Ja'far al-Sadiq (as) — K
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-4-10-Birth-of-Imam-al-Askari-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20260923
 DTEND;VALUE=DATE:20260924
 SUMMARY:Birth of Imam al-Askari (as)
@@ -124,7 +124,7 @@ DESCRIPTION:Birth of Imam al-Askari (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-5-13-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261026
 DTEND;VALUE=DATE:20261027
 SUMMARY:Martyrdom of Lady Fatima (sa)
@@ -133,7 +133,7 @@ DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-5-15-Birth-of-Imam-Zayn-al-Abidin-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261028
 DTEND;VALUE=DATE:20261029
 SUMMARY:Birth of Imam Zayn al-Abidin (as)
@@ -142,7 +142,7 @@ DESCRIPTION:Birth of Imam Zayn al-Abidin (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-6-3-Martyrdom-of-Lady-Fatima-sa-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261114
 DTEND;VALUE=DATE:20261115
 SUMMARY:Martyrdom of Lady Fatima (sa)
@@ -151,7 +151,7 @@ DESCRIPTION:Martyrdom of Lady Fatima (sa) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-6-20-Birth-of-Lady-Fatima-sa-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261201
 DTEND;VALUE=DATE:20261202
 SUMMARY:Birth of Lady Fatima (sa)
@@ -160,7 +160,7 @@ DESCRIPTION:Birth of Lady Fatima (sa) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-1-Birth-of-Imam-Muhammad-Baqir-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261212
 DTEND;VALUE=DATE:20261213
 SUMMARY:Birth of Imam Muhammad Baqir (as)
@@ -169,7 +169,7 @@ DESCRIPTION:Birth of Imam Muhammad Baqir (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-3-Martyrdom-of-Imam-Ali-Naqi-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261214
 DTEND;VALUE=DATE:20261215
 SUMMARY:Martyrdom of Imam Ali Naqi (as)
@@ -178,7 +178,7 @@ DESCRIPTION:Martyrdom of Imam Ali Naqi (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-5-Birth-of-Imam-Ali-Naqi-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261216
 DTEND;VALUE=DATE:20261217
 SUMMARY:Birth of Imam Ali Naqi (as)
@@ -187,7 +187,7 @@ DESCRIPTION:Birth of Imam Ali Naqi (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-10-Birth-of-Imam-Muhammad-Taqi-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261221
 DTEND;VALUE=DATE:20261222
 SUMMARY:Birth of Imam Muhammad Taqi (as)
@@ -196,7 +196,7 @@ DESCRIPTION:Birth of Imam Muhammad Taqi (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-13-Birth-of-Imam-Ali-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261224
 DTEND;VALUE=DATE:20261225
 SUMMARY:Birth of Imam Ali (as)
@@ -205,7 +205,7 @@ DESCRIPTION:Birth of Imam Ali (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-15-Martyrdom-of-Lady-Zainab-sa-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20261226
 DTEND;VALUE=DATE:20261227
 SUMMARY:Martyrdom of Lady Zainab (sa)
@@ -214,7 +214,7 @@ DESCRIPTION:Martyrdom of Lady Zainab (sa) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-25-Martyrdom-of-Imam-Moosa-Kazim-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270105
 DTEND;VALUE=DATE:20270106
 SUMMARY:Martyrdom of Imam Moosa Kazim (as)
@@ -223,7 +223,7 @@ DESCRIPTION:Martyrdom of Imam Moosa Kazim (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-26-Martyrdom-of-Hazrat-Abu-Talib-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270106
 DTEND;VALUE=DATE:20270107
 SUMMARY:Martyrdom of Hazrat Abu Talib (as)
@@ -232,7 +232,7 @@ DESCRIPTION:Martyrdom of Hazrat Abu Talib (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-27-Eid-e-Mab-ath-Meraj@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270107
 DTEND;VALUE=DATE:20270108
 SUMMARY:Eid e Mab'ath / Meraj
@@ -241,7 +241,7 @@ DESCRIPTION:Eid e Mab'ath / Meraj — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-7-28-Journey-of-Imam-Hussain-as-from-Medina@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270108
 DTEND;VALUE=DATE:20270109
 SUMMARY:Journey of Imam Hussain (as) from Medina
@@ -250,7 +250,7 @@ DESCRIPTION:Journey of Imam Hussain (as) from Medina — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-8-1-Birth-of-Lady-Zainab-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270110
 DTEND;VALUE=DATE:20270111
 SUMMARY:Birth of Lady Zainab (as)
@@ -259,7 +259,7 @@ DESCRIPTION:Birth of Lady Zainab (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-8-3-Birth-of-Imam-Hussain-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270112
 DTEND;VALUE=DATE:20270113
 SUMMARY:Birth of Imam Hussain (as)
@@ -268,7 +268,7 @@ DESCRIPTION:Birth of Imam Hussain (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-8-4-Birth-of-Hazrat-Abbas-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270113
 DTEND;VALUE=DATE:20270114
 SUMMARY:Birth of Hazrat Abbas (as)
@@ -277,7 +277,7 @@ DESCRIPTION:Birth of Hazrat Abbas (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-8-15-Birth-of-Imam-Mehdi-as-Shab-e-Bara-at@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270124
 DTEND;VALUE=DATE:20270125
 SUMMARY:Birth of Imam Mehdi (as) / Shab e Bara'at
@@ -286,7 +286,7 @@ DESCRIPTION:Birth of Imam Mehdi (as) / Shab e Bara'at — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-9-15-Birth-of-Imam-Hasan-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270223
 DTEND;VALUE=DATE:20270224
 SUMMARY:Birth of Imam Hasan (as)
@@ -295,7 +295,7 @@ DESCRIPTION:Birth of Imam Hasan (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-9-19-Shab-e-Zarbat-Imam-Ali-as-Shab-e-Qadr@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270227
 DTEND;VALUE=DATE:20270228
 SUMMARY:Shab e Zarbat Imam Ali (as) / Shab e Qadr
@@ -304,7 +304,7 @@ DESCRIPTION:Shab e Zarbat Imam Ali (as) / Shab e Qadr — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-9-21-Martyrdom-of-Imam-Ali-as-Shab-e-Qadr@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270301
 DTEND;VALUE=DATE:20270302
 SUMMARY:Martyrdom of Imam Ali (as) / Shab e Qadr
@@ -313,7 +313,7 @@ DESCRIPTION:Martyrdom of Imam Ali (as) / Shab e Qadr — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-9-23-Shab-e-Qadr@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270303
 DTEND;VALUE=DATE:20270304
 SUMMARY:Shab e Qadr
@@ -322,7 +322,7 @@ DESCRIPTION:Shab e Qadr — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-9-25-Jumu-ah-al-Wida-last-Friday-of-Ramadan-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270305
 DTEND;VALUE=DATE:20270306
 SUMMARY:Jumu'ah al-Wida (last Friday of Ramadan)
@@ -331,7 +331,7 @@ DESCRIPTION:Jumu'ah al-Wida (last Friday of Ramadan) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-10-1-Eid-al-Fitr@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270310
 DTEND;VALUE=DATE:20270311
 SUMMARY:Eid al-Fitr
@@ -340,7 +340,7 @@ DESCRIPTION:Eid al-Fitr — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-10-8-Demolition-of-Jannatul-Baqi@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270317
 DTEND;VALUE=DATE:20270318
 SUMMARY:Demolition of Jannatul Baqi
@@ -349,7 +349,7 @@ DESCRIPTION:Demolition of Jannatul Baqi — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-10-15-Martyrdom-of-Imam-Ja-far-al-Sadiq-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270324
 DTEND;VALUE=DATE:20270325
 SUMMARY:Martyrdom of Imam Ja'far al-Sadiq (as)
@@ -358,7 +358,7 @@ DESCRIPTION:Martyrdom of Imam Ja'far al-Sadiq (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-11-11-Birth-of-Imam-Ali-al-Rida-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270419
 DTEND;VALUE=DATE:20270420
 SUMMARY:Birth of Imam Ali al-Rida (as)
@@ -367,7 +367,7 @@ DESCRIPTION:Birth of Imam Ali al-Rida (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-11-29-Martyrdom-of-Imam-Muhammad-Taqi-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270507
 DTEND;VALUE=DATE:20270508
 SUMMARY:Martyrdom of Imam Muhammad Taqi (as)
@@ -376,7 +376,7 @@ DESCRIPTION:Martyrdom of Imam Muhammad Taqi (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-12-1-Marriage-of-Imam-Ali-as-and-Lady-Fatima-sa-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270508
 DTEND;VALUE=DATE:20270509
 SUMMARY:Marriage of Imam Ali (as) and Lady Fatima (sa)
@@ -385,7 +385,7 @@ DESCRIPTION:Marriage of Imam Ali (as) and Lady Fatima (sa) — KICEA Islamic Cal
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-12-7-Martyrdom-of-Imam-Muhammad-Baqir-as-@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270514
 DTEND;VALUE=DATE:20270515
 SUMMARY:Martyrdom of Imam Muhammad Baqir (as)
@@ -393,17 +393,17 @@ CATEGORIES:ISLAMIC
 DESCRIPTION:Martyrdom of Imam Muhammad Baqir (as) — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
-UID:islamic-1448-12-10-Eid-al-Azha@kicea.github.io
-DTSTAMP:20260926T135357Z
+UID:islamic-1448-12-10-Eid-al-Adha@kicea.github.io
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270517
 DTEND;VALUE=DATE:20270518
-SUMMARY:Eid al-Azha
+SUMMARY:Eid al-Adha
 CATEGORIES:ISLAMIC
-DESCRIPTION:Eid al-Azha — KICEA Islamic Calendar
+DESCRIPTION:Eid al-Adha — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-12-18-Eid-al-Ghadeer@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270525
 DTEND;VALUE=DATE:20270526
 SUMMARY:Eid al-Ghadeer
@@ -412,7 +412,7 @@ DESCRIPTION:Eid al-Ghadeer — KICEA Islamic Calendar
 END:VEVENT
 BEGIN:VEVENT
 UID:islamic-1448-12-24-Eid-al-Mubahela@kicea.github.io
-DTSTAMP:20260926T135357Z
+DTSTAMP:20260926T140928Z
 DTSTART;VALUE=DATE:20270531
 DTEND;VALUE=DATE:20270601
 SUMMARY:Eid al-Mubahela

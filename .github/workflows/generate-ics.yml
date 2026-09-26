@@ -1,0 +1,36 @@
+name: Generate KICEA Calendar Feed
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'calendar.html'
+      - 'generate_ics.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Generate kicea-calendar.ics
+        run: node generate_ics.js
+
+      - name: Commit updated calendar feed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- kicea-calendar.ics; then
+            echo "No calendar feed changes detected."
+            exit 0
+          fi
+          git add kicea-calendar.ics
+          git commit -m "Automatically update KICEA calendar feed"
+          git push

@@ -30,10 +30,6 @@
         <div class="max-w-5xl mx-auto px-4">
             <div class="relative mb-4">
                 <div class="text-center"><h2 class="text-4xl font-bold text-gray-800 dark:text-gray-100">KICEA Calendar</h2><p class="text-sm font-semibold text-purple-700 dark:text-purple-300 mt-1">1448 AH</p></div>
-                <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                    <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                </button>
             </div>
 
             <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 rounded-xl p-6 md:p-8 card-hover transition-colors duration-200">
@@ -125,6 +121,23 @@
                     </div>
                 </div>
                 <div id="eventListBody" class="overflow-y-auto px-5 py-4 space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Day detail modal (shown when a calendar cell is clicked) -->
+        <div id="dayDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div id="dayDetailBackdrop" class="absolute inset-0 bg-black/50"></div>
+            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-sm max-h-[85vh] overflow-y-auto">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <div>
+                        <p id="dayDetailIslamicDate" class="text-lg font-bold text-gray-800 dark:text-gray-100"></p>
+                        <p id="dayDetailEnglishDate" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5"></p>
+                    </div>
+                    <button id="dayDetailCloseBtn" type="button" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 shrink-0" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+                <div id="dayDetailBody" class="px-5 py-4 space-y-3"></div>
             </div>
         </div>
 
@@ -341,24 +354,25 @@
             const eventsByMonth = {
                 "Muharram": {
                     1: { label: "Beginning of the Hijri Year", type: "other" },
-                    2: { label: "Arrival of Imam al-Hussain (as) to Karbala", type: "other" },
+                    2: { label: "Arrival of Imam Hussain (as) to Karbala", type: "other" },
                     10: { label: "Ashura", type: "commemoration" },
                     25: { label: "Martyrdom of Imam Zayn al-Abidin (as)", type: "commemoration" }
                 },
                 "Safar": {
                     7: { label: "Birth of Imam Musa Kazim (as)", type: "celebration" },
-                    10: { label: "Martyrdom of Ruqayya bint Imam al-Hussain (as)", type: "commemoration" },
-                    17: { label: "Martyrdom of Imam Ali al-Rida (as)", type: "commemoration" },
+                    10: { label: "Martyrdom of Ruqayya bint Imam Hussain (as)", type: "commemoration" },
+                    17: { label: "Martyrdom of Imam Ali Rida (as)", type: "commemoration" },
                     20: { label: "Arba'een", type: "commemoration" },
                     28: { label: "Martyrdom of Imam Hasan (as) and Prophet Muhammad (pbuh)", type: "commemoration" }
                 },
                 "Rabi' al-Awwal": {
-                    8: { label: "Martyrdom of Imam al-Askari (as)", type: "commemoration" },
+                    8: { label: "Martyrdom of Imam Hasan Askari (as)", type: "commemoration" },
                     9: { label: "Eid al-Zahra (as)", type: "celebration" },
-                    17: { label: "Birth of Prophet Muhammad (pbuh) and Imam Ja'far al-Sadiq (as)", type: "celebration" }
+                    17: { label: "Birth of Prophet Muhammad (pbuh) and Imam Ja'far Sadiq (as)", type: "celebration" }
                 },
                 "Rabi' al-Thani": {
-                    10: { label: "Birth of Imam al-Askari (as)", type: "celebration" }
+                    8: { label: "Birth of Imam Hasan Askari (as)", type: "celebration" },
+                    10: { label: "Passing away of Lady Masooma e Qom (sa)", type: "commemoration" },
                 },
                 "Jumada al-Awwal": {
                     13: { label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
@@ -366,7 +380,9 @@
                 },
                 "Jumada al-Thani": {
                     3: { label: "Martyrdom of Lady Fatima (sa)", type: "commemoration" },
-                    20: { label: "Birth of Lady Fatima (sa)", type: "celebration" }
+                    13: { label: "Passing away of Lady Ummul Baneen (sa)", type: "commemoration" },
+                    20: { label: "Birth of Lady Fatima (sa)", type: "celebration" },
+                    29: { label: "Passing away of Hazrat Umm Kulsum (sa)", type: "commemoration" },
                 },
                 "Rajab": {
                     1: { label: "Birth of Imam Muhammad Baqir (as)", type: "celebration" },
@@ -375,9 +391,9 @@
                     10: { label: "Birth of Imam Muhammad Taqi (as)", type: "celebration" },
                     13: { label: "Birth of Imam Ali (as)", type: "celebration" },
                     15: { label: "Martyrdom of Lady Zainab (sa)", type: "commemoration" },
-                    25: { label: "Martyrdom of Imam Moosa Kazim (as)", type: "commemoration" },
+                    25: { label: "Martyrdom of Imam Musa Kazim (as)", type: "commemoration" },
                     26: { label: "Martyrdom of Hazrat Abu Talib (as)", type: "commemoration" },
-                    27: { label: "Eid e Mab'ath / Meraj", type: "celebration" },
+                    27: { label: "Eid e Mab'ath", type: "celebration" },
                     28: { label: "Journey of Imam Hussain (as) from Medina", type: "commemoration" }
                 },
                 "Sha'ban": {
@@ -387,6 +403,7 @@
                     15: { label: "Birth of Imam Mehdi (as) / Shab e Bara'at", type: "celebration" }
                 },
                 "Ramadan": {
+                    10: { label: "Passing away of Hazrat Khadija (sa)", type: "commemoration" },
                     15: { label: "Birth of Imam Hasan (as)", type: "celebration" },
                     19: { label: "Shab e Zarbat Imam Ali (as) / Shab e Qadr", type: "commemoration" },
                     21: { label: "Martyrdom of Imam Ali (as) / Shab e Qadr", type: "commemoration" },
@@ -395,10 +412,11 @@
                 "Shawwal": {
                     1: { label: "Eid al-Fitr", type: "celebration" },
                     8: { label: "Demolition of Jannatul Baqi", type: "commemoration" },
-                    15: { label: "Martyrdom of Imam Ja'far al-Sadiq (as)", type: "commemoration" }
+                    15: { label: "Martyrdom of Imam Ja'far Sadiq (as)", type: "commemoration" }
                 },
                 "Dhu al-Qi'dah": {
-                    11: { label: "Birth of Imam Ali al-Rida (as)", type: "celebration" },
+                    1: { label: "Birth of Lady Masooma e Qom (sa)", type: "celebration" },
+                    11: { label: "Birth of Imam Ali Rida (as)", type: "celebration" },
                     29: { label: "Martyrdom of Imam Muhammad Taqi (as)", type: "commemoration" }
                 },
                 "Dhu al-Hijjah": {
@@ -425,38 +443,37 @@
                     { date: "2026-09-27", label: "Birth of Imam Hasan Askari (as)", type: "celebration" },
 
                     // 1448 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
-                    { date: "2026-06-26", label: "Ashura", type: "commemoration" },
-                    { date: "2027-03-10", label: "Eid-ul-Fitr", type: "celebration" },
-                    { date: "2027-05-17", label: "Eid-ul-Azha", type: "celebration" },
+                    { date: "2026-06-26", label: "Majlis: Ashura", type: "commemoration" },
+                    { date: "2027-03-10", label: "Namaz: Eid-ul-Fitr", type: "celebration" },
+                    { date: "2027-05-17", label: "Namaz: Eid-ul-Adha", type: "celebration" },
 
                     // Late 2026 one-off center events
-                    { date: "2026-10-25", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    { date: "2026-10-29", label: "Birth of Imam Zayn al-Abidin (as)", type: "celebration" },
-                    { date: "2026-11-12", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    { date: "2026-11-13", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    { date: "2026-11-14", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    { date: "2026-11-15", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    // { date: "2026-11-18", label: "Kids Education Program", type: "program" },
-                    { date: "2026-11-19", label: "Majlis (Martyrdom of Lady Fatima (sa))", type: "commemoration" },
-                    { date: "2026-11-29", label: "Birth of Lady Fatima (sa)", type: "celebration" },
-                    { date: "2026-12-13", label: "Birth of Imam Muhammad Baqir (as)", type: "celebration" },
-                    { date: "2026-12-17", label: "Birth of Imam Ali al-Naqi (as)", type: "celebration" },
-                    { date: "2026-12-24", label: "Birth of Imam Ali (as)", type: "celebration" },
-                    { date: "2026-12-20", label: "Birth of Imam Muhammad Taqi (as) and Imam Ali (as)", type: "celebration" },
-                    { date: "2026-12-27", label: "Martyrdom of Lady Zainab (as)", type: "commemoration" },
-                    { date: "2027-01-07", label: "Martyrdom of Imam Musa Kazim (as) / Departure from Medina", type: "commemoration" },
-                    { date: "2027-01-10", label: "Birth of Seyyeda Zainab (sa), Hazrat Abbas (as) and Imam Hussain (as)", type: "celebration" },
-                    { date: "2027-01-23", label: "Birth of Imam Zamana (atfs) / Amaal e Shab e Bara'at", type: "celebration" },
-                    { date: "2027-02-13", label: "Dua during Holy Month of Ramadan", type: "dua" },
-                    { date: "2027-02-20", label: "Birth of Imam Hasan (as) & Dua", type: "celebration" },
-                    { date: "2027-03-06", label: "Dua during Holy Month of Ramadan", type: "dua" },
-                    { date: "2027-03-18", label: "Commemoration of Demolition of Jannatul Baqi", type: "commemoration" },
-                    { date: "2027-03-28", label: "Martyrdom of Imam Jafar Sadiq (as)", type: "commemoration" },
-                    { date: "2027-04-18", label: "Birth of Imam Ali Reza (as)", type: "celebration" },
-                    { date: "2027-05-09", label: "Martyrdom of Imam Muhammad Taqi (as)", type: "commemoration" },
-                    { date: "2027-05-13", label: "Martyrdom of Imam Muhammad Baqir (as) & Hazrat Muslim (as)", type: "commemoration" },
-                    { date: "2027-05-23", label: "Eid-al-Ghadir", type: "celebration" },
-                    { date: "2027-05-30", label: "Eid-al-Mubahela", type: "celebration" },
+                    { date: "2026-10-25", label: "Majlis: Martyrdom of Lady Fatima (sa))", type: "commemoration" },
+                    { date: "2026-10-29", label: "Milad: Birth of Imam Zayn al-Abidin (as)", type: "celebration" },
+                    { date: "2026-11-12", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-13", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-14", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-15", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-19", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
+                    { date: "2026-11-29", label: "Milad: Birth of Lady Fatima (sa)", type: "celebration" },
+                    { date: "2026-12-13", label: "Milad: Birth of Imam Muhammad Baqir (as)", type: "celebration" },
+                    { date: "2026-12-17", label: "Milad: Birth of Imam Ali Naqi (as)", type: "celebration" },
+                    { date: "2026-12-24", label: "Milad: Birth of Imam Ali (as)", type: "celebration" },
+                    { date: "2026-12-20", label: "Milad: Birth of Imam Muhammad Taqi (as) & Imam Ali (as)", type: "celebration" },
+                    { date: "2027-01-03", label: "Majlis: Martyrdom of Imam Musa Kazim (as) & Lady Zainab (as)", type: "commemoration" },
+                    { date: "2027-01-07", label: "Jashn: Eid e Mab'ath", type: "celebration" },
+                    { date: "2027-01-10", label: "Milad: Birth of Seyyeda Zainab (sa), Hazrat Abbas (as) & Imam Hussain (as)", type: "celebration" },
+                    { date: "2027-01-23", label: "Milad: Birth of Imam Zamana (atfs) & Amaal e Shab e Bara'at", type: "celebration" },
+                    { date: "2027-02-13", label: "Dua: Holy Month of Ramadan", type: "dua" },
+                    { date: "2027-02-20", label: "Milad: Birth of Imam Hasan (as) & Dua", type: "celebration" },
+                    { date: "2027-03-06", label: "Dua: Holy Month of Ramadan", type: "dua" },
+                    { date: "2027-03-18", label: "Majlis: Demolition of Jannatul Baqi", type: "commemoration" },
+                    { date: "2027-03-28", label: "Majlis: Martyrdom of Imam Jafar Sadiq (as)", type: "commemoration" },
+                    { date: "2027-04-18", label: "Milad: Birth of Imam Ali Reza (as)", type: "celebration" },
+                    { date: "2027-05-09", label: "Majlis: Martyrdom of Imam Muhammad Taqi (as)", type: "commemoration" },
+                    { date: "2027-05-13", label: "Majlis: Martyrdom of Imam Muhammad Baqir (as) & Hazrat Muslim (as)", type: "commemoration" },
+                    { date: "2027-05-23", label: "Jashn: Eid-al-Ghadir", type: "celebration" },
+                    { date: "2027-05-30", label: "Jashn: Eid-al-Mubahela", type: "celebration" },
 
                     // Other KICEA events will be added later
                 ]
@@ -466,7 +483,7 @@
             // Unlike "special" (exact Gregorian date, one-off) these are keyed by Hijri
             // month name + day, so they apply to every occurrence of that month across
             // 1448 AH, the same way eventsByMonth works for Islamic events.
-            const kiceaHussainCommemoration = { label: "Martyrdom of Imam Hussain (as) and his companions", type: "commemoration" };
+            const kiceaHussainCommemoration = { label: "Ashra e Muharram: Martyrdom of Imam Hussain (as) and his companions", type: "commemoration" };
             const kiceaAnnualByMonth = {
                 "Muharram": {
                     1: kiceaHussainCommemoration,
@@ -480,9 +497,9 @@
                     9: kiceaHussainCommemoration
                 },
                 "Ramadan": {
-                    18: { label: "Shab e Zarbat / Laylatul Qadr", type: "commemoration" },
-                    20: { label: "Martyrdom of Imam Ali (as) / Laylatul Qadr", type: "commemoration" },
-                    22: { label: "Laylatul Qadr", type: "dua" }
+                    18: { label: "Majlis: Shab e Zarbat & Aamal: Laylatul Qadr", type: "commemoration" },
+                    20: { label: "Majlis: Martyrdom of Imam Ali (as) & Aamal: Laylatul Qadr", type: "commemoration" },
+                    22: { label: "Aamal: Laylatul Qadr", type: "dua" }
                 }
                 // Dhu al-Hijjah's contribution to the Imam Hussain commemoration (its
                 // last day, 29th or 30th depending on month length) is handled
@@ -542,6 +559,9 @@
             }
             function fmtDateWithYear(date) {
                 return date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+            }
+            function fmtDateFull(date) {
+                return date.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
             }
             function getEnglishRange(index) {
                 const start = parseUTC(islamicMonths[index].start);
@@ -795,7 +815,7 @@
                             if (special[day]) {
                                 special[day] = { label: special[day].label + " · Jumu'ah al-Wida", type: special[day].type };
                             } else {
-                                special[day] = { label: "Jumu'ah al-Wida (last Friday of Ramadan)", type: "other" };
+                                special[day] = { label: "Jumu'ah al-Wida (last Friday of Ramadan) & Youm e Quds", type: "other" };
                             }
                             break;
                         }
@@ -1071,6 +1091,58 @@
                 if (e.key === 'Escape') closeEventListModal();
             });
 
+            // =================================================================
+            // DAY DETAIL MODAL — shown when a calendar cell is clicked.
+            // Displays the Islamic date, the English date, and any event(s) on
+            // that day (an Islamic calendar event and/or a KICEA event — both
+            // are shown together when both exist).
+            // =================================================================
+            function badgeHTML(label, style) {
+                return '<span class="text-[10px] uppercase tracking-wide rounded-full px-2 py-0.5 ' + style + '">' + label + '</span>';
+            }
+
+            function eventBlockHTML(sectionLabel, dotClass, badge, label) {
+                return '<div class="rounded-lg border border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 px-4 py-3">' +
+                    '<p class="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1.5">' + sectionLabel + '</p>' +
+                    '<div class="flex items-start gap-2">' +
+                    '<span class="w-2 h-2 rounded-full inline-block mt-1.5 ' + dotClass + ' shrink-0"></span>' +
+                    '<div class="min-w-0"><p class="font-medium text-gray-800 dark:text-gray-100 text-sm">' + label + '</p>' + badge + '</div>' +
+                    '</div></div>';
+            }
+
+            function showDayDetail(day, date, month, islamicInfo, kiceaEvent) {
+                document.getElementById('dayDetailIslamicDate').textContent = day + ' ' + month.label + ' ' + month.year + ' AH';
+                document.getElementById('dayDetailEnglishDate').textContent = fmtDateFull(date);
+
+                const body = document.getElementById('dayDetailBody');
+                let html = '';
+
+                if (islamicInfo) {
+                    const style = typeStyles[islamicInfo.type];
+                    html += eventBlockHTML('Islamic Calendar Event', style.dot, badgeHTML(islamicTypeLabels[islamicInfo.type], 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'), islamicInfo.label);
+                }
+                if (kiceaEvent) {
+                    const kStyle = kiceaTypeStyles[kiceaEvent.type];
+                    html += eventBlockHTML('KICEA Event', kStyle.dot, badgeHTML(kiceaTypeLabels[kiceaEvent.type], kStyle.badgeBg), kiceaEvent.label);
+                }
+                if (!islamicInfo && !kiceaEvent) {
+                    html += '<p class="text-sm text-gray-500 dark:text-gray-400">No events listed on this day.</p>';
+                }
+
+                body.innerHTML = html;
+                document.getElementById('dayDetailModal').classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDayDetailModal() {
+                document.getElementById('dayDetailModal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+            document.getElementById('dayDetailCloseBtn').addEventListener('click', closeDayDetailModal);
+            document.getElementById('dayDetailBackdrop').addEventListener('click', closeDayDetailModal);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeDayDetailModal();
+            });
+
             function render(index) {
                 current = index;
                 select.value = index;
@@ -1102,7 +1174,7 @@
                     const kiceaStyle = kiceaEvent ? kiceaTypeStyles[kiceaEvent.type] : null;
 
                     const cell = document.createElement('div');
-                    cell.className = 'relative overflow-hidden aspect-square rounded-lg flex flex-col items-center justify-center text-xs border ' +
+                    cell.className = 'relative overflow-hidden aspect-square rounded-lg flex flex-col items-center justify-center text-xs border cursor-pointer hover:ring-2 hover:ring-purple-400 dark:hover:ring-purple-500 transition ' +
                         (style ? style.cell : 'bg-white border-purple-100 dark:bg-gray-800 dark:border-purple-900/40') +
                         (isToday ? ' ring-2 ring-purple-600 dark:ring-purple-400 ring-offset-1 dark:ring-offset-gray-900' : '') +
                         (kiceaStyle ? ' ' + kiceaStyle.border : '');
@@ -1126,6 +1198,10 @@
                     cell.innerHTML =
                         mainNumberHTML +
                         '<span class="relative z-10 text-[10px] ' + (isIslamicMonthStart ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-gray-500 dark:text-gray-400') + '">' + (isIslamicMonthStart ? '🌙 1' : day) + '</span>';
+
+                    cell.addEventListener('click', (function(d, dt, m, sp, ke) {
+                        return function() { showDayDetail(d, dt, m, sp || null, ke || null); };
+                    })(day, date, month, isSpecial, kiceaEvent));
 
                     grid.appendChild(cell);
                 }
@@ -1323,10 +1399,9 @@
             <div class="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-5 text-center">
                 <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100">Have feedback about the calendar?</h3>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-3">Suggestions, corrections, or other feedback are welcome.</p>
-                <a href="mailto:kiceaofficial@gmail.com?subject=KICEA%20Calendar%20Feedback" class="inline-flex items-center gap-2 bg-gray-800 dark:bg-gray-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition">
+                <a href="https://forms.gle/EwiP2yvq6bKgPkZr5" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-gray-800 dark:bg-gray-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition">
                     Send Feedback
                 </a>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">kiceaofficial@gmail.com</p>
             </div>
         </div>
     </section>

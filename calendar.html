@@ -46,7 +46,7 @@
                 <div class="grid sm:grid-cols-2 gap-4 mb-6">
                     <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800">
                         <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100">Islamic Calendar Events</h4>
+                            <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100">Islamic Calendar</h4>
                             <button id="viewAllIslamicBtn" type="button" class="text-xs font-medium text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 hover:underline flex items-center gap-1">
                                 View full list
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
@@ -83,11 +83,11 @@
 
                 <div class="grid sm:grid-cols-2 gap-4 mt-6">
                     <div>
-                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">List of Islamic Events</h4>
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">Islamic Calendar</h4>
                         <div id="islamicEventsList" class="space-y-2"></div>
                     </div>
                     <div>
-                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">List of KICEA Events</h4>
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">KICEA Events</h4>
                         <div id="kiceaEventsList" class="space-y-2"></div>
                     </div>
                 </div>
@@ -444,13 +444,6 @@
                 ],
                 special: [
                     { date: "2026-09-27", label: "Birth of Imam Hasan Askari (as)", type: "celebration" },
-
-                    // 1448 AH — Ashura, Eid-ul-Fitr, Eid-ul-Azha
-                    { date: "2026-06-26", label: "Majlis: Ashura", type: "commemoration" },
-                    { date: "2027-03-10", label: "Namaz: Eid-ul-Fitr", type: "celebration" },
-                    { date: "2027-05-17", label: "Namaz: Eid-ul-Adha", type: "celebration" },
-
-                    // Late 2026 one-off center events
                     { date: "2026-10-25", label: "Majlis: Martyrdom of Lady Fatima (sa))", type: "commemoration" },
                     { date: "2026-10-29", label: "Milad: Birth of Imam Zayn al-Abidin (as)", type: "celebration" },
                     { date: "2026-11-12", label: "Majlis: Martyrdom of Lady Fatima (sa)", type: "commemoration" },
@@ -497,12 +490,19 @@
                     6: kiceaHussainCommemoration,
                     7: kiceaHussainCommemoration,
                     8: kiceaHussainCommemoration,
-                    9: kiceaHussainCommemoration
+                    9: kiceaHussainCommemoration,
+                    10: kiceaHussainCommemoration
                 },
                 "Ramadan": {
                     18: { label: "Majlis: Shab e Zarbat & Aamal: Laylatul Qadr", type: "commemoration" },
                     20: { label: "Majlis: Martyrdom of Imam Ali (as) & Aamal: Laylatul Qadr", type: "commemoration" },
                     22: { label: "Aamal: Laylatul Qadr", type: "dua" }
+                },
+                "Shawwal": {
+                    1: {label: "Namaz: Eid-ul-Fitr", type: "celebration" }
+                },
+                "Dhu al-Hijjah": {
+                    10: {label: "Namaz: Eid-al Azha", type: "celebration" }
                 }
                 // Dhu al-Hijjah's contribution to the Imam Hussain commemoration (its
                 // last day, 29th or 30th depending on month length) is handled
@@ -978,7 +978,7 @@
             }
 
             let copyLinkResetTimer = null;
-            function openEventListModal(title, bodyHTML, closestRowId, hash) {
+            function openEventListModal(title, bodyHTML, closestRowId, hash, highlightClosest = false) {
                 document.getElementById('eventListTitle').textContent = title;
                 const body = document.getElementById('eventListBody');
                 body.innerHTML = bodyHTML;
@@ -989,12 +989,17 @@
                 if (copyLabel) copyLabel.textContent = 'Copy link';
                 if (hash) updateLocationHash(hash);
 
+                // Keep the list positioned near the current/upcoming item.
+                // KICEA lists retain their original highlight; Islamic Calendar
+                // lists can use the same positioning without the highlight.
                 if (closestRowId) {
                     requestAnimationFrame(() => {
                         const closestRow = document.getElementById(closestRowId);
                         if (closestRow) {
                             closestRow.scrollIntoView({ behavior: 'auto', block: 'center' });
-                            closestRow.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-50');
+                            if (highlightClosest) {
+                                closestRow.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-50');
+                            }
                         }
                     });
                 }
@@ -1049,7 +1054,7 @@
 
             function showAllIslamicEvents() {
                 const rows = getAllIslamicEventEntries();
-                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Islamic calendar events across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH.</p>';
+                let html = '<p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Islamic calendar across ' + islamicMonths[0].year + '–' + islamicMonths[islamicMonths.length - 1].year + ' AH.</p>';
                 let closestRowId = '';
 
                 if (rows.length === 0) {
@@ -1062,7 +1067,7 @@
                         html += rowHTML(style.dot, 'bg-gray-100 text-gray-600', islamicTypeLabels[r.type], r.label, dateLabel, 'islamic-event-' + index);
                     });
                 }
-                openEventListModal('All Islamic Calendar Events', html, closestRowId, eventsHash('islamic'));
+                openEventListModal('Islamic Calendar', html, closestRowId, eventsHash('islamic'), false);
             }
 
             function showAllKiceaEvents() {
@@ -1082,7 +1087,7 @@
                         html += rowHTML(style.dot, style.badgeBg, kiceaTypeLabels[r.type], r.label, dateLabel, 'kicea-event-' + index, dayNames[r.start.getUTCDay()].slice(0, 3));
                     });
                 }
-                openEventListModal('All KICEA Events', html, closestRowId, eventsHash('kicea'));
+                openEventListModal('All KICEA Events', html, closestRowId, eventsHash('kicea'), true);
             }
 
             document.getElementById('viewAllIslamicBtn').addEventListener('click', showAllIslamicEvents);
@@ -1146,10 +1151,10 @@
                 if (e.key === 'Escape') closeDayDetailModal();
             });
 
-            function render(index) {
+            function render(index, preserveLocationHash = false) {
                 current = index;
                 select.value = index;
-                updateLocationHash(monthHash(index));
+                if (!preserveLocationHash) updateLocationHash(monthHash(index));
                 hideFutureNotice();
                 const { month, start, end, length, special, kiceaAnnual } = getMonthData(index);
 
@@ -1383,12 +1388,15 @@
                 }
             });
 
-            render(current);
+            // Check the incoming hash BEFORE the first render. render() normally updates
+            // the month hash, so checking afterwards would overwrite #events/islamic or
+            // #events/kicea and break shared "View full list" links.
+            const initialEventsKind = parseEventsListFromLocation();
+            render(current, initialEventsKind !== null);
 
             // If the page was opened via a shared "View full list" link
             // (#events/islamic or #events/kicea), open that modal automatically
-            // once the base calendar has rendered.
-            const initialEventsKind = parseEventsListFromLocation();
+            // after the base calendar has rendered, while preserving the event-list hash.
             if (initialEventsKind === 'islamic') {
                 showAllIslamicEvents();
             } else if (initialEventsKind === 'kicea') {

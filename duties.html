@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cooking Teams Schedule (Live)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --bg-elevated: #ffffff;
+      --fg: #1e293b;
+      --fg-muted: #64748b;
+      --accent: #0ea5e9;
+      --accent-hover: #0284c7;
+      --accent-soft: #e0f2fe;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --card-shadow-hover: 0 10px 25px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 180ms ease;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --bg-elevated: #1e293b;
+        --fg: #f1f5f9;
+        --fg-muted: #94a3b8;
+        --accent: #38bdf8;
+        --accent-hover: #7dd3fc;
+        --accent-soft: #0c4a6e;
+        --border: #334155;
+        --border-strong: #475569;
+        --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+        --card-shadow-hover: 0 10px 25px rgba(0,0,0,0.4), 0 4px 6px rgba(0,0,0,0.2);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 0 8px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--fg-muted);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-weight: 400;
+    }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      padding: 0 8px;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--fg);
+      box-shadow: var(--card-shadow);
+    }
+
+    .stat-pill .value {
+      color: var(--accent);
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .refresh-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .refresh-btn:hover { background: var(--accent-hover); }
+    .refresh-btn:active { transform: translateY(-50%) scale(0.98); }
+    .refresh-btn.loading { opacity: 0.6; cursor: wait; }
+    .refresh-btn .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    .refresh-btn.loading .spinner { display: block; }
+    .refresh-btn.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .last-updated {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      margin-top: 8px;
+    }
+
+    .table-wrapper {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead {
+      background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 100%);
+      border-bottom: 2px solid var(--border);
+    }
+
+    th {
+      padding: 14px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--fg-muted);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    th:first-child { padding-left: 16px; }
+    th:last-child { padding-right: 16px; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:hover {
+      background: var(--accent-soft);
+    }
+
+    td {
+      padding: 12px;
+      vertical-align: top;
+    }
+
+    td:first-child { padding-left: 16px; }
+    td:last-child { padding-right: 16px; }
+
+    .team-cell {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--fg);
+      white-space: nowrap;
+    }
+
+    .team-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .members-cell {
+      max-width: 320px;
+    }
+
+    .member-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .member-item {
+      font-size: 0.825rem;
+      color: var(--fg);
+      padding: 3px 8px;
+      background: var(--bg);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+    }
+
+    .member-item:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .dates-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 140px;
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--fg);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      transition: all var(--transition);
+    }
+
+    .date-badge:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .date-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .date-badge.next-program::before {
+      background: #22c55e;
+    }
+
+    .date-badge.next-program:hover {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #16a34a;
+    }
+
+    .empty-state {
+      color: var(--fg-muted);
+      font-style: italic;
+      font-size: 0.85rem;
+      padding: 8px 0;
+    }
+
+    .loading-state, .error-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--fg-muted);
+    }
+
+    .loading-state .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    .error-state { color: #ef4444; }
+    .error-state button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Mobile card view */
+    @media (max-width: 900px) {
+      .table-wrapper {
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        border-radius: 0;
+      }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+
+      thead { display: none; }
+
+      tbody tr {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        padding: 16px;
+        box-shadow: var(--card-shadow);
+        position: relative;
+      }
+
+      tbody tr:hover {
+        background: var(--bg-elevated);
+        box-shadow: var(--card-shadow-hover);
+        transform: translateY(-2px);
+      }
+
+      td {
+        padding: 8px 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      td:first-child, td:last-child { padding-left: 0; padding-right: 0; }
+
+      .team-cell {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+
+      .member-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .member-item {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+
+      .dates-cell {
+        gap: 5px;
+      }
+
+      .date-badge {
+        padding: 5px 9px;
+        font-size: 0.7rem;
+      }
+
+      .refresh-btn {
+        position: static;
+        transform: none;
+        margin: 16px auto 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 16px 12px; }
+      h1 { font-size: 1.5rem; }
+      .stat-pill { padding: 6px 10px; font-size: 0.8rem; }
+      tbody tr { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>IT Team Schedule</h1>
+      <p class="subtitle">Team members & future program dates</p>
+      <button class="refresh-btn" id="refreshBtn" aria-label="Refresh data">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-text">Refresh</span>
+      </button>
+    </header>
+
+    <div class="stats-bar" id="statsBar"></div>
+    <p class="last-updated" id="lastUpdated">Loading...</p>
+
+    <div class="table-wrapper" id="tableWrapper">
+      <div class="loading-state" id="loadingState">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Fetching latest data from Google Sheets…</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRPkD8o_OaTAdRwBilDeY35Tnoz5YU9wg-PUyTPXs881ThMERuW8HBv5TLb1PO-SOZHKHyvD2aGJV7Z/pub?gid=2134034644&single=true&output=csv';
+    // CORS proxy for file:// protocol — uses jina.ai which handles Google redirects
+    const PROXY_URL = 'https://r.jina.ai/http://' + CSV_URL.replace('https://', '');
+
+    const refreshBtn = document.getElementById('refreshBtn');
+    const tableWrapper = document.getElementById('tableWrapper');
+    const loadingState = document.getElementById('loadingState');
+    const statsBar = document.getElementById('statsBar');
+    const lastUpdated = document.getElementById('lastUpdated');
+
+    function setLoading(isLoading) {
+      refreshBtn.classList.toggle('loading', isLoading);
+      refreshBtn.disabled = isLoading;
+      loadingState.style.display = isLoading ? 'block' : 'none';
+    }
+
+    function parseCSV(csvText) {
+      const rows = [];
+      let currentRow = [];
+      let currentField = '';
+      let inQuotes = false;
+      let i = 0;
+
+      while (i < csvText.length) {
+        const char = csvText[i];
+        const nextChar = csvText[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            // Escaped quote
+            currentField += '"';
+            i += 2;
+            continue;
+          } else {
+            // Toggle quote state
+            inQuotes = !inQuotes;
+            i++;
+            continue;
+          }
+        }
+
+        if (char === ',' && !inQuotes) {
+          // End of field
+          currentRow.push(currentField);
+          currentField = '';
+          i++;
+          continue;
+        }
+
+        if ((char === '\n' || char === '\r') && !inQuotes) {
+          // End of row (handle both \n and \r\n)
+          if (char === '\r' && nextChar === '\n') i++; // Skip \n in \r\n
+          currentRow.push(currentField);
+          rows.push(currentRow);
+          currentRow = [];
+          currentField = '';
+          i++;
+          continue;
+        }
+
+        currentField += char;
+        i++;
+      }
+
+      // Push last field/row if not empty
+      if (currentField || currentRow.length) {
+        currentRow.push(currentField);
+        rows.push(currentRow);
+      }
+
+      return rows;
+    }
+
+    function processData(rows) {
+      // Skip header row, expect: Team #, Members, Next Program, Future Programs...
+      const teams = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row[0]?.trim()) continue;
+
+        const teamName = row[0].trim();
+        const members = row[1]?.split('\n').map(m => m.trim()).filter(m => m && m !== '-') || [];
+        const dates = row.slice(2).map(d => d.trim()).filter(d => d);
+
+        teams.push({ team: teamName, members, dates });
+      }
+      return teams;
+    }
+
+    function getTeamNumber(teamName) {
+      const match = teamName.match(/(\d+)/);
+      return match ? match[1] : '';
+    }
+
+    function parseDate(dateStr) {
+      // Parse "15 October 2026" format
+      const parts = dateStr.trim().split(' ');
+      if (parts.length !== 3) return null;
+      const day = parseInt(parts[0], 10);
+      const monthStr = parts[1];
+      const year = parseInt(parts[2], 10);
+      const monthMap = {
+        'january': 0, 'february': 1, 'march': 2, 'april': 3, 'may': 4, 'june': 5,
+        'july': 6, 'august': 7, 'september': 8, 'october': 9, 'november': 10, 'december': 11
+      };
+      const month = monthMap[monthStr.toLowerCase()];
+      if (month === undefined || isNaN(day) || isNaN(year)) return null;
+      return new Date(year, month, day);
+    }
+
+    function renderStats(teams) {
+      const totalTeams = teams.length;
+      const totalMembers = teams.reduce((sum, t) => sum + t.members.length, 0);
+      const totalDates = teams.reduce((sum, t) => sum + t.dates.length, 0);
+
+      // Find earliest future date across all teams
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let nextProgramDate = '—';
+      let earliestFuture = null;
+
+      for (const team of teams) {
+        for (const dateStr of team.dates) {
+          const parsed = parseDate(dateStr);
+          if (parsed && parsed >= today) {
+            if (!earliestFuture || parsed < earliestFuture) {
+              earliestFuture = parsed;
+              nextProgramDate = dateStr;
+            }
+          }
+        }
+      }
+
+      const stats = [
+        { label: 'Teams', value: totalTeams },
+        { label: 'Members', value: totalMembers },
+        { label: 'Program Dates', value: totalDates },
+        { label: 'Next Program', value: nextProgramDate }
+      ];
+
+      statsBar.innerHTML = stats.map(s => `
+        <span class="stat-pill">
+          <span class="value">${s.value}</span>
+          <span>${s.label}</span>
+        </span>
+      `).join('');
+    }
+
+    function renderTable(teams) {
+      const tbodyHtml = teams.map((team, idx) => {
+        const teamNum = getTeamNumber(team.team);
+        const validMembers = team.members.filter(m => m.trim());
+        const validDates = team.dates.filter(d => d.trim());
+
+        return `
+          <tr style="--delay: ${idx * 50}ms">
+            <td class="team-cell">
+              <span class="team-number">${teamNum}</span>
+              ${escapeHtml(team.team)}
+            </td>
+            <td class="members-cell">
+              <ul class="member-list">
+                ${validMembers.map(m => `<li class="member-item">${escapeHtml(m)}</li>`).join('')}
+                ${validMembers.length === 0 ? '<li class="empty-state">No members listed</li>' : ''}
+              </ul>
+            </td>
+            <td>
+              <div class="dates-cell">
+                ${validDates[0] ? `<span class="date-badge next-program">${escapeHtml(validDates[0])}</span>` : '<span class="empty-state">—</span>'}
+              </div>
+            </td>
+            <td>
+              <div class="dates-cell">
+                ${validDates.slice(1).map(d => `<span class="date-badge">${escapeHtml(d)}</span>`).join('')}
+                ${validDates.length <= 1 ? '<span class="empty-state">No future dates</span>' : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tableWrapper.innerHTML = `
+        <table id="scheduleTable">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Members</th>
+              <th>Next Program</th>
+              <th>Future Programs</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody">${tbodyHtml}</tbody>
+        </table>
+      `;
+
+      // Staggered row animation
+      const rows = tableWrapper.querySelectorAll('tbody tr');
+      rows.forEach((row, i) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(10px)';
+        row.style.transition = `opacity 300ms ease ${i * 50}ms, transform 300ms ease ${i * 50}ms`;
+        requestAnimationFrame(() => {
+          row.style.opacity = '1';
+          row.style.transform = 'translateY(0)';
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showError(message) {
+      tableWrapper.innerHTML = `
+        <div class="error-state">
+          <p>${escapeHtml(message)}</p>
+          <button onclick="fetchData()">Try Again</button>
+        </div>
+      `;
+    }
+
+    async function fetchData() {
+      setLoading(true);
+      try {
+        // Use proxy when on file:// protocol, direct fetch otherwise
+        const isLocalFile = location.protocol === 'file:';
+        const url = isLocalFile ? PROXY_URL : CSV_URL + '&_=' + Date.now();
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        let csvText = await response.text();
+
+        // Strip jina.ai markdown wrapper if present
+        if (csvText.includes('Markdown Content:')) {
+          const idx = csvText.indexOf('Markdown Content:');
+          csvText = csvText.slice(idx + 'Markdown Content:'.length).trim();
+        }
+        // Also strip "Title:" and "URL Source:" lines if present
+        csvText = csvText.replace(/^Title:.*\n/, '').replace(/^URL Source:.*\n/, '').trim();
+        const rows = parseCSV(csvText);
+        const teams = processData(rows);
+
+        if (teams.length === 0) {
+          showError('No team data found in sheet');
+          return;
+        }
+
+        renderStats(teams);
+        renderTable(teams);
+        lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
+      } catch (err) {
+        console.error(err);
+        showError(`Failed to load: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    refreshBtn.addEventListener('click', fetchData);
+
+    // Initial load
+    fetchData();
+  </script>
+</body>
+</html>

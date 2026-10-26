@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parking Information – Hussainiya Seoul</title>
+<meta name="description" content="Parking information for visitors to Hussainiya Seoul in Gojan-dong, Ansan, South Korea.">
+<style>
+  :root{
+    --green:#0f4c3a;
+    --green-dark:#0a3629;
+    --green-soft:#e6f0ea;
+    --gold:#b8913a;
+    --gold-soft:#f3e7c4;
+    --cream:#faf5e6;
+    --white:#ffffff;
+    --ink:#1e2a25;
+    --muted:#4d5b54;
+    --border:#e2d9bd;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+    color:var(--ink);
+    background:var(--cream);
+  }
+  a{color:inherit}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px}
+
+  header{
+    background:linear-gradient(160deg,var(--green) 0%,var(--green-dark) 100%);
+    color:var(--white);
+    border-bottom:4px solid var(--gold);
+    padding:32px 0 28px;
+    text-align:center;
+  }
+  .pin{
+    width:56px;height:56px;margin:0 auto 10px;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--gold);border-radius:50%;
+    background:rgba(255,255,255,.06);
+  }
+  .pin svg{width:32px;height:32px}
+  header h1{margin:0;font-size:1.9rem;line-height:1.2;letter-spacing:.3px}
+  header .sub{
+    margin:6px 0 0;color:var(--gold-soft);
+    font-size:1.05rem;letter-spacing:2px;text-transform:uppercase;
+  }
+  .address{margin:18px auto 0;max-width:520px;font-size:1rem}
+  .address .ko{display:block;margin-top:2px;color:var(--gold-soft)}
+  .landmark{
+    display:inline-block;margin-top:14px;padding:6px 16px;
+    border:1px solid var(--gold);border-radius:999px;
+    font-size:.95rem;background:rgba(255,255,255,.08);
+  }
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    min-height:48px;padding:10px 18px;
+    border-radius:12px;text-decoration:none;font-weight:600;font-size:.95rem;
+    border:1.5px solid var(--gold);
+    background:var(--gold);color:var(--green-dark);
+  }
+  .btn:hover,.btn:focus-visible{background:#c9a24a}
+  .btn:focus-visible,.chip:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+
+  main{padding:24px 0 8px}
+  h2{
+    color:var(--green);font-size:1.4rem;margin:32px 0 6px;
+    padding-bottom:8px;border-bottom:2px solid var(--gold);
+  }
+  .lead{margin:8px 0 16px;color:var(--muted)}
+
+  .notice{
+    background:var(--gold-soft);
+    border:1.5px solid var(--gold);
+    border-left:8px solid var(--gold);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    margin-top:-4px;
+    box-shadow:0 2px 8px rgba(15,76,58,.08);
+  }
+  .notice h2{
+    margin:0 0 6px;border:0;padding:0;color:var(--green-dark);
+    font-size:1.2rem;display:flex;align-items:center;gap:8px;
+  }
+  .notice p{margin:0}
+
+  .cards{display:grid;gap:18px;grid-template-columns:1fr}
+  .card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:0 2px 8px rgba(15,76,58,.06);
+    display:flex;flex-direction:column;
+  }
+  .tag{
+    align-self:flex-start;
+    background:var(--green-soft);color:var(--green);
+    font-size:.78rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:3px 12px;border-radius:999px;border:1px solid #c5dccf;
+  }
+  .card h3{margin:10px 0 0;font-size:1.2rem;color:var(--green-dark);line-height:1.3}
+  .card .ko{margin:2px 0 0;font-size:1.05rem;color:var(--muted)}
+  .info{list-style:none;margin:14px 0 0;padding:0}
+  .info li{display:flex;gap:10px;padding:8px 0;border-top:1px dashed var(--border)}
+  .info li:first-child{border-top:0}
+  .ico{flex:0 0 22px;text-align:center;font-size:1.05rem;line-height:1.5}
+  .info strong{color:var(--green-dark)}
+  .caution{
+    margin:14px 0 0;padding:10px 12px;font-size:.92rem;
+    background:var(--cream);border:1px solid var(--border);border-radius:10px;color:var(--muted);
+  }
+  .card .btn{margin-top:auto}
+  .links{margin-top:auto;padding-top:16px}
+  .links .btn{margin:0 0 10px}
+  .chips{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .chip{
+    display:flex;align-items:center;justify-content:center;gap:4px;
+    min-height:48px;padding:8px 10px;border-radius:10px;
+    border:1px solid var(--border);background:var(--cream);
+    color:var(--green-dark);text-decoration:none;font-size:.95rem;font-weight:600;
+  }
+  .chip:hover,.chip:focus-visible{background:var(--green-soft);border-color:var(--green)}
+
+  footer{
+    margin-top:36px;background:var(--green-dark);color:var(--cream);
+    border-top:4px solid var(--gold);padding:24px 0;text-align:center;
+  }
+  footer p{margin:0 auto;max-width:640px;font-size:.92rem}
+  footer .name{margin-top:14px;color:var(--gold-soft);font-weight:700;letter-spacing:.5px}
+
+  @media (min-width:700px){
+    header h1{font-size:2.4rem}
+    .cards{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="pin" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d9b862" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s-6.5-5.6-6.5-11.2A6.5 6.5 0 0 1 12 4.3a6.5 6.5 0 0 1 6.5 6.5C18.5 16.4 12 22 12 22z"/>
+        <path d="M8.8 12.6V11c0-1.7 1.4-2.6 3.2-4 1.8 1.4 3.2 2.3 3.2 4v1.6z"/>
+        <path d="M12 5.6v1.4"/>
+      </svg>
+    </div>
+    <h1>Hussainiya Seoul</h1>
+    <p class="sub">Parking Information</p>
+
+    <p class="address">
+      681-5 Gojan-dong, Danwon-gu, Ansan-si, Gyeonggi-do, South Korea
+      <span class="ko" lang="ko">경기도 안산시 단원구 고잔동 681-5</span>
+    </p>
+    <span class="landmark">Near Gojan Station, Exit 2</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="notice" aria-labelledby="notice-title">
+    <h2 id="notice-title"><span aria-hidden="true">⚠️</span> Parking Inside Hussainiya</h2>
+    <p>Parking is available inside Hussainiya, but parking spaces are limited. If all spaces are occupied, please do not park illegally, block entrances, obstruct traffic, or park on neighbouring properties. Please use one of the nearby parking options listed below.</p>
+  </section>
+
+  <h2>Nearby Parking Options</h2>
+  <p class="lead">Rates and free-parking times below are as supplied by Hussainiya Seoul or as reported, and have not been independently verified.</p>
+
+  <div class="cards">
+
+    <!-- Option A -->
+    <article class="card" aria-labelledby="optA">
+      <span class="tag">Closest Public Option</span>
+      <h3 id="optA">Gojan Station Transfer Parking</h3>
+      <p class="ko" lang="ko">고잔역환승주차장</p>
+      <ul class="info">
+        <li><span class="ico" aria-hidden="true">🅿️</span><span><strong>Location:</strong> Near Gojan Station and Hussainiya Seoul. Reference: <span lang="ko">고잔동 679-1</span></span></li>
+        <li><span class="ico" aria-hidden="true">₩</span><span><strong>Reported rate:</strong> ₩400 for the first 30 minutes, then ₩200 for each additional 10 minutes.</span></li>
+        <li><span class="ico" aria-hidden="true">🕙</span><span><strong>Free parking</strong> (as supplied by the venue): after 10:00 PM and on Sundays.</span></li>
+      </ul>
+      <p class="caution">Please check the lot's operating hours and late-night exit arrangements on-site, as published information may differ.</p>
+      <div class="links">
+        <a class="btn" href="https://app.modu.kr/p/101566" target="_blank" rel="noopener noreferrer" aria-label="Gojan Station Transfer Parking on Modu Parking">Modu Parking (<span lang="ko">모두의주차장</span>)</a>
+        <div class="chips">
+          <a class="chip" href="https://naver.me/G5PYgquf" target="_blank" rel="noopener noreferrer" aria-label="Gojan Station Transfer Parking on Naver Map">Naver Map</a>
+          <a class="chip" href="https://place.map.kakao.com/623983483" target="_blank" rel="noopener noreferrer" aria-label="Gojan Station Transfer Parking on KakaoMap">KakaoMap</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Option B -->
+    <article class="card" aria-labelledby="optB">
+      <span class="tag">Public Parking Lot</span>
+      <h3 id="optB">Darigan-gil Public Parking</h3>
+      <p class="ko" lang="ko">다리간길 공영주차장</p>
+      <ul class="info">
+        <li><span class="ico" aria-hidden="true">🅿️</span><span><strong>Reference:</strong> <span lang="ko">다리간로 4</span>, Ansan</span></li>
+        <li><span class="ico" aria-hidden="true">₩</span><span><strong>Reported rate:</strong> ₩600 per 30 minutes (approximately ₩1,200 per hour at the base rate).</span></li>
+      </ul>
+      <p class="caution">Tariff, operating hours, and availability should be checked on-site, as parking information can change.</p>
+      <div class="links">
+        <a class="btn" href="https://app.modu.kr/p/234162" target="_blank" rel="noopener noreferrer" aria-label="Darigan-gil Public Parking on Modu Parking">Modu Parking (<span lang="ko">모두의주차장</span>)</a>
+        <div class="chips">
+          <a class="chip" href="https://naver.me/5CFWoTKl" target="_blank" rel="noopener noreferrer" aria-label="Darigan-gil Public Parking on Naver Map">Naver Map</a>
+          <a class="chip" href="https://place.map.kakao.com/27122946" target="_blank" rel="noopener noreferrer" aria-label="Darigan-gil Public Parking on KakaoMap">KakaoMap</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Parking rates, free-parking periods, operating hours, and availability may change. Please follow all posted parking signs and local regulations. Never park in prohibited areas or block traffic.</p>
+    <p class="name">Hussainiya Seoul · South Korea</p>
+  </div>
+</footer>
+
+</body>
+</html>
